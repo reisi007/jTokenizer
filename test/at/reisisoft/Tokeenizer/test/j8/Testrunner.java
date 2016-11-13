@@ -8,7 +8,9 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        Simple.class
+        Simple.class,
+        Loops.class,
+        Aritmetics.class
 })
 public class Testrunner {
 }

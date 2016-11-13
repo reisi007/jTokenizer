@@ -1,0 +1,7 @@
+ public static void main(String[] args) throws IOException {
+        char s;
+        while ((s = (char) System.in.read()) == 'a') ;
+        do {
+            stuff();
+        } while (true);
+    }
