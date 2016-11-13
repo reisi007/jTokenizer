@@ -10,7 +10,7 @@ public class Main {
         String input = "+12 + 34 - -01";
 
         // Create simpleJavaTokens and print them
-        List<JavaSimpleToken> simpleJavaTokens = new JavaLexar().lex(input);
+        List<JavaSimpleToken> simpleJavaTokens = new JavaTokenizer().tokenize(input);
         for (JavaSimpleToken simpleJavaToken : simpleJavaTokens)
             System.out.println(simpleJavaToken);
     }

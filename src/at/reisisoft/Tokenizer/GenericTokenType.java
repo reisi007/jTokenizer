@@ -6,6 +6,7 @@ package at.reisisoft.Tokenizer;
 public interface GenericTokenType {
     /**
      * Get the name of the JavaSimpleToken
+     *
      * @return The token's name
      */
     public String getName();

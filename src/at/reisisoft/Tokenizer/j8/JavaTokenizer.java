@@ -1,18 +1,20 @@
 package at.reisisoft.Tokenizer.j8;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JavaLexar {
-
-
-    public List<JavaSimpleToken> lex(String input) {
+public class JavaTokenizer {
+    /**
+     * @param input The Java file (as a String) to be tokenized
+     * @return Returns an ArrayList
+     */
+    public List<JavaSimpleToken> tokenize(String input) {
         // The tokens to return
-        List<JavaSimpleToken> tokens = new LinkedList<>();
+        List<JavaSimpleToken> tokens = new ArrayList<>();
 
-        // JavaLexar logic begins here
+        // JavaTokenizer logic begins here
         StringBuilder tokenPatternsBuffer = new StringBuilder();
         final JavaSimpleTokenType[] javaSimpleTokenTypes = JavaSimpleTokenType.values();
         for (JavaSimpleTokenType tokenType : javaSimpleTokenTypes)
@@ -44,6 +46,4 @@ public class JavaLexar {
         }
         return null;
     }
-
-
 }
