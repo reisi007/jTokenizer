@@ -1,0 +1,8 @@
+   int i;
+        i = 0;
+        String[] a = new String[10];
+        for (; i < a.length; i++)
+            System.out.println("Test");
+        for (; ; ) {
+            System.out.print('a');
+        }
