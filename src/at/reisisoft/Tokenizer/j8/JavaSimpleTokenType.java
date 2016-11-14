@@ -66,6 +66,10 @@ public enum JavaSimpleTokenType implements RegExTokenType {
         return pattern;
     }
 
+    public JavaSimpleTokenType[] getValues() {
+        return JavaSimpleTokenType.values();
+    }
+
     @Override
     public String getName() {
         return super.name();

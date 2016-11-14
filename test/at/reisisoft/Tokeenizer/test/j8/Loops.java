@@ -32,7 +32,7 @@ public class Loops {
                 JavaSimpleTokenType.BINARYRELATIONAL,
                 JavaSimpleTokenType.IDENTIFYER,
                 JavaSimpleTokenType.SEMICOLON,
-                JavaSimpleTokenType.IDENTIFYER,
+                JavaSimpleTokenType.UNARYPOSTFIX,
                 JavaSimpleTokenType.BRACKETROUNDEND,
                 JavaSimpleTokenType.IDENTIFYER,
                 JavaSimpleTokenType.BRACKETROUNDSTART,

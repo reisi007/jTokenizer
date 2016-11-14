@@ -9,5 +9,12 @@ public interface GenericTokenType {
      *
      * @return The token's name
      */
-    public String getName();
+    String getName();
+
+    /**
+     * Gets an array of all token of ONE specific type. Please ensure that a cast to the implementaded type works!
+     *
+     * @return An array of all token types
+     */
+    GenericTokenType[] getValues();
 }

@@ -13,4 +13,9 @@ public enum JavaAdvancedTokenType implements GenericTokenType {
     public String getName() {
         return super.name();
     }
+
+    @Override
+    public JavaAdvancedTokenType[] getValues() {
+        return JavaAdvancedTokenType.values();
+    }
 }
