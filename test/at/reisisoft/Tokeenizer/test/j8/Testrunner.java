@@ -10,7 +10,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         Simple.class,
         Loops.class,
-        Aritmetics.class
+        Aritmetics.class,
+        Try.class
 })
 public class Testrunner {
 }

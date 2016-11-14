@@ -18,6 +18,9 @@ public enum JavaSimpleTokenType implements RegExTokenType {
     VISABILITY("(public|private|protected)"),
     CLASS("class"),
     STATIC("static"),
+    TRY("try"),
+    CATCH("catch"),
+    FINALLY("finally"),
     FINAL("final"),
     FOR("for"),
     DO("do"),
@@ -28,6 +31,7 @@ public enum JavaSimpleTokenType implements RegExTokenType {
     BINARYEQUALITY("(!|=)="),
     ASSIGNMENT("([\\+\\-\\*\\/%&^\\|]|<{2}|>{2,3})?="),
     COLON(":"),
+    COMMA(","),
     SEMICOLON(";"),
     QUESTIONMARK("\\?"),
     SYNCHRONIZED("synchronized"),
@@ -53,7 +57,7 @@ public enum JavaSimpleTokenType implements RegExTokenType {
     BINARYRELATIONAL("(<=?|>=?|instanceof)"),
     BINARYLOGICAL("[\\|&]{2}"),
     BINARYBITWISE("[\\|\\^&]"),
-    IDENTIFYER("[^\\s)(\\:;]+");
+    IDENTIFYER("[^\\s)(\\:,;]+");
 
 
     private String pattern;
