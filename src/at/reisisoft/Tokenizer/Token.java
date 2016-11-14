@@ -12,4 +12,12 @@ public interface Token<Data> {
     GenericTokenType getTokenType();
 
     String toString();
+
+    int getStartPos();
+
+    void setStartPos(int startPos);
+
+    int getEndPos();
+
+    void setEndPos(int endPos);
 }

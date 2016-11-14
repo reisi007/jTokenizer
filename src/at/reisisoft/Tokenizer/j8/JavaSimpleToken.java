@@ -7,12 +7,29 @@ import at.reisisoft.Tokenizer.Token;
  * Created by Florian on 12.11.2016.
  */
 public class JavaSimpleToken implements Token<String> {
-    private JavaSimpleTokenType type;
-    private String data;
+    private final JavaSimpleTokenType type;
+    private final String data;
+    private int startPos, endPos;
 
     public JavaSimpleToken(JavaSimpleTokenType type, String data) {
         this.type = type;
         this.data = data;
+    }
+
+    public int getStartPos() {
+        return startPos;
+    }
+
+    public void setStartPos(int startPos) {
+        this.startPos = startPos;
+    }
+
+    public int getEndPos() {
+        return endPos;
+    }
+
+    public void setEndPos(int endPos) {
+        this.endPos = endPos;
     }
 
     /**

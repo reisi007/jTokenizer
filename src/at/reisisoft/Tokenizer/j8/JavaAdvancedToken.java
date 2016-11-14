@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Florian on 12.11.2016.
  */
 public class JavaAdvancedToken implements Token<List<Token<?>>> {
-    private final List<Token<?>> children = new LinkedList<>();
+    private final LinkedList<Token<?>> children = new LinkedList<>();
     private final JavaAdvancedTokenType type;
 
 
@@ -47,5 +47,29 @@ public class JavaAdvancedToken implements Token<List<Token<?>>> {
     @Override
     public String toString() {
         return getData();
+    }
+
+    @Override
+    public int getStartPos() {
+        if (children.size() == 0)
+            return 0;
+        return children.getFirst().getStartPos();
+    }
+
+    @Override
+    public void setStartPos(int startPos) {
+        throw new IllegalStateException("Cannot set Startpos");
+    }
+
+    @Override
+    public int getEndPos() {
+        if (children.size() == 0)
+            return 0;
+        return children.getLast().getEndPos();
+    }
+
+    @Override
+    public void setEndPos(int endPos) {
+        throw new IllegalStateException("Cannot set Endpos");
     }
 }

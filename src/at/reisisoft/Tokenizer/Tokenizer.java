@@ -26,7 +26,7 @@ public class Tokenizer<TokenType extends RegExTokenType, T extends Token<String>
         ArrayList<T> tokens = new ArrayList<>();
         // JavaTokenizer logic begins here
         StringBuilder tokenPatternsBuffer = new StringBuilder();
-        /**
+        /*
          *  The user guarantees, that. See @at.reisisoft.Tokenizer.GenericTokenType#getValues
          */
         final TokenType[] tokenTypes = (TokenType[]) whitespace.getValues();
@@ -53,7 +53,12 @@ public class Tokenizer<TokenType extends RegExTokenType, T extends Token<String>
         for (TokenType cur : availableTokenTypes) {
             group = matcher.group(cur.getName());
             if (group != null) {
-                return tokenConstructor.apply(cur, group);
+                T token = tokenConstructor.apply(cur, group);
+                if (whitespace != token) {
+                    token.setStartPos(matcher.start());
+                    token.setEndPos(matcher.end());
+                }
+                return token;
             }
         }
         return null;
