@@ -7,7 +7,9 @@ import at.reisisoft.Tokenizer.GenericTokenType;
  * All tokens which can't directly be found in the Java Source. They consist. Names must not have underscores for some reason.
  */
 public enum JavaAdvancedTokenType implements GenericTokenType {
-    CLASS;
+    CLASS,
+    ERROR,
+    FILE;
 
     @Override
     public String getName() {

@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 /**
  * Created by Florian on 20.11.2016.
  */
-public abstract class LexerImpl<TokenizerToken extends Token<String>, TokenizerTokenType extends GenericTokenType, ReturnToken extends HirachialToken<?>> implements Lexer<TokenizerToken, ReturnToken> {
+public class LexerImpl<TokenizerToken extends Token<String>, ReturnToken extends HirachialToken<?>> implements Lexer<TokenizerToken, ReturnToken> {
 
     private final Supplier<LexerRule<TokenizerToken, ReturnToken>> fileRuleSupplier;
     private final Supplier<ReturnToken> error;
