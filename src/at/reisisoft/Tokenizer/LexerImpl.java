@@ -31,13 +31,15 @@ public abstract class LexerImpl<TokenizerToken extends Token<String>, TokenizerT
         tokenizerTokenTypes = Collections.unmodifiableList(tokenizerTokenTypes);
         final LexerRule<TokenizerToken, ReturnToken> fileRule = fileRuleSupplier.get();
         if (!fileRule.isApplicable(tokenizerTokenTypes, 0)) {
-            throw new LexerException("Lexer's \"FILE\" rule does not support this file!");
+            throw GENERIC_LEXER_EXCEPTION.get();
         }
         final LexingResult<ReturnToken> fileLexingResult = fileRule.apply(this, tokenizerTokenTypes, 0);
         if (fileLexingResult.getNextArrayfromPos() < tokenizerTokenTypes.size()) {
             //There are tokens, which are at the end of the file, but the rest of the file is a valid Java file
             ReturnToken errorToken = Objects.requireNonNull(error.get());
             int curPos = fileLexingResult.getNextArrayfromPos();
+            if (curPos < 0)
+                throw GENERIC_LEXER_EXCEPTION.get();
             while (curPos < tokenizerTokenTypes.size()) {
                 tokenizerTokenTypes.get(curPos);
                 errorToken.addChildren(tokenizerTokenTypes);

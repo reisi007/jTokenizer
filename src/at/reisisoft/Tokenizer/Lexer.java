@@ -1,11 +1,14 @@
 package at.reisisoft.Tokenizer;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Created by Florian on 12.11.2016.
  */
 public interface Lexer<TokenizerToken extends Token<String>, ReturnTokenType extends HirachialToken<?>> {
+    Supplier<LexerException> GENERIC_LEXER_EXCEPTION = () -> new LexerException("The lexer does not support this file!");
+
     /**
      * Lexes over all tokens. Implementations should gurantee, that this list is not modified via this method
      *
