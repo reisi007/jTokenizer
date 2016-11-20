@@ -1,17 +1,15 @@
 package at.reisisoft.Tokenizer.j8;
 
 import at.reisisoft.Tokenizer.GenericTokenType;
+import at.reisisoft.Tokenizer.HirachialToken;
 import at.reisisoft.Tokenizer.Token;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Florian on 12.11.2016.
  */
-public class JavaAdvancedToken implements Token<List<Token<?>>> {
+public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> {
     private final LinkedList<Token<?>> children = new LinkedList<>();
     private final JavaAdvancedTokenType type;
 
@@ -37,6 +35,12 @@ public class JavaAdvancedToken implements Token<List<Token<?>>> {
     }
 
     @Override
+    public void addChildren(Collection<? extends Token<?>> javaAdvancedTokenTypes) {
+        children.addAll(javaAdvancedTokenTypes);
+    }
+
+
+    @Override
     public GenericTokenType getTokenType() {
         return type;
     }
@@ -58,7 +62,7 @@ public class JavaAdvancedToken implements Token<List<Token<?>>> {
 
     @Override
     public void setStartPos(int startPos) {
-        throw new IllegalStateException("Cannot set Startpos");
+        throw new IllegalStateException("Cannot set startPos");
     }
 
     @Override
@@ -70,6 +74,6 @@ public class JavaAdvancedToken implements Token<List<Token<?>>> {
 
     @Override
     public void setEndPos(int endPos) {
-        throw new IllegalStateException("Cannot set Endpos");
+        throw new IllegalStateException("Cannot set endPos");
     }
 }
