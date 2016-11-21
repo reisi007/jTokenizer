@@ -1,6 +1,5 @@
 package at.reisisoft.Tokenizer.j8;
 
-import at.reisisoft.Tokenizer.GenericTokenType;
 import at.reisisoft.Tokenizer.Token;
 
 /**
@@ -54,7 +53,7 @@ public class JavaSimpleToken implements Token<String> {
     }
 
     @Override
-    public GenericTokenType getTokenType() {
+    public JavaSimpleTokenType getTokenType() {
         return type;
     }
 

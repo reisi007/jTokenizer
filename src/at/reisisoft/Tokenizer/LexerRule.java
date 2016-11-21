@@ -24,6 +24,6 @@ public interface LexerRule<TokenizerToken extends Token<String>, ReturnToken ext
      * @return Returns a {@see Lexer.LexingResult} object.
      * @throws LexerException Throws an exception e.g. if no token could be found. Implementations should guarantee, that no exception is thrown, when {@link LexerRule#isApplicable(List, int)} returns {@code true}
      */
-    Lexer.LexingResult<ReturnToken> apply(final Lexer lexer, List<TokenizerToken> tokenizerTokens, int fromPos) throws LexerException;
+    Lexer.LexingResult<ReturnToken> apply(final Lexer<TokenizerToken, ReturnToken> lexer, List<TokenizerToken> tokenizerTokens, int fromPos) throws LexerException;
 
 }

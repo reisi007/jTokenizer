@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 /**
  * Created by Florian on 12.11.2016.
  */
-public interface Lexer<TokenizerToken extends Token<String>, ReturnTokenType extends HirachialToken<?>> {
+public interface Lexer<TokenizerToken extends Token<String>, ReturnToken extends HirachialToken<?>> {
     Supplier<LexerException> GENERIC_LEXER_EXCEPTION = () -> new LexerException("The lexer does not support this file!");
 
     /**
@@ -16,7 +16,7 @@ public interface Lexer<TokenizerToken extends Token<String>, ReturnTokenType ext
      * @return A list of all recognized tokens
      * @throws LexerException Thrown e.g. when a construct in the Java file cannot be matched to a LexerRule
      */
-    ReturnTokenType lexFile(List<TokenizerToken> tokenizerTokens) throws LexerException;
+    ReturnToken lexFile(List<TokenizerToken> tokenizerTokens) throws LexerException;
 
     /**
      * Lexes from the position specified in {@code int fromPos}. It lexes and returns when one token is found.
@@ -27,7 +27,7 @@ public interface Lexer<TokenizerToken extends Token<String>, ReturnTokenType ext
      * @return Returns a {@see Lexer.LexingResult} object
      * @throws LexerException Thrown e.g. when no rule matches the list from the specific position
      */
-    LexingResult lexNext(List<TokenizerToken> tokenizerTokens, int fromPos) throws LexerException;
+    LexingResult<ReturnToken> lexNext(List<TokenizerToken> tokenizerTokens, int fromPos) throws LexerException;
 
     /**
      * @param <ReturnToken> The TokenType which is stored in this class.
