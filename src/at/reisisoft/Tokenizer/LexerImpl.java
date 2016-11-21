@@ -14,12 +14,10 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
     private final Supplier<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> fileRuleSupplier;
     private final Supplier<ReturnToken> error;
 
-    private final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules;
 
-    public LexerImpl(Supplier<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> fileRuleSupplier, Supplier<ReturnToken> error, List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules) {
+    public LexerImpl(Supplier<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> fileRuleSupplier, Supplier<ReturnToken> error) {
         this.fileRuleSupplier = fileRuleSupplier;
         this.error = error;
-        this.lexerRules = Collections.unmodifiableList(lexerRules);
     }
 
     @Override
@@ -40,9 +38,11 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
             int curPos = fileLexingResult.getNextArrayfromPos();
             if (curPos < 0)
                 throw GENERIC_LEXER_EXCEPTION.get();
+            TokenizerToken cur;
             while (curPos < tokenizerTokenTypes.size()) {
-                tokenizerTokenTypes.get(curPos);
-                errorToken.addChildren(tokenizerTokenTypes);
+                cur = tokenizerTokenTypes.get(curPos);
+                errorToken.addChildren(cur);
+                curPos++;
             }
             ReturnToken file = Objects.requireNonNull(fileLexingResult.getReturnToken());
             file.addChildren(errorToken);
@@ -52,14 +52,14 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
     }
 
     @Override
-    public LexingResult lexNext(List<TokenizerToken> tokenizerTokenTypes, int fromPos) throws LexerException {
-        final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> currentRole = getMatchingRule(tokenizerTokenTypes, fromPos)
+    public LexingResult<ReturnToken> lexNext(final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> callingRule, List<TokenizerToken> tokenizerTokenTypes, int fromPos) throws LexerException {
+        final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> currentRole = getMatchingRule(callingRule, tokenizerTokenTypes, fromPos)
                 .orElseThrow(() -> new LexerException("No rule found for token at index " + fromPos));
         return Objects.requireNonNull(currentRole.apply(this, tokenizerTokenTypes, fromPos));
     }
 
-    private Optional<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getMatchingRule(final List<TokenizerToken> tokenizerTokenList, final int fromPos) {
-        for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> rule : lexerRules) {
+    private Optional<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getMatchingRule(final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> callingRule, final List<TokenizerToken> tokenizerTokenList, final int fromPos) {
+        for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> rule : callingRule.getApplicableRules()) {
             boolean isApplicable = rule.isApplicable(tokenizerTokenList, fromPos);
             if (isApplicable) {
                 return Optional.of(rule);

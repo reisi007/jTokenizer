@@ -8,7 +8,7 @@ import at.reisisoft.Tokenizer.GenericTokenType;
  */
 public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenType> {
     ASSIGNMENT,
-    CLASS,
+    CLASS_OR_INTERFACE,
     DECLARATION,
     ERROR,
     FILE,

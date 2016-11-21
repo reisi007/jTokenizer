@@ -1,6 +1,5 @@
-package at.reisisoft.Tokeenizer.test.j8.files;
+package at.reisisoft.Tokeenizer.test.j8;
 
-import at.reisisoft.Tokeenizer.test.j8.TestHelper;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import org.junit.Test;
 

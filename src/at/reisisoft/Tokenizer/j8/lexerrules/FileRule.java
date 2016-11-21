@@ -2,25 +2,32 @@ package at.reisisoft.Tokenizer.j8.lexerrules;
 
 import at.reisisoft.Tokenizer.Lexer;
 import at.reisisoft.Tokenizer.LexerException;
+import at.reisisoft.Tokenizer.LexerRule;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Florian on 20.11.2016.
  */
 public class FileRule implements JavaLexerRule {
 
-    private static final List<JavaSimpleTokenType> acceptedStartTokens;
-    private static final List<JavaSimpleTokenType> fileBeginning;
+    private static JavaLexerRule instance = null;
 
-    static {
+    public static JavaLexerRule getInstance() {
+        if (instance == null) {
+            instance = new FileRule();
+        }
+        return instance;
+    }
+
+    private final List<JavaSimpleTokenType> acceptedStartTokens;
+    private final List<JavaSimpleTokenType> fileBeginning;
+
+    private FileRule() {
         List<JavaSimpleTokenType> fileStart = Arrays.asList(
                 JavaSimpleTokenType.PACKAGE,
                 JavaSimpleTokenType.IMPORT,
@@ -62,9 +69,14 @@ public class FileRule implements JavaLexerRule {
             fromPos++;
         }
         //Each Java file has exactly one class [class/@interface/interface] --> exactly one additional subelement
-        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(javaSimpleTokens, fromPos);
+        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(this, javaSimpleTokens, fromPos);
         fromPos = lexingResult.getNextArrayfromPos();
         advancedToken.addChildren(lexingResult.getReturnToken());
         return new Lexer.LexingResult<>(advancedToken, fromPos);
+    }
+
+    @Override
+    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
+        return Collections.singletonList(ClassRule.getInstance());
     }
 }
