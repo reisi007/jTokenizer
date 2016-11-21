@@ -7,7 +7,7 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TokenizerImpl<TokenType extends RegExTokenType<TokenType>, T extends Token<String>> implements Tokenizer<TokenType, T> {
+public class TokenizerImpl<TokenType extends RegExTokenType<TokenType>, T extends Token<String>> implements Tokenizer<T> {
 
     private final TokenType whitespace;
     private final BiFunction<TokenType, String, T> tokenConstructor;
