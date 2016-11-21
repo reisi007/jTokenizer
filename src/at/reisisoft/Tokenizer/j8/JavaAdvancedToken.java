@@ -44,6 +44,15 @@ public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> 
         return type;
     }
 
+    @Override
+    public void addChildren(Token<?, ?>... tokenTypes) {
+        if (tokenTypes != null && tokenTypes.length == 1) {
+            children.add(tokenTypes[0]);
+            return;
+        }
+        HirachialToken.super.addChildren(tokenTypes);
+    }
+
     /**
      * @see #getData()
      */
