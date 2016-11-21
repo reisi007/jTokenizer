@@ -3,7 +3,7 @@ package at.reisisoft.Tokenizer;
 /**
  * Created by Florian on 12.11.2016.
  */
-public interface GenericTokenType {
+public interface GenericTokenType<T extends GenericTokenType<T>> {
     /**
      * Get the name of the JavaSimpleToken
      *
@@ -16,5 +16,5 @@ public interface GenericTokenType {
      *
      * @return An array of all token types
      */
-    GenericTokenType[] getValues();
+    T[] getValues();
 }

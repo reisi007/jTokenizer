@@ -7,7 +7,7 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TokenizerImpl<TokenType extends RegExTokenType, T extends Token<String>> implements Tokenizer<TokenType, T> {
+public class TokenizerImpl<TokenType extends RegExTokenType<TokenType>, T extends Token<String>> implements Tokenizer<TokenType, T> {
 
     private final TokenType whitespace;
     private final BiFunction<TokenType, String, T> tokenConstructor;
@@ -23,10 +23,8 @@ public class TokenizerImpl<TokenType extends RegExTokenType, T extends Token<Str
         ArrayList<T> tokens = new ArrayList<>();
         // JavaTokenizerImpl logic begins here
         StringBuilder tokenPatternsBuffer = new StringBuilder();
-        /*
-         *  The user guarantees, that. See @at.reisisoft.TokenizerImpl.GenericTokenType#getValues
-         */
-        final TokenType[] tokenTypes = (TokenType[]) whitespace.getValues();
+
+        final TokenType[] tokenTypes = whitespace.getValues();
         for (TokenType tokenType : tokenTypes)
             tokenPatternsBuffer.append(String.format("|(?<%s>%s)", tokenType.getName(), tokenType.getPattern()));
         Pattern tokenPatterns = Pattern.compile(tokenPatternsBuffer.substring(1));

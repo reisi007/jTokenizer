@@ -9,7 +9,7 @@ import static at.reisisoft.Tokenizer.j8.JavaRegEx.LOOKAHEAD_END_OF_WORD;
  * All tokens which can directly be found in the Java Source. Names must not have underscores for some reason.
  * Declare the most common / cheapest first if dependencies allow that!
  */
-public enum JavaSimpleTokenType implements RegExTokenType {
+public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     WHITESPACE("\\s+"),
     SCOPESTART("\\{"),
     SCOPEEND("\\}"),
