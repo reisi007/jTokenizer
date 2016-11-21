@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 /**
  * Created by Florian on 12.11.2016.
  */
-public interface Lexer<TokenizerToken extends Token<String>, ReturnToken extends HirachialToken<?>> {
+public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerTokenType>, TokenizerToken extends Token<TokenizerTokenType, String>, ReturnToken extends HirachialToken<?>> {
     Supplier<LexerException> GENERIC_LEXER_EXCEPTION = () -> new LexerException("The lexer does not support this file!");
 
     /**

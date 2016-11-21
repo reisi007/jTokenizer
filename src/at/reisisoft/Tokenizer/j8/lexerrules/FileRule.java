@@ -46,7 +46,7 @@ public class FileRule implements JavaLexerRule {
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.FILE);
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
         if (fileBeginning.indexOf(simpleToken.getTokenType()) == -1) {

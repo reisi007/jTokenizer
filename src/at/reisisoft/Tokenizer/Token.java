@@ -3,13 +3,13 @@ package at.reisisoft.Tokenizer;
 /**
  * Created by Florian on 12.11.2016.
  */
-public interface Token<Data> {
+public interface Token<TokenType extends GenericTokenType<TokenType>, Data> {
 
     String getData();
 
     Data getRawData();
 
-    GenericTokenType getTokenType();
+    TokenType getTokenType();
 
     String toString();
 

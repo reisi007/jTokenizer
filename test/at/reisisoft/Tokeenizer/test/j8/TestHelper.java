@@ -9,6 +9,7 @@ import at.reisisoft.Tokenizer.j8.JavaTokenizerImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -26,7 +27,7 @@ public class TestHelper {
     public static ArrayList<JavaSimpleTokenType> doTokenizerTest(String filename, ArrayList<JavaSimpleTokenType> solution) {
         Tokenizer<JavaSimpleTokenType, JavaSimpleToken> lexar = new JavaTokenizerImpl();
         String file = FileLoader.getTestFile(filename);
-        final ArrayList<JavaSimpleToken> lexed = lexar.tokenize(file);
+        final List<JavaSimpleToken> lexed = lexar.tokenize(file);
         // assertEquals(solution.size(), lexed.size());
         JavaSimpleToken current;
         JavaSimpleTokenType expected;

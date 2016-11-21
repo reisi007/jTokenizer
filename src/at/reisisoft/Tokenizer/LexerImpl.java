@@ -9,14 +9,14 @@ import java.util.function.Supplier;
 /**
  * Created by Florian on 20.11.2016.
  */
-public class LexerImpl<TokenizerToken extends Token<String>, ReturnToken extends HirachialToken<?>> implements Lexer<TokenizerToken, ReturnToken> {
+public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerTokenType>, TokenizerToken extends Token<TokenizerTokenType, String>, ReturnToken extends HirachialToken<?>> implements Lexer<TokenizerTokenType, TokenizerToken, ReturnToken> {
 
-    private final Supplier<LexerRule<TokenizerToken, ReturnToken>> fileRuleSupplier;
+    private final Supplier<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> fileRuleSupplier;
     private final Supplier<ReturnToken> error;
 
-    private final List<LexerRule<TokenizerToken, ReturnToken>> lexerRules;
+    private final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules;
 
-    public LexerImpl(Supplier<LexerRule<TokenizerToken, ReturnToken>> fileRuleSupplier, Supplier<ReturnToken> error, List<LexerRule<TokenizerToken, ReturnToken>> lexerRules) {
+    public LexerImpl(Supplier<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> fileRuleSupplier, Supplier<ReturnToken> error, List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules) {
         this.fileRuleSupplier = fileRuleSupplier;
         this.error = error;
         this.lexerRules = Collections.unmodifiableList(lexerRules);
@@ -29,7 +29,7 @@ public class LexerImpl<TokenizerToken extends Token<String>, ReturnToken extends
         }
         //Make list readonly
         tokenizerTokenTypes = Collections.unmodifiableList(tokenizerTokenTypes);
-        final LexerRule<TokenizerToken, ReturnToken> fileRule = fileRuleSupplier.get();
+        final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> fileRule = fileRuleSupplier.get();
         if (!fileRule.isApplicable(tokenizerTokenTypes, 0)) {
             throw GENERIC_LEXER_EXCEPTION.get();
         }
@@ -53,13 +53,13 @@ public class LexerImpl<TokenizerToken extends Token<String>, ReturnToken extends
 
     @Override
     public LexingResult lexNext(List<TokenizerToken> tokenizerTokenTypes, int fromPos) throws LexerException {
-        final LexerRule<TokenizerToken, ReturnToken> currentRole = getMatchingRule(tokenizerTokenTypes, fromPos)
+        final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> currentRole = getMatchingRule(tokenizerTokenTypes, fromPos)
                 .orElseThrow(() -> new LexerException("No rule found for token at index " + fromPos));
         return Objects.requireNonNull(currentRole.apply(this, tokenizerTokenTypes, fromPos));
     }
 
-    private Optional<LexerRule<TokenizerToken, ReturnToken>> getMatchingRule(final List<TokenizerToken> tokenizerTokenList, final int fromPos) {
-        for (LexerRule<TokenizerToken, ReturnToken> rule : lexerRules) {
+    private Optional<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getMatchingRule(final List<TokenizerToken> tokenizerTokenList, final int fromPos) {
+        for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> rule : lexerRules) {
             boolean isApplicable = rule.isApplicable(tokenizerTokenList, fromPos);
             if (isApplicable) {
                 return Optional.of(rule);

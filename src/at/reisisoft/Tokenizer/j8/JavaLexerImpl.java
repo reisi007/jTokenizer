@@ -10,9 +10,9 @@ import java.util.function.Supplier;
 /**
  * Created by Florian on 20.11.2016.
  */
-public class JavaLexerImpl extends LexerImpl<JavaSimpleToken, JavaAdvancedToken> {
+public class JavaLexerImpl extends LexerImpl<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> {
 
-    public JavaLexerImpl(Supplier fileRuleSupplier, Supplier error, List<LexerRule<JavaSimpleToken, JavaAdvancedToken>> list) {
+    public JavaLexerImpl(Supplier fileRuleSupplier, Supplier error, List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> list) {
         super(FileRule::new, () -> new JavaAdvancedToken(JavaAdvancedTokenType.ERROR), list);
     }
 }
