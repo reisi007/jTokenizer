@@ -17,9 +17,9 @@ class JavaRegEx {
         if (supportedGenericsLevel == 0)
             return '(' + IDENTIFYER_ALLOWED_CHARS + ')';
         if (supportedGenericsLevel == 1)
-            return '(' + (IDENTIFYER_ALLOWED_CHARS + "(<" + IDENTIFYER_NON_GENERICS_CHAR) + ">)" + '|' + getIdentifyerRegex(0) + ')';
+            return '(' + (IDENTIFYER_ALLOWED_CHARS + "(\\s*?<" + IDENTIFYER_NON_GENERICS_CHAR) + ">\\s*?)" + '|' + getIdentifyerRegex(0) + ')';
         String oneGenericsLevelLower = getIdentifyerRegex(supportedGenericsLevel - 1);
-        return '(' + (IDENTIFYER_ALLOWED_CHARS) + "(<(" + oneGenericsLevelLower + ")?" + IDENTIFYER_NON_GENERICS_CHAR + '(' + oneGenericsLevelLower + ")?>)" + '|' + oneGenericsLevelLower + ')';
+        return '(' + (IDENTIFYER_ALLOWED_CHARS) + "(\\s*?<(" + oneGenericsLevelLower + ")?" + IDENTIFYER_NON_GENERICS_CHAR + '(' + oneGenericsLevelLower + ")?>\\s*?)" + '|' + oneGenericsLevelLower + ')';
     }
 
     public static void main(String[] args) {
