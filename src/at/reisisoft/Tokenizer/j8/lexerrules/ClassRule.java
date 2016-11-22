@@ -19,7 +19,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  */
 public class ClassRule implements JavaLexerRule {
 
-    private static JavaLexerRule instance = null;
+    private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {
         if (instance == null) {
@@ -29,12 +29,12 @@ public class ClassRule implements JavaLexerRule {
     }
 
     private ClassRule() {
-    }
 
+    }
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules = Collections.unmodifiableList(
             Arrays.asList(
-                    //TODO
+                    FunctionRule.getInstance()
             )
     );
 
@@ -55,7 +55,7 @@ public class ClassRule implements JavaLexerRule {
         inList = acceptToken.indexOf(tokenType) != -1;
         if (inList)
             return true;
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= 4 && (fromPos + i) < javaSimpleTokens.size(); i++) {
             tokenType = javaSimpleTokens.get(fromPos + i).getTokenType();
             inList = JavaSimpleTokenType.CLASS.equals(tokenType);
             if (inList)

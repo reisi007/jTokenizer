@@ -75,6 +75,11 @@ public class FileRule implements JavaLexerRule {
         return new Lexer.LexingResult<>(advancedToken, fromPos);
     }
 
+    /**
+     * For this implementation this function will not be called very often, in most cases only once!
+     *
+     * @return A list of lexing rules, which can be applied on File level.
+     */
     @Override
     public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
         return Collections.singletonList(ClassRule.getInstance());

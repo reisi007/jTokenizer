@@ -25,11 +25,10 @@ public class TestHelper {
         Tokenizer<JavaSimpleTokenType, JavaSimpleToken> lexar = new JavaTokenizerImpl();
         String file = FileLoader.getTestFile(filename);
         final List<JavaSimpleToken> lexed = lexar.tokenize(file);
-        // assertEquals(solution.size(), lexed.size());
         JavaSimpleToken current;
         JavaSimpleTokenType expected;
         GenericTokenType actual;
-        System.out.printf("%n%n== TokenizerTest ==%n%n");
+        System.out.printf("%n%n== TokenizerTest ==%nEXPECTED <==> ACTUAL%n%n");
         for (int i = 0; i < solution.size(); i++) {
             current = lexed.get(i);
             expected = solution.get(i);
@@ -46,7 +45,7 @@ public class TestHelper {
         final List<GenericTokenType<?>> actualTokens = explode(javaAdvancedToken);
         GenericTokenType<?> actual = null;
         GenericTokenType<?> expected = null;
-        System.out.printf("%n%n== LexerTest ==%n%n");
+        System.out.printf("%n%n== LexerTest ==%nEXPECTED <==> ACTUAL%n%n");
         for (int i = 0; i < solution.size(); i++) {
             actual = actualTokens.get(i);
             expected = solution.get(i);
