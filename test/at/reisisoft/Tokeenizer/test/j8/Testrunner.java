@@ -11,7 +11,8 @@ import org.junit.runners.Suite;
         Simple.class,
         Loops.class,
         Aritmetics.class,
-        Try.class
+        Try.class,
+        Lambda.class
 })
 public class Testrunner {
 }

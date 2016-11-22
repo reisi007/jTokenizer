@@ -1,0 +1,40 @@
+package at.reisisoft.Tokeenizer.test.j8;
+
+import java.io.Serializable;
+
+/**
+ * Created by Florian on 13.11.2016.
+ */
+public abstract class TMP implements Serializable {
+
+    public TMP() {
+
+    }
+
+    private TMP(String a) {
+
+    }
+
+    TMP(int u){
+
+    }
+
+    void do1() {
+
+    }
+
+    protected void try2() {
+
+    }
+
+    final void do3() {
+
+    };
+
+    public abstract String doDifferentStuff(String a, String b);
+
+    public static final void longSignatur(String... strings) {
+
+    }
+
+}

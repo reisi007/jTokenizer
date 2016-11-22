@@ -1,0 +1,4 @@
+    Supplier<String> empty = () -> "";
+    Function<String, String> simple = a -> a.toLowerCase();
+    BiFunction<String, String, Integer> totalLength = (a, b) -> a.length() + b.length();
+    Function<String,String> complicated = (String a) -> a.toUpperCase();

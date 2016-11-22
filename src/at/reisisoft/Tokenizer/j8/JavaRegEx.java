@@ -8,4 +8,22 @@ class JavaRegEx {
      * A pattern which performs a positive lookahead [without consuming the characters].
      */
     static final String LOOKAHEAD_END_OF_WORD = "(?=(\\s|\\{|\\(|;))";
+    private static final String IDENTIFYER_ALLOWED_CHARS = "[^\\s)(\\:,;<>]+";
+    private static final String IDENTIFYER_NON_GENERICS_CHAR = "[^<>]*";
+
+    public static String getIdentifyerRegex(int supportedGenericsLevel) {
+        if (supportedGenericsLevel < 0)
+            throw new IllegalArgumentException("supportedGenericsLevel must be >= 0");
+        if (supportedGenericsLevel == 0)
+            return '(' + IDENTIFYER_ALLOWED_CHARS + ')';
+        if (supportedGenericsLevel == 1)
+            return '(' + (IDENTIFYER_ALLOWED_CHARS + "(<" + IDENTIFYER_NON_GENERICS_CHAR) + ">)" + '|' + getIdentifyerRegex(0) + ')';
+        String oneGenericsLevelLower = getIdentifyerRegex(supportedGenericsLevel - 1);
+        return '(' + (IDENTIFYER_ALLOWED_CHARS) + "(<(" + oneGenericsLevelLower + ")?" + IDENTIFYER_NON_GENERICS_CHAR + '(' + oneGenericsLevelLower + ")?>)" + '|' + oneGenericsLevelLower + ')';
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i <= 5; i++)
+            System.out.println(getIdentifyerRegex(i));
+    }
 }

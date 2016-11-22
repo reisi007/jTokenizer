@@ -33,6 +33,7 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     ELSE("else" + LOOKAHEAD_END_OF_WORD),
     NEW("new" + LOOKAHEAD_END_OF_WORD),
     ABSTRACT("abstract" + LOOKAHEAD_END_OF_WORD),
+    LAMBDAARROW("->" + LOOKAHEAD_END_OF_WORD),
     BINARYEQUALITY("(!|=)="),
     ASSIGNMENT("([\\+\\-\\*\\/%&^\\|]|<{2}|>{2,3})?="),
     COLON(":"),
@@ -66,7 +67,15 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     BINARYRELATIONAL("(<=?|>=?|instanceof" + LOOKAHEAD_END_OF_WORD + ")"),
     BINARYLOGICAL("[\\|&]{2}"),
     BINARYBITWISE("[\\|\\^&]"),
-    IDENTIFYER("[^\\s)(\\:,;]+");
+    /* Maximal level of Generic support. The maximum generic depth
+    List is 0,
+    List<T> is one
+     List<List<Map<String,List<String>>>> is 4
+     Somewhere close to 13 is the limit (Java Heap space)
+     Until 10 the speed is okay
+     I am unsure whether the speed difference between 1 and 5 is noticable, so using 5.
+     */
+    IDENTIFYER(JavaRegEx.getIdentifyerRegex(5));
 
 
     private String pattern;
