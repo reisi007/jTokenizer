@@ -280,4 +280,73 @@ public class Simple {
         TestHelper.doLexerTest(tokens, lexerSolution);
     }
 
+    @Test
+    public void simpleDeclareInit() throws LexerException {
+        ArrayList<JavaSimpleTokenType> solution = TestHelper.getList(
+                PACKAGE,
+                COMMENTBLOCK,
+                CLASS,
+                IDENTIFYER,
+                SCOPESTART,
+                VISABILITY,
+                IDENTIFYER,
+                IDENTIFYER,
+                SEMICOLON,
+                VISABILITY,
+                FINAL,
+                STATIC,
+                IDENTIFYER,
+                IDENTIFYER,
+                JavaSimpleTokenType.ASSIGNMENT,
+                STRING,
+                SEMICOLON,
+                VISABILITY,
+                IDENTIFYER,
+                IDENTIFYER,
+                COMMA,
+                IDENTIFYER,
+                JavaSimpleTokenType.ASSIGNMENT,
+                IDENTIFYER,
+                SEMICOLON,
+                SCOPEEND
+        );
+
+        List<JavaSimpleToken> tokens = TestHelper.doTokenizerTest("simpleDeclareInit", solution);
+
+        ArrayList<GenericTokenType<?>> lexerSolution = TestHelper.getList(
+                FILE,
+                PACKAGE,
+                COMMENTBLOCK,
+                CLASS_OR_INTERFACE,
+                GENERIC_GROUP,
+                CLASS,
+                IDENTIFYER,
+                SCOPE,
+                SCOPESTART,
+                VISABILITY,
+                IDENTIFYER,
+                IDENTIFYER,
+                SEMICOLON,
+                VISABILITY,
+                FINAL,
+                STATIC,
+                IDENTIFYER,
+                IDENTIFYER,
+                JavaSimpleTokenType.ASSIGNMENT,
+                STRING,
+                SEMICOLON,
+                VISABILITY,
+                IDENTIFYER,
+                IDENTIFYER,
+                COMMA,
+                IDENTIFYER,
+                JavaSimpleTokenType.ASSIGNMENT,
+                IDENTIFYER,
+                SEMICOLON,
+                SCOPEEND
+        );
+        TestHelper.doLexerTest(tokens, lexerSolution);
+
+    }
+
 }

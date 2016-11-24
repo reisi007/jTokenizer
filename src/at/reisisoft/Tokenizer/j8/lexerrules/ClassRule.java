@@ -19,11 +19,27 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  */
 public class ClassRule implements JavaLexerRule {
 
+    private static List<JavaSimpleTokenType> optionalTokenTypes;
+
+    public ClassRule() {
+        if (optionalTokenTypes == null) {
+            optionalTokenTypes = Collections.unmodifiableList(
+                    Arrays.asList(
+                            JavaSimpleTokenType.VISABILITY,
+                            JavaSimpleTokenType.STATIC,
+                            JavaSimpleTokenType.FINAL,
+                            JavaSimpleTokenType.ABSTRACT,
+                            JavaSimpleTokenType.ANNOTATION
+                    )
+            );
+        }
+    }
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules = Collections.unmodifiableList(
             Arrays.asList(
                     UnnecessarySemicolonRule.getInstance(),
-                    new FunctionRule()
+                    new FunctionRule(),
+                    new DeclInitialRule()
             )
     );
 
@@ -37,20 +53,14 @@ public class ClassRule implements JavaLexerRule {
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
-        //If the element is not in the list -> inner class "@MyAnnotation static class XY" or "final class XY" -> lookahead if one of the next 4 tokens is class
-        JavaSimpleTokenType tokenType;
-        boolean inList;
-        tokenType = javaSimpleTokens.get(fromPos).getTokenType();
-        inList = acceptToken.indexOf(tokenType) != -1;
-        if (inList)
-            return true;
-        for (int i = 1; i <= 4 && (fromPos + i) < javaSimpleTokens.size(); i++) {
-            tokenType = javaSimpleTokens.get(fromPos + i).getTokenType();
-            inList = JavaSimpleTokenType.CLASS.equals(tokenType);
-            if (inList)
-                return true;
-        }
-        return false;
+        JavaSimpleToken cur;
+        while (fromPos < javaSimpleTokens.size()
+                && ((cur = javaSimpleTokens.get(fromPos)) != null)
+                && optionalTokenTypes.indexOf(cur.getTokenType()) >= 0)
+            fromPos++;
+        return fromPos < javaSimpleTokens.size()
+                && ((cur = javaSimpleTokens.get(fromPos)) != null)
+                && acceptToken.indexOf(cur.getTokenType()) >= 0;
     }
 
     @Override

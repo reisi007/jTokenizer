@@ -1,0 +1,12 @@
+package at.reisisoft.Tokeenizer.test.j8;
+
+/**
+ * Created by Florian on 13.11.2016.
+ */
+class TMP {
+
+    protected long y;
+    private final static String empty = "";
+    public int i, j = i;
+
+}

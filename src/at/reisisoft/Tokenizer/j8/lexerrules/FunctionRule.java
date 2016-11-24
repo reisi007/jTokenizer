@@ -34,7 +34,9 @@ public class FunctionRule implements JavaLexerRule {
                     JavaSimpleTokenType.VISABILITY,
                     JavaSimpleTokenType.STATIC,
                     JavaSimpleTokenType.ABSTRACT,
-                    JavaSimpleTokenType.FINAL
+                    JavaSimpleTokenType.FINAL,
+                    JavaSimpleTokenType.ABSTRACT,
+                    JavaSimpleTokenType.ANNOTATION
             );
         }
         if (headLexerRules == null) {
