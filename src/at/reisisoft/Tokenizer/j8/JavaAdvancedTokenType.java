@@ -15,6 +15,7 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     FILE,
     FUNCTION,
     GENERIC_GROUP,
+    ROUND_BRACKETS,
     SCOPE,
     STATEMENT;
 

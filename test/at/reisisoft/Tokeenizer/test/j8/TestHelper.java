@@ -33,7 +33,7 @@ public class TestHelper {
             current = lexed.get(i);
             expected = solution.get(i);
             actual = current.getTokenType();
-            System.out.println(expected + " <==> " + actual);
+            System.out.println(i + ") " + expected + " <==> " + actual);
             assertEquals(expected, actual);
         }
         return lexed;
@@ -49,7 +49,7 @@ public class TestHelper {
         for (int i = 0; i < solution.size(); i++) {
             actual = actualTokens.get(i);
             expected = solution.get(i);
-            System.out.println(expected + " <==> " + actual);
+            System.out.println(i + ") " + expected + " <==> " + actual);
             assertEquals(expected, actual);
         }
     }
