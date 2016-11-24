@@ -15,7 +15,8 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     FILE,
     FUNCTION,
     GENERIC_GROUP,
-    SCOPE;
+    SCOPE,
+    STATEMENT;
 
     @Override
     public String getName() {

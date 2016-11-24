@@ -19,22 +19,11 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  */
 public class ClassRule implements JavaLexerRule {
 
-    private static JavaLexerRule instance;
-
-    public static JavaLexerRule getInstance() {
-        if (instance == null) {
-            instance = new ClassRule();
-        }
-        return instance;
-    }
-
-    private ClassRule() {
-
-    }
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules = Collections.unmodifiableList(
             Arrays.asList(
-                    FunctionRule.getInstance()
+                    UnnecessarySemicolonRule.getInstance(),
+                    new FunctionRule()
             )
     );
 

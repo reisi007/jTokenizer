@@ -15,27 +15,24 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
 /**
  * Created by Florian on 22.11.2016.
+ * As {@link FunctionRule} uses dynamic rules in {@link FunctionRule#getApplicableRules()} we must not use
  */
 public class FunctionRule implements JavaLexerRule {
 
-    private static JavaLexerRule instance;
 
-    public static JavaLexerRule getInstance() {
-        if (instance == null) {
-            instance = new FunctionRule();
+    private static List<JavaSimpleTokenType> acceptTokenTypes;
+
+    public FunctionRule() {
+        if (acceptTokenTypes == null) {
+            acceptTokenTypes = Arrays.asList(
+                    JavaSimpleTokenType.VISABILITY,
+                    JavaSimpleTokenType.STATIC,
+                    JavaSimpleTokenType.ABSTRACT,
+                    JavaSimpleTokenType.FINAL
+            );
         }
-        return instance;
     }
 
-    private final List<JavaSimpleTokenType> acceptTokenTypes = Arrays.asList(
-            JavaSimpleTokenType.VISABILITY,
-            JavaSimpleTokenType.STATIC,
-            JavaSimpleTokenType.ABSTRACT,
-            JavaSimpleTokenType.FINAL
-    );
-
-    private FunctionRule() {
-    }
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> tokens, int fromPos) {
@@ -83,7 +80,7 @@ public class FunctionRule implements JavaLexerRule {
         //The tokenType of cur is BRACKETROUNDSTART, cntIdentifyer is either 1 or 2
         JavaAdvancedTokenType functionOrConstructor = cntIdentifyer == 1 ? JavaAdvancedTokenType.CONSTRUCTOR : JavaAdvancedTokenType.FUNCTION;
         JavaAdvancedToken mainToken = new JavaAdvancedToken(functionOrConstructor, functionHead);
-        //TODO Parse parameters, put them in functionHead, then check if it has a body. If so, parse the body. Do not forget to check if a ; is after }
+        //TODO Parse parameters, put them in functionHead, then check if it has a body. If so, parse the body. Do not forget to check if a necessary ; is after }
         return new Lexer.LexingResult<>(mainToken, fromPos);
     }
 

@@ -8,42 +8,42 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Florian on 20.11.2016.
  */
 public class FileRule implements JavaLexerRule {
 
-    private static JavaLexerRule instance = null;
+    private static List<JavaSimpleTokenType> acceptedStartTokens;
+    private static List<JavaSimpleTokenType> fileBeginning;
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = new ArrayList<>();
 
-    public static JavaLexerRule getInstance() {
-        if (instance == null) {
-            instance = new FileRule();
+    public FileRule() {
+        if (fileBeginning == null) {
+            fileBeginning = Arrays.asList(
+                    JavaSimpleTokenType.PACKAGE,
+                    JavaSimpleTokenType.IMPORT,
+                    JavaSimpleTokenType.COMMENTBLOCK,
+                    JavaSimpleTokenType.COMMENTLINE
+            );
         }
-        return instance;
-    }
-
-    private final List<JavaSimpleTokenType> acceptedStartTokens;
-    private final List<JavaSimpleTokenType> fileBeginning;
-
-    private FileRule() {
-        List<JavaSimpleTokenType> fileStart = Arrays.asList(
-                JavaSimpleTokenType.PACKAGE,
-                JavaSimpleTokenType.IMPORT,
-                JavaSimpleTokenType.COMMENTBLOCK,
-                JavaSimpleTokenType.COMMENTLINE
-        );
-        fileBeginning = fileStart;
-        Collection<JavaSimpleTokenType> additionalElements = Arrays.asList(
-                JavaSimpleTokenType.VISABILITY,
-                JavaSimpleTokenType.CLASS,
-                JavaSimpleTokenType.INTERFACE
-        );
-
-        List<JavaSimpleTokenType> startTokens = new ArrayList<>(fileStart);
-        startTokens.addAll(additionalElements);
-        acceptedStartTokens = startTokens;
+        if (acceptedStartTokens == null) {
+            acceptedStartTokens = new ArrayList<>(
+                    Arrays.asList(
+                            JavaSimpleTokenType.VISABILITY,
+                            JavaSimpleTokenType.CLASS,
+                            JavaSimpleTokenType.INTERFACE
+                    )
+            );
+            acceptedStartTokens.addAll(fileBeginning);
+        }
+        subrules.add(UnnecessarySemicolonRule.getInstance());
+        subrules.add(new ClassRule());
+        subrules = Collections.unmodifiableList(subrules);
     }
 
     @Override
@@ -82,6 +82,6 @@ public class FileRule implements JavaLexerRule {
      */
     @Override
     public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return Collections.singletonList(ClassRule.getInstance());
+        return subrules;
     }
 }
