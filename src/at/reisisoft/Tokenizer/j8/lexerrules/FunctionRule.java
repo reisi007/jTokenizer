@@ -35,8 +35,7 @@ public class FunctionRule implements JavaLexerRule {
                     JavaSimpleTokenType.STATIC,
                     JavaSimpleTokenType.ABSTRACT,
                     JavaSimpleTokenType.FINAL,
-                    JavaSimpleTokenType.ABSTRACT,
-                    JavaSimpleTokenType.ANNOTATION
+                    JavaSimpleTokenType.ABSTRACT
             );
         }
         if (headLexerRules == null) {

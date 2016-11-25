@@ -20,6 +20,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 public class ClassRule implements JavaLexerRule {
 
     private static List<JavaSimpleTokenType> optionalTokenTypes;
+    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules;
 
     public ClassRule() {
         if (optionalTokenTypes == null) {
@@ -28,20 +29,22 @@ public class ClassRule implements JavaLexerRule {
                             JavaSimpleTokenType.VISABILITY,
                             JavaSimpleTokenType.STATIC,
                             JavaSimpleTokenType.FINAL,
-                            JavaSimpleTokenType.ABSTRACT,
-                            JavaSimpleTokenType.ANNOTATION
+                            JavaSimpleTokenType.ABSTRACT
+                    )
+            );
+        }
+        if (subRules == null) {
+            subRules = Collections.unmodifiableList(
+                    Arrays.asList(
+                            AnnotationRule.getInstance(),
+                            UnnecessarySemicolonRule.getInstance(),
+                            new FunctionRule(),
+                            new DeclInitialRule()
                     )
             );
         }
     }
 
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules = Collections.unmodifiableList(
-            Arrays.asList(
-                    UnnecessarySemicolonRule.getInstance(),
-                    new FunctionRule(),
-                    new DeclInitialRule()
-            )
-    );
 
     private final List<JavaSimpleTokenType> acceptToken = Collections.unmodifiableList(
             Arrays.asList(

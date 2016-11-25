@@ -23,8 +23,7 @@ public class DeclInitialRule implements JavaLexerRule {
                     Arrays.asList(
                             JavaSimpleTokenType.VISABILITY,
                             JavaSimpleTokenType.STATIC,
-                            JavaSimpleTokenType.FINAL,
-                            JavaSimpleTokenType.ANNOTATION
+                            JavaSimpleTokenType.FINAL
                     )
             );
         }
@@ -40,7 +39,7 @@ public class DeclInitialRule implements JavaLexerRule {
         if ((fromPos + 3) >= javaSimpleTokens.size())
             return false;
         int i;
-        for (i = 0; i <= 2; i++) {
+        for (i = 0; i < 2; i++) {
             if (!JavaSimpleTokenType.IDENTIFYER.equals(javaSimpleTokens.get(fromPos + i).getTokenType()))
                 return false;
         }

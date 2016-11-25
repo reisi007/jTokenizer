@@ -20,7 +20,7 @@ public class FileRule implements JavaLexerRule {
 
     private static List<JavaSimpleTokenType> acceptedStartTokens;
     private static List<JavaSimpleTokenType> fileBeginning;
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = new ArrayList<>();
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
 
     public FileRule() {
         if (fileBeginning == null) {
@@ -41,9 +41,13 @@ public class FileRule implements JavaLexerRule {
             );
             acceptedStartTokens.addAll(fileBeginning);
         }
-        subrules.add(UnnecessarySemicolonRule.getInstance());
-        subrules.add(new ClassRule());
-        subrules = Collections.unmodifiableList(subrules);
+        subrules = Collections.unmodifiableList(
+                Arrays.asList(
+                        UnnecessarySemicolonRule.getInstance(),
+                        AnnotationRule.getInstance(),
+                        new ClassRule()
+                )
+        );
     }
 
     @Override

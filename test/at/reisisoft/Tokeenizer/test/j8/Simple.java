@@ -2,6 +2,7 @@ package at.reisisoft.Tokeenizer.test.j8;
 
 import at.reisisoft.Tokenizer.GenericTokenType;
 import at.reisisoft.Tokenizer.LexerException;
+import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import org.junit.Test;
@@ -109,6 +110,7 @@ public class Simple {
                 BRACKETROUNDEND,
                 SCOPESTART,
                 SCOPEEND,
+                JavaSimpleTokenType.ANNOTATION,
                 IDENTIFYER,
                 IDENTIFYER,
                 BRACKETROUNDSTART,
@@ -208,6 +210,9 @@ public class Simple {
                 SCOPE,
                 SCOPESTART,
                 SCOPEEND,
+                GENERIC_GROUP,
+                JavaAdvancedTokenType.ANNOTATION,
+                JavaSimpleTokenType.ANNOTATION,
                 FUNCTION,
                 GENERIC_GROUP,
                 IDENTIFYER,
