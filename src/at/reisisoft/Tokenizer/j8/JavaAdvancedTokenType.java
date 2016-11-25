@@ -9,13 +9,17 @@ import at.reisisoft.Tokenizer.GenericTokenType;
 public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenType> {
     ANNOTATION,
     ASSIGNMENT,
+    BINARY_OPERATOR,
     CLASS_OR_INTERFACE,
+    CONSTANT_OR_VARIABLE,
     CONSTRUCTOR,
     DECLARATION,
     ERROR,
+    EXPRESSION,
     FILE,
     FUNCTION,
     GENERIC_GROUP,
+    LAMBDA,
     ROUND_BRACKETS,
     SCOPE,
     STATEMENT;

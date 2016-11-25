@@ -31,4 +31,11 @@ public interface LexerRule<TokenizerTokenType extends GenericTokenType<Tokenizer
      */
     List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getApplicableRules();
 
+    default boolean isAnyRuleApplicable(List<TokenizerToken> tokenizerTokens, int fromPos) {
+        for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> cur : getApplicableRules())
+            if (cur.isApplicable(tokenizerTokens, fromPos))
+                return true;
+        return false;
+    }
+
 }

@@ -8,7 +8,6 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,17 +34,19 @@ public class FunctionRule implements JavaLexerRule {
                     JavaSimpleTokenType.STATIC,
                     JavaSimpleTokenType.ABSTRACT,
                     JavaSimpleTokenType.FINAL,
-                    JavaSimpleTokenType.ABSTRACT
+                    JavaSimpleTokenType.DEFAULT
             );
         }
         if (headLexerRules == null) {
             headLexerRules = Collections.singletonList(ParameterRule.getInstance());
         }
         if (bodyLexerRules == null) {
-            bodyLexerRules = new ArrayList<>();
             // TODO add body rules and add them
-            bodyLexerRules.add(UnnecessarySemicolonRule.getInstance());
-            bodyLexerRules = Collections.unmodifiableList(bodyLexerRules);
+            bodyLexerRules = Collections.unmodifiableList(
+                    Arrays.asList(
+                            UnnecessarySemicolonRule.getInstance()
+                    )
+            );
         }
     }
 
