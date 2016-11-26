@@ -2,7 +2,6 @@ package at.reisisoft.Tokenizer.j8.lexerrules;
 
 import at.reisisoft.Tokenizer.Lexer;
 import at.reisisoft.Tokenizer.LexerException;
-import at.reisisoft.Tokenizer.LexerRule;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
@@ -39,7 +38,6 @@ public class ClassRule implements JavaLexerRule {
     }
 
     private List<JavaSimpleTokenType> optionalTokenTypes;
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules;
 
     private final List<JavaSimpleTokenType> acceptToken = Collections.unmodifiableList(
             Arrays.asList(
@@ -63,21 +61,10 @@ public class ClassRule implements JavaLexerRule {
 
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
-        //Start init rules
-        if (subRules == null) {
-            subRules = Collections.unmodifiableList(
-                    Arrays.asList(
-                            AnnotationRule.getInstance(),
-                            UnnecessarySemicolonRule.getInstance(),
-                            FunctionRule.getInstance(),
-                            DeclInitialRule.getInstance()
-                    )
-            );
-        }
-        //End init rules
+
         JavaAdvancedToken classToken = new JavaAdvancedToken(JavaAdvancedTokenType.CLASS_OR_INTERFACE);
         JavaAdvancedToken classHeader = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
-        JavaAdvancedToken classBody = new JavaAdvancedToken(JavaAdvancedTokenType.SCOPE);
+
         JavaSimpleToken current = null;
         while (fromPos < javaSimpleTokens.size()
                 && (current = javaSimpleTokens.get(fromPos)) != null
@@ -85,25 +72,11 @@ public class ClassRule implements JavaLexerRule {
             classHeader.addChildren(current);
             fromPos++;
         }
-        fromPos++; //The token after SCOPESTART
-        if (!(fromPos < javaSimpleTokens.size()) || current == null)
+        if (!(fromPos < javaSimpleTokens.size()) || !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();
-        classToken.addChildren(classHeader, classBody);
-        //Make the class body
-        classBody.addChildren(current);
-        current = javaSimpleTokens.get(fromPos);
-        while (!JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType())) {
-            final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subRules, javaSimpleTokens, fromPos);
-            fromPos = lexingResult.getNextArrayfromPos();
-            if (fromPos < 0 || fromPos >= javaSimpleTokens.size()) {
-                throw GENERIC_LEXER_EXCEPTION.get();
-            }
-            classBody.addChildren(lexingResult.getReturnToken());
-            current = javaSimpleTokens.get(fromPos);
-        }
-        // We here can assert, that current has a SCOPEEND tokentyp
-        classBody.addChildren(current);
-        fromPos++;
+        Lexer.LexingResult<JavaAdvancedToken> classBodyLexingResult = lexer.lexNext(Collections.singletonList(ClassBodyRule.getInstance()), javaSimpleTokens, fromPos);
+        fromPos = classBodyLexingResult.getNextArrayfromPos();
+        classToken.addChildren(classHeader, classBodyLexingResult.getReturnToken());
         return new Lexer.LexingResult<>(classToken, fromPos);
     }
 }

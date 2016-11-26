@@ -78,10 +78,12 @@ public class FileRule implements JavaLexerRule {
             advancedToken.addChildren(simpleToken);
             fromPos++;
         }
-        //Each Java file has exactly one class [class/@interface/interface] --> exactly one additional subelement
-        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
-        fromPos = lexingResult.getNextArrayfromPos();
-        advancedToken.addChildren(lexingResult.getReturnToken());
+
+        while (fromPos < javaSimpleTokens.size()) {
+            final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
+            fromPos = lexingResult.getNextArrayfromPos();
+            advancedToken.addChildren(lexingResult.getReturnToken());
+        }
         return new Lexer.LexingResult<>(advancedToken, fromPos);
     }
 }
