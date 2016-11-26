@@ -31,6 +31,7 @@ public class FunctionRule implements JavaLexerRule {
 
     private FunctionRule() {
         acceptTokenTypes = Arrays.asList(
+                JavaSimpleTokenType.IDENTIFYER,
                 JavaSimpleTokenType.VISABILITY,
                 JavaSimpleTokenType.STATIC,
                 JavaSimpleTokenType.ABSTRACT,
@@ -47,37 +48,17 @@ public class FunctionRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> tokens, int fromPos) {
+    public boolean isApplicable(List<JavaSimpleToken> tokens, final int origFromPos) {
+        int fromPos = origFromPos;
         JavaSimpleToken cur = tokens.get(fromPos);
-        //Optional things
         while (acceptTokenTypes.indexOf(cur.getTokenType()) >= 0) {
             fromPos++;
             if (fromPos >= tokens.size())
                 return false;
             cur = tokens.get(fromPos);
         }
-        //Next we need an identifier (Class name if constructor, otherwise return type)
-        if (!JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType()))
-            return false;
-        fromPos++;
-        if (fromPos >= tokens.size())
-            return false;
-        cur = tokens.get(fromPos);
-        if (JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType()))
-            return true;
-        if (!JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType()))
-            return false;
-        fromPos++;
-        if (fromPos >= tokens.size())
-            return false;
-        cur = tokens.get(fromPos);
-        if (JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType()))
-            return true;
-        fromPos++;
-        if (fromPos >= tokens.size())
-            return false;
-        cur = tokens.get(fromPos);
-        return JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType());
+        return JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType())
+                && origFromPos < fromPos;
     }
 
     @Override

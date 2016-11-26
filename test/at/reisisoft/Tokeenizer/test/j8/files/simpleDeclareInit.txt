@@ -7,6 +7,6 @@ class TMP {
 
     protected long y;
     private final static String empty = "";
-    public int i, j = i;
+    public int i =( 11 ), j = i;
 
 }

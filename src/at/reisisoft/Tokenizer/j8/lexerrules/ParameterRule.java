@@ -56,7 +56,7 @@ public class ParameterRule implements JavaLexerRule {
         }
         if (!JavaSimpleTokenType.BRACKETROUNDSTART.equals(curToken.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();
-        JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.ROUND_BRACKETS, curToken);
+        JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.BRACKETS_ROUND, curToken);
         final List<JavaSimpleTokenType> endParam = Arrays.asList(JavaSimpleTokenType.COMMA, JavaSimpleTokenType.BRACKETROUNDEND);
         boolean searchNext = fromPos < tokens.size();
         if (!searchNext)

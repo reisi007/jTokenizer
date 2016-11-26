@@ -30,7 +30,7 @@ public class BracketRule implements JavaLexerRule {
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> rules;
 
     private BracketRule() {
-            rules = Collections.singletonList(ExpressionRule.getInstance());
+        rules = Collections.singletonList(ExpressionRule.getInstance());
     }
 
     @Override
@@ -43,7 +43,7 @@ public class BracketRule implements JavaLexerRule {
         JavaSimpleToken current = javaSimpleTokens.get(fromPos);
         if (!JavaSimpleTokenType.BRACKETROUNDSTART.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();
-        JavaAdvancedToken brackets = new JavaAdvancedToken(JavaAdvancedTokenType.ROUND_BRACKETS, current);
+        JavaAdvancedToken brackets = new JavaAdvancedToken(JavaAdvancedTokenType.BRACKETS_ROUND, current);
         fromPos++;
         Lexer.LexingResult<JavaAdvancedToken> curLexingResult;
         do {
@@ -51,7 +51,7 @@ public class BracketRule implements JavaLexerRule {
             brackets.addChildren(curLexingResult.getReturnToken());
             fromPos = curLexingResult.getNextArrayfromPos();
             current = javaSimpleTokens.get(fromPos);
-        } while (JavaSimpleTokenType.BRACKETROUNDEND.equals(current.getTokenType()));
+        } while (!JavaSimpleTokenType.BRACKETROUNDEND.equals(current.getTokenType()));
         fromPos++;
         brackets.addChildren(current);
         //TODO postfix check

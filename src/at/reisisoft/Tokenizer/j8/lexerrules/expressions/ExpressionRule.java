@@ -42,7 +42,7 @@ public class ExpressionRule implements JavaLexerRule {
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
         //Start init rules
-        if (subrules != null) {
+        if (subrules == null) {
             subrules = Collections.unmodifiableList(
                     Arrays.asList(
                             LambdaRule.getInstance(),
@@ -66,14 +66,13 @@ public class ExpressionRule implements JavaLexerRule {
                 throw GENERIC_LEXER_EXCEPTION.get();
             curToken = javaSimpleTokens.get(fromPos);
         } while (!isEndReached(curToken));
-        expression.addChildren(curToken);
-        fromPos++;
         return new Lexer.LexingResult<>(expression, fromPos);
     }
 
     private boolean isEndReached(JavaSimpleToken tokenType) {
         return tokenType == null
                 || JavaSimpleTokenType.COMMA.equals(tokenType.getTokenType())
-                || JavaSimpleTokenType.SEMICOLON.equals(tokenType.getTokenType());
+                || JavaSimpleTokenType.SEMICOLON.equals(tokenType.getTokenType())
+                || JavaSimpleTokenType.BRACKETROUNDEND.equals(tokenType.getTokenType());
     }
 }

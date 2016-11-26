@@ -11,27 +11,23 @@ import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import java.util.List;
 
 /**
- * Created by Florian on 25.11.2016.
+ * Created by Florian on 26.11.2016.
  */
-public class ConstantVariableRule implements JavaLexerRule {
-    private static JavaLexerRule instance;
-
-    public static JavaLexerRule getInstance() {
-        if (instance == null)
-            instance = new ConstantVariableRule();
-        return instance;
-    }
-
+public class CastRule implements JavaLexerRule {
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
-        JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
-        return JavaSimpleTokenType.STRING.equals(curToken.getTokenType())
-                || JavaSimpleTokenType.IDENTIFYER.equals(curToken.getTokenType())
-                || JavaSimpleTokenType.NUMBER.equals(curToken.getTokenType());
+        if (fromPos + 2 >= javaSimpleTokens.size())
+            return false;
+        return JavaSimpleTokenType.BRACKETROUNDSTART.equals(javaSimpleTokens.get(fromPos).getTokenType())
+                && JavaSimpleTokenType.IDENTIFYER.equals(javaSimpleTokens.get(fromPos + 1))
+                && JavaSimpleTokenType.BRACKETROUNDEND.equals(javaSimpleTokens.get(fromPos + 2));
     }
 
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
-        return new Lexer.LexingResult<>(new JavaAdvancedToken(JavaAdvancedTokenType.CONSTANT_OR_VARIABLE, javaSimpleTokens.get(fromPos)), fromPos + 1);
+        return new Lexer.LexingResult<>(
+                new JavaAdvancedToken(JavaAdvancedTokenType.CAST, javaSimpleTokens.get(fromPos), javaSimpleTokens.get(fromPos + 1), javaSimpleTokens.get(fromPos + 2))
+                , fromPos + 3
+        );
     }
 }
