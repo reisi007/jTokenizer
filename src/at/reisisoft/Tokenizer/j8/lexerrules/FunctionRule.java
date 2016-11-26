@@ -71,6 +71,12 @@ public class FunctionRule implements JavaLexerRule {
         if (fromPos >= tokens.size())
             return false;
         cur = tokens.get(fromPos);
+        if (JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType()))
+            return true;
+        fromPos++;
+        if (fromPos >= tokens.size())
+            return false;
+        cur = tokens.get(fromPos);
         return JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType());
     }
 
