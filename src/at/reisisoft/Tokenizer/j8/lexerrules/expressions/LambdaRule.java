@@ -19,8 +19,21 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  * Created by Florian on 25.11.2016.
  */
 public class LambdaRule implements JavaLexerRule {
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> leftRules = Collections.singletonList(ParameterRule.getInstance()),
-            rightRules = Collections.singletonList(ExpressionRule.getInstance()), curRules = leftRules;
+    private static JavaLexerRule instance;
+
+    public static JavaLexerRule getInstance() {
+        if (instance == null)
+            instance = new LambdaRule();
+        return instance;
+    }
+
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>>
+            leftRules = Collections.singletonList(ParameterRule.getInstance()),
+            rightRules = Collections.singletonList(ExpressionRule.getInstance());
+
+    private LambdaRule() {
+
+    }
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
@@ -54,7 +67,7 @@ public class LambdaRule implements JavaLexerRule {
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.LAMBDA);
-        Lexer.LexingResult<JavaAdvancedToken> leftSideLexingResult = lexer.lexNext(this, javaSimpleTokens, fromPos);
+        Lexer.LexingResult<JavaAdvancedToken> leftSideLexingResult = lexer.lexNext(leftRules, javaSimpleTokens, fromPos);
         fromPos = leftSideLexingResult.getNextArrayfromPos();
         advancedToken.addChildren(leftSideLexingResult.getReturnToken());
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
@@ -71,8 +84,7 @@ public class LambdaRule implements JavaLexerRule {
             // If we have a scope we should add to it
             advancedToken = scope;
         }
-        curRules = rightRules;
-        Lexer.LexingResult<JavaAdvancedToken> rightSide = lexer.lexNext(this, javaSimpleTokens, fromPos);
+        Lexer.LexingResult<JavaAdvancedToken> rightSide = lexer.lexNext(rightRules, javaSimpleTokens, fromPos);
         advancedToken.addChildren(rightSide.getReturnToken());
         fromPos = rightSide.getNextArrayfromPos();
         if (JavaAdvancedTokenType.SCOPE.equals(advancedToken.getTokenType())) {
@@ -83,10 +95,5 @@ public class LambdaRule implements JavaLexerRule {
             fromPos++;
         }
         return new Lexer.LexingResult<>(advancedToken, fromPos);
-    }
-
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return curRules;
     }
 }

@@ -2,11 +2,9 @@ package at.reisisoft.Tokenizer.j8.lexerrules;
 
 import at.reisisoft.Tokenizer.Lexer;
 import at.reisisoft.Tokenizer.LexerException;
-import at.reisisoft.Tokenizer.LexerRule;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
-import at.reisisoft.Tokenizer.j8.lexerrules.expressions.ExpressionRule;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,9 +14,17 @@ import java.util.List;
  * Created by Florian on 24.11.2016.
  */
 public class DeclInitialRule implements JavaLexerRule {
-    private static List<JavaSimpleTokenType> optionalTokenTypes;
+    private List<JavaSimpleTokenType> optionalTokenTypes;
 
-    public DeclInitialRule() {
+    private static JavaLexerRule instance;
+
+    public static JavaLexerRule getInstance() {
+        if (instance == null)
+            instance = new DeclInitialRule();
+        return instance;
+    }
+
+    private DeclInitialRule() {
         if (optionalTokenTypes == null) {
             optionalTokenTypes = Collections.unmodifiableList(
                     Arrays.asList(
@@ -53,10 +59,5 @@ public class DeclInitialRule implements JavaLexerRule {
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
         return null; //TODO
-    }
-
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return Collections.singletonList(ExpressionRule.getInstance());
     }
 }

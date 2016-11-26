@@ -22,13 +22,13 @@ public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerToke
      * Lexes from the position specified in {@code int fromPos}. It lexes and returns when one token is found.
      * This operation can be greedy, which means that not the smallest possible token should be returned, but the largest possible
      *
-     * @param callingRule     The context (= rule) for which the {@code tokenizerTokens} should be eveluated
+     * @param currentRules    The rules for which the {@code tokenizerTokens} should be evaluated against
      * @param tokenizerTokens The tokens from the tokenizer
      * @param fromPos         The position in the array the pattern should be found
      * @return Returns a {@see Lexer.LexingResult} object
      * @throws LexerException Thrown e.g. when no rule matches the list from the specific position
      */
-    LexingResult<ReturnToken> lexNext(final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> callingRule, final List<TokenizerToken> tokenizerTokens, int fromPos) throws LexerException;
+    LexingResult<ReturnToken> lexNext(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> currentRules, final List<TokenizerToken> tokenizerTokens, int fromPos) throws LexerException;
 
     /**
      * @param <ReturnToken> The TokenType which is stored in this class.

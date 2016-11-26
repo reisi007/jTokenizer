@@ -26,16 +26,4 @@ public interface LexerRule<TokenizerTokenType extends GenericTokenType<Tokenizer
      */
     Lexer.LexingResult<ReturnToken> apply(final Lexer<TokenizerTokenType, TokenizerToken, ReturnToken> lexer, List<TokenizerToken> tokenizerTokens, int fromPos) throws LexerException;
 
-    /**
-     * @return A list of rules, which could be applied
-     */
-    List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getApplicableRules();
-
-    default boolean isAnyRuleApplicable(List<TokenizerToken> tokenizerTokens, int fromPos) {
-        for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> cur : getApplicableRules())
-            if (cur.isApplicable(tokenizerTokens, fromPos))
-                return true;
-        return false;
-    }
-
 }

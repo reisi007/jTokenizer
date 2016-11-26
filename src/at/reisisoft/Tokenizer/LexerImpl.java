@@ -52,14 +52,14 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
     }
 
     @Override
-    public LexingResult<ReturnToken> lexNext(final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> callingRule, List<TokenizerToken> tokenizerTokenTypes, int fromPos) throws LexerException {
-        final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> currentRole = getMatchingRule(callingRule, tokenizerTokenTypes, fromPos)
+    public LexingResult<ReturnToken> lexNext(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules, List<TokenizerToken> tokenizerTokenTypes, int fromPos) throws LexerException {
+        final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> currentRole = getMatchingRule(lexerRules, tokenizerTokenTypes, fromPos)
                 .orElseThrow(() -> new LexerException("No rule found for token at index " + fromPos));
         return Objects.requireNonNull(currentRole.apply(this, tokenizerTokenTypes, fromPos));
     }
 
-    private Optional<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getMatchingRule(final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> callingRule, final List<TokenizerToken> tokenizerTokenList, final int fromPos) {
-        for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> rule : callingRule.getApplicableRules()) {
+    private Optional<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getMatchingRule(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules, final List<TokenizerToken> tokenizerTokenList, final int fromPos) {
+        for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> rule : lexerRules) {
             boolean isApplicable = rule.isApplicable(tokenizerTokenList, fromPos);
             if (isApplicable) {
                 return Optional.of(rule);

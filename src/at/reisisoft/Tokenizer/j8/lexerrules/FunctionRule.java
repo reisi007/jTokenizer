@@ -16,40 +16,35 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
 /**
  * Created by Florian on 22.11.2016.
- * As {@link FunctionRule} uses dynamic rules in {@link FunctionRule#getApplicableRules()} we must not use
  */
 public class FunctionRule implements JavaLexerRule {
+    private static JavaLexerRule instance;
 
-
-    private static List<JavaSimpleTokenType> acceptTokenTypes;
-    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> headLexerRules;
-    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> bodyLexerRules;
-
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> currentRules;
-
-    public FunctionRule() {
-        if (acceptTokenTypes == null) {
-            acceptTokenTypes = Arrays.asList(
-                    JavaSimpleTokenType.VISABILITY,
-                    JavaSimpleTokenType.STATIC,
-                    JavaSimpleTokenType.ABSTRACT,
-                    JavaSimpleTokenType.FINAL,
-                    JavaSimpleTokenType.DEFAULT
-            );
-        }
-        if (headLexerRules == null) {
-            headLexerRules = Collections.singletonList(ParameterRule.getInstance());
-        }
-        if (bodyLexerRules == null) {
-            // TODO add body rules and add them
-            bodyLexerRules = Collections.unmodifiableList(
-                    Arrays.asList(
-                            UnnecessarySemicolonRule.getInstance()
-                    )
-            );
-        }
+    public static JavaLexerRule getInstance() {
+        if (instance == null)
+            instance = new FunctionRule();
+        return instance;
     }
 
+    private List<JavaSimpleTokenType> acceptTokenTypes;
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> headLexerRules, bodyLexerRules;
+
+    private FunctionRule() {
+        acceptTokenTypes = Arrays.asList(
+                JavaSimpleTokenType.VISABILITY,
+                JavaSimpleTokenType.STATIC,
+                JavaSimpleTokenType.ABSTRACT,
+                JavaSimpleTokenType.FINAL,
+                JavaSimpleTokenType.DEFAULT
+        );
+        headLexerRules = Collections.singletonList(ParameterRule.getInstance());
+        // TODO add body rules and add them
+        bodyLexerRules = Collections.unmodifiableList(
+                Arrays.asList(
+                        UnnecessarySemicolonRule.getInstance()
+                )
+        );
+    }
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> tokens, int fromPos) {
@@ -79,9 +74,8 @@ public class FunctionRule implements JavaLexerRule {
         return JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType());
     }
 
-    // Needs to be synchronized, as we have a state here, which is accessible via #getApplicableRules
     @Override
-    public synchronized Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> tokens, int fromPos) throws LexerException {
+    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> tokens, int fromPos) throws LexerException {
         JavaAdvancedToken functionHead = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
         int cntIdentifyer = 0;
         JavaSimpleToken cur = null;
@@ -98,8 +92,7 @@ public class FunctionRule implements JavaLexerRule {
         //The tokenType of cur is BRACKETROUNDSTART, cntIdentifyer is either 1 or 2
         JavaAdvancedTokenType functionOrConstructor = cntIdentifyer == 1 ? JavaAdvancedTokenType.CONSTRUCTOR : JavaAdvancedTokenType.FUNCTION;
         JavaAdvancedToken mainToken = new JavaAdvancedToken(functionOrConstructor, functionHead);
-        currentRules = headLexerRules;
-        Lexer.LexingResult<JavaAdvancedToken> functionHeadLexingResult = lexer.lexNext(this, tokens, fromPos);
+        Lexer.LexingResult<JavaAdvancedToken> functionHeadLexingResult = lexer.lexNext(headLexerRules, tokens, fromPos);
         fromPos = functionHeadLexingResult.getNextArrayfromPos();
         functionHead.addChildren(functionHeadLexingResult.getReturnToken());
         //Check if a semicolon is next -> abstract method
@@ -117,9 +110,8 @@ public class FunctionRule implements JavaLexerRule {
             mainToken.addChildren(functionBody);
             // Peek at next element -> If not SCOPEEND do subparsing.
             simpleToken = tokens.get(fromPos);
-            currentRules = bodyLexerRules;
             while (!JavaSimpleTokenType.SCOPEEND.equals(simpleToken.getTokenType())) {
-                Lexer.LexingResult<JavaAdvancedToken> bodyLexingResult = lexer.lexNext(this, tokens, fromPos);
+                Lexer.LexingResult<JavaAdvancedToken> bodyLexingResult = lexer.lexNext(bodyLexerRules, tokens, fromPos);
                 fromPos = bodyLexingResult.getNextArrayfromPos();
                 if (fromPos >= tokens.size())
                     throw GENERIC_LEXER_EXCEPTION.get();
@@ -130,10 +122,5 @@ public class FunctionRule implements JavaLexerRule {
             fromPos++;
         }
         return new Lexer.LexingResult<>(mainToken, fromPos);
-    }
-
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return currentRules;
     }
 }

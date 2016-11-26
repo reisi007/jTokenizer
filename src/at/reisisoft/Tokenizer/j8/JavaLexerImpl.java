@@ -9,6 +9,6 @@ import at.reisisoft.Tokenizer.j8.lexerrules.FileRule;
 public class JavaLexerImpl extends LexerImpl<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> {
 
     public JavaLexerImpl() {
-        super(FileRule::new, () -> new JavaAdvancedToken(JavaAdvancedTokenType.ERROR));
+        super(FileRule::getInstance, () -> new JavaAdvancedToken(JavaAdvancedTokenType.ERROR));
     }
 }

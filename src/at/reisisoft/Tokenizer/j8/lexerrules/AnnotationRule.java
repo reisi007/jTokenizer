@@ -18,7 +18,15 @@ import java.util.List;
 public class AnnotationRule implements JavaLexerRule {
 
     private static JavaLexerRule instance;
-    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.unmodifiableList(
+            Arrays.asList(
+                    this,
+                    ClassRule.getInstance(),
+                    FunctionRule.getInstance(),
+                    DeclInitialRule.getInstance()
+            )
+    );
+    ;
 
     public static JavaLexerRule getInstance() {
         if (instance == null)
@@ -37,15 +45,7 @@ public class AnnotationRule implements JavaLexerRule {
 
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
-        subrules = Collections.unmodifiableList(
-                Arrays.asList(
-                        getInstance(),
-                        new ClassRule(),
-                        new FunctionRule(),
-                        new DeclInitialRule()
-                )
-        );
-        //TODO quick implementation, maybe add more scope
+        //TODO quick implementation, maybe add more scopes
         JavaAdvancedToken annotation = new JavaAdvancedToken(JavaAdvancedTokenType.ANNOTATION),
                 container = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP, annotation);
         JavaSimpleToken current = javaSimpleTokens.get(fromPos);
@@ -74,14 +74,9 @@ public class AnnotationRule implements JavaLexerRule {
         }
 
         //On what is the annotation defined?
-        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(this, javaSimpleTokens, fromPos);
+        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
         fromPos = lexingResult.getNextArrayfromPos();
         container.addChildren(lexingResult.getReturnToken());
         return new Lexer.LexingResult<>(container, fromPos);
-    }
-
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return subrules;
     }
 }

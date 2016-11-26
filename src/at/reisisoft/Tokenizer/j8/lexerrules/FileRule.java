@@ -18,34 +18,40 @@ import java.util.List;
  */
 public class FileRule implements JavaLexerRule {
 
-    private static List<JavaSimpleTokenType> acceptedStartTokens;
-    private static List<JavaSimpleTokenType> fileBeginning;
+    private static JavaLexerRule instance;
+
+    public static JavaLexerRule getInstance() {
+        if (instance == null)
+            instance = new FileRule();
+        return instance;
+    }
+
+    private List<JavaSimpleTokenType> acceptedStartTokens;
+    private List<JavaSimpleTokenType> fileBeginning;
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
 
-    public FileRule() {
-        if (fileBeginning == null) {
-            fileBeginning = Arrays.asList(
-                    JavaSimpleTokenType.PACKAGE,
-                    JavaSimpleTokenType.IMPORT,
-                    JavaSimpleTokenType.COMMENTBLOCK,
-                    JavaSimpleTokenType.COMMENTLINE
-            );
-        }
-        if (acceptedStartTokens == null) {
-            acceptedStartTokens = new ArrayList<>(
-                    Arrays.asList(
-                            JavaSimpleTokenType.VISABILITY,
-                            JavaSimpleTokenType.CLASS,
-                            JavaSimpleTokenType.INTERFACE
-                    )
-            );
-            acceptedStartTokens.addAll(fileBeginning);
-        }
+    private FileRule() {
+        fileBeginning = Arrays.asList(
+                JavaSimpleTokenType.PACKAGE,
+                JavaSimpleTokenType.IMPORT,
+                JavaSimpleTokenType.COMMENTBLOCK,
+                JavaSimpleTokenType.COMMENTLINE
+        );
+
+        acceptedStartTokens = new ArrayList<>(
+                Arrays.asList(
+                        JavaSimpleTokenType.VISABILITY,
+                        JavaSimpleTokenType.CLASS,
+                        JavaSimpleTokenType.INTERFACE
+                )
+        );
+        acceptedStartTokens.addAll(fileBeginning);
+
         subrules = Collections.unmodifiableList(
                 Arrays.asList(
                         UnnecessarySemicolonRule.getInstance(),
                         AnnotationRule.getInstance(),
-                        new ClassRule()
+                        ClassRule.getInstance()
                 )
         );
     }
@@ -53,7 +59,7 @@ public class FileRule implements JavaLexerRule {
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
         JavaSimpleTokenType current = javaSimpleTokens.get(0).getTokenType();
-        return acceptedStartTokens.indexOf(current) >= 0;
+        return fromPos == 0 && acceptedStartTokens.indexOf(current) >= 0;
     }
 
     @Override
@@ -73,19 +79,9 @@ public class FileRule implements JavaLexerRule {
             fromPos++;
         }
         //Each Java file has exactly one class [class/@interface/interface] --> exactly one additional subelement
-        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(this, javaSimpleTokens, fromPos);
+        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
         fromPos = lexingResult.getNextArrayfromPos();
         advancedToken.addChildren(lexingResult.getReturnToken());
         return new Lexer.LexingResult<>(advancedToken, fromPos);
-    }
-
-    /**
-     * For this implementation this function will not be called very often, in most cases only once!
-     *
-     * @return A list of lexing rules, which can be applied on File level.
-     */
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return subrules;
     }
 }

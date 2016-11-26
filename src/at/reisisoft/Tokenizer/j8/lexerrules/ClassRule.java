@@ -19,32 +19,27 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  */
 public class ClassRule implements JavaLexerRule {
 
-    private static List<JavaSimpleTokenType> optionalTokenTypes;
-    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules;
+    private static JavaLexerRule instance;
 
-    public ClassRule() {
-        if (optionalTokenTypes == null) {
-            optionalTokenTypes = Collections.unmodifiableList(
-                    Arrays.asList(
-                            JavaSimpleTokenType.VISABILITY,
-                            JavaSimpleTokenType.STATIC,
-                            JavaSimpleTokenType.FINAL,
-                            JavaSimpleTokenType.ABSTRACT
-                    )
-            );
-        }
-        if (subRules == null) {
-            subRules = Collections.unmodifiableList(
-                    Arrays.asList(
-                            AnnotationRule.getInstance(),
-                            UnnecessarySemicolonRule.getInstance(),
-                            new FunctionRule(),
-                            new DeclInitialRule()
-                    )
-            );
-        }
+    public static JavaLexerRule getInstance() {
+        if (instance == null)
+            instance = new ClassRule();
+        return instance;
     }
 
+    private ClassRule() {
+        optionalTokenTypes = Collections.unmodifiableList(
+                Arrays.asList(
+                        JavaSimpleTokenType.VISABILITY,
+                        JavaSimpleTokenType.STATIC,
+                        JavaSimpleTokenType.FINAL,
+                        JavaSimpleTokenType.ABSTRACT
+                )
+        );
+    }
+
+    private List<JavaSimpleTokenType> optionalTokenTypes;
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules;
 
     private final List<JavaSimpleTokenType> acceptToken = Collections.unmodifiableList(
             Arrays.asList(
@@ -68,6 +63,18 @@ public class ClassRule implements JavaLexerRule {
 
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+        //Start init rules
+        if (subRules == null) {
+            subRules = Collections.unmodifiableList(
+                    Arrays.asList(
+                            AnnotationRule.getInstance(),
+                            UnnecessarySemicolonRule.getInstance(),
+                            FunctionRule.getInstance(),
+                            DeclInitialRule.getInstance()
+                    )
+            );
+        }
+        //End init rules
         JavaAdvancedToken classToken = new JavaAdvancedToken(JavaAdvancedTokenType.CLASS_OR_INTERFACE);
         JavaAdvancedToken classHeader = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
         JavaAdvancedToken classBody = new JavaAdvancedToken(JavaAdvancedTokenType.SCOPE);
@@ -86,7 +93,7 @@ public class ClassRule implements JavaLexerRule {
         classBody.addChildren(current);
         current = javaSimpleTokens.get(fromPos);
         while (!JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType())) {
-            final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(this, javaSimpleTokens, fromPos);
+            final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subRules, javaSimpleTokens, fromPos);
             fromPos = lexingResult.getNextArrayfromPos();
             if (fromPos < 0 || fromPos >= javaSimpleTokens.size()) {
                 throw GENERIC_LEXER_EXCEPTION.get();
@@ -98,10 +105,5 @@ public class ClassRule implements JavaLexerRule {
         classBody.addChildren(current);
         fromPos++;
         return new Lexer.LexingResult<>(classToken, fromPos);
-    }
-
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return subRules;
     }
 }

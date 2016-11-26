@@ -12,7 +12,6 @@ import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
@@ -33,29 +32,34 @@ public class ExpressionRule implements JavaLexerRule {
     private ExpressionRule() {
     }
 
-    private static final Supplier<List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>>> subrules = () -> Collections.unmodifiableList(
-            Arrays.asList(
-                    new LambdaRule(),
-                    new BracketRule(),
-                    new NewRule()
-            )
-    );
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
-        //return fromPos > 0 && JavaSimpleTokenType.ASSIGNMENT.equals(javaSimpleTokens.get(fromPos - 1).getTokenType());
         return true;
     }
 
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+        //Start init rules
+        if (subrules != null) {
+            subrules = Collections.unmodifiableList(
+                    Arrays.asList(
+                            LambdaRule.getInstance(),
+                            BracketRule.getInstance(),
+                            NewRule.getInstance(),
+                            ConstantVariableRule.getInstance()
+                    )
+            );
+        }
+        //End init rules
         JavaAdvancedToken expression = new JavaAdvancedToken(JavaAdvancedTokenType.EXPRESSION);
         JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
         if (isEndReached(curToken))
             throw GENERIC_LEXER_EXCEPTION.get();
         Lexer.LexingResult<JavaAdvancedToken> curLexingResult;
         do {
-            curLexingResult = lexer.lexNext(this, javaSimpleTokens, fromPos);
+            curLexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
             expression.addChildren(curLexingResult.getReturnToken());
             fromPos = curLexingResult.getNextArrayfromPos();
             if (fromPos > javaSimpleTokens.size())
@@ -65,11 +69,6 @@ public class ExpressionRule implements JavaLexerRule {
         expression.addChildren(curToken);
         fromPos++;
         return new Lexer.LexingResult<>(expression, fromPos);
-    }
-
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return subrules.get();
     }
 
     private boolean isEndReached(JavaSimpleToken tokenType) {

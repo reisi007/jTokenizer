@@ -19,12 +19,18 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  */
 public class BracketRule implements JavaLexerRule {
 
-    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> rules;
+    public static JavaLexerRule instance;
 
-    public BracketRule() {
-        if (rules == null) {
+    public static JavaLexerRule getInstance() {
+        if (instance == null)
+            instance = new BracketRule();
+        return instance;
+    }
+
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> rules;
+
+    private BracketRule() {
             rules = Collections.singletonList(ExpressionRule.getInstance());
-        }
     }
 
     @Override
@@ -41,7 +47,7 @@ public class BracketRule implements JavaLexerRule {
         fromPos++;
         Lexer.LexingResult<JavaAdvancedToken> curLexingResult;
         do {
-            curLexingResult = lexer.lexNext(this, javaSimpleTokens, fromPos);
+            curLexingResult = lexer.lexNext(rules, javaSimpleTokens, fromPos);
             brackets.addChildren(curLexingResult.getReturnToken());
             fromPos = curLexingResult.getNextArrayfromPos();
             current = javaSimpleTokens.get(fromPos);
@@ -52,8 +58,4 @@ public class BracketRule implements JavaLexerRule {
         return new Lexer.LexingResult<>(brackets, fromPos);
     }
 
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return rules;
-    }
 }

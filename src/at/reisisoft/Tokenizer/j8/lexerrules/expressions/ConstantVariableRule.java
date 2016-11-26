@@ -2,14 +2,12 @@ package at.reisisoft.Tokenizer.j8.lexerrules.expressions;
 
 import at.reisisoft.Tokenizer.Lexer;
 import at.reisisoft.Tokenizer.LexerException;
-import at.reisisoft.Tokenizer.LexerRule;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,10 +32,5 @@ public class ConstantVariableRule implements JavaLexerRule {
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
         return new Lexer.LexingResult<>(new JavaAdvancedToken(JavaAdvancedTokenType.CONSTANT_OR_VARIABLE, javaSimpleTokens.get(fromPos)), fromPos + 1);
-    }
-
-    @Override
-    public List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getApplicableRules() {
-        return Collections.emptyList();
     }
 }
