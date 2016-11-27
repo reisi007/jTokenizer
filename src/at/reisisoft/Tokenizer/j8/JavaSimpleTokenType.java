@@ -99,4 +99,8 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     public boolean isConstantOrVariable() {
         return STRING.equals(this) || IDENTIFYER.equals(this) || NUMBER.equals(this);
     }
+
+    public boolean isComment() {
+        return COMMENTBLOCK.equals(this) || COMMENTLINE.equals(this);
+    }
 }

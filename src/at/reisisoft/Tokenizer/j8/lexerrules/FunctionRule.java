@@ -33,7 +33,9 @@ public class FunctionRule implements JavaLexerRule {
             JavaSimpleTokenType.STATIC,
             JavaSimpleTokenType.ABSTRACT,
             JavaSimpleTokenType.FINAL,
-            JavaSimpleTokenType.DEFAULT
+            JavaSimpleTokenType.DEFAULT,
+            JavaSimpleTokenType.COMMENTBLOCK,
+            JavaSimpleTokenType.COMMENTLINE
     );
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> headLexerRules = Collections.unmodifiableList(
             Arrays.asList(
@@ -99,6 +101,9 @@ public class FunctionRule implements JavaLexerRule {
             } else if (!JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType()))
                 throw GENERIC_LEXER_EXCEPTION.get();
             //Function has a body -> parse it
+            if (simpleToken.getTokenType().isComment()) {
+                fromPos = RuleUtils.addSimpleToken(mainToken, lexer, javaSimpleTokens, fromPos);
+            }
             Lexer.LexingResult<JavaAdvancedToken> functionBody = lexer.lexNext(Collections.singletonList(GenericScope.getInstace()), javaSimpleTokens, fromPos);
             fromPos = functionBody.getNextArrayfromPos();
             mainToken.addChildren(functionBody.getReturnToken());

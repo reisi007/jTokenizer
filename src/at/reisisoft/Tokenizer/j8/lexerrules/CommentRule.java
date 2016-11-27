@@ -26,7 +26,7 @@ public class CommentRule implements JavaLexerRule {
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
-        return isValidToken(javaSimpleTokens.get(fromPos).getTokenType());
+        return javaSimpleTokens.get(fromPos).getTokenType().isComment();
     }
 
     @Override
@@ -37,15 +37,10 @@ public class CommentRule implements JavaLexerRule {
         JavaSimpleToken cur;
         while (fromPos < javaSimpleTokens.size()
                 && (cur = javaSimpleTokens.get(fromPos)) != null
-                && isValidToken(cur.getTokenType())) {
+                && cur.getTokenType().isComment()) {
             comment.addChildren(cur);
             fromPos++;
         }
         return new Lexer.LexingResult<>(comment, fromPos);
     }
-
-    private boolean isValidToken(JavaSimpleTokenType token) {
-        return JavaSimpleTokenType.COMMENTBLOCK.equals(token) || JavaSimpleTokenType.COMMENTLINE.equals(token);
-    }
-
 }

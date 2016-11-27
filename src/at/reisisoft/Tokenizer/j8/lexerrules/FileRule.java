@@ -41,7 +41,9 @@ public class FileRule implements JavaLexerRule {
     private FileRule() {
         fileBeginning = Arrays.asList(
                 JavaSimpleTokenType.PACKAGE,
-                JavaSimpleTokenType.IMPORT
+                JavaSimpleTokenType.IMPORT,
+                JavaSimpleTokenType.COMMENTBLOCK,
+                JavaSimpleTokenType.COMMENTLINE
         );
 
         acceptedStartTokens = new ArrayList<>(
@@ -67,14 +69,10 @@ public class FileRule implements JavaLexerRule {
         if (fileBeginning.indexOf(simpleToken.getTokenType()) == -1) {
             throw Lexer.GENERIC_LEXER_EXCEPTION.get();
         }
-        advancedToken.addChildren(simpleToken);
-        fromPos++;
-
         while (fromPos < javaSimpleTokens.size()
                 && (simpleToken = javaSimpleTokens.get(fromPos)) != null
                 && fileBeginning.indexOf(simpleToken.getTokenType()) != -1) {
-            advancedToken.addChildren(simpleToken);
-            fromPos++;
+            fromPos = RuleUtils.addSimpleToken(advancedToken, lexer, javaSimpleTokens, fromPos);
         }
 
         while (fromPos < javaSimpleTokens.size()) {

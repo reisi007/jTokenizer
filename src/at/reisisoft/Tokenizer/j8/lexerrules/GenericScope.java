@@ -48,6 +48,7 @@ public class GenericScope implements JavaLexerRule {
                     Arrays.asList(
                             UnnecessarySemicolonRule.getInstance(),
                             GenericScope.getInstace(),
+                            CommentRule.getInstance(),
                             StatementRule.getInstance()
                     )
             );
@@ -71,7 +72,7 @@ public class GenericScope implements JavaLexerRule {
             current = javaSimpleTokens.get(fromPos);
             scope.addChildren(lexingResult.getReturnToken(), current);
         }
-        if (!JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType()))
+        if (current == null || !JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();
         scope.addChildren(current);
         fromPos++;

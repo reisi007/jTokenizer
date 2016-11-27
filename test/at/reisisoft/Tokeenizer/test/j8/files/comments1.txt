@@ -1,0 +1,43 @@
+/*
+Comment
+ */
+package at.reisisoft.Tokeenizer.test.j8;
+
+//Comment
+
+/**
+ * Created by Florian on 13.11.2016.
+ */
+public // comment
+class /*comment*/ TMP
+//Comment
+{
+    //Comment
+    public /*Constructor*/ TMP /* Not again **/(/*No args found*/) {
+        //Empty :D
+    }
+
+    private /*static*/ final /*warte*/ int /*es kommt gleich*/ i /*legend*/ = //ary LEGENDARY*/
+            1 //SEMICOLON
+            ;
+
+    public
+            //auch hier?
+    enum /*OMG*/ OMG {
+        TEST /*Es kommt gleich*/, TEST2 //Und dieses Mal kein Semicolon!!!
+    }
+
+    @Override(/*nooo*/)
+    //Fehlen doch nur noch Funktionen
+    public /*static*/ String
+    //MUHAHAHAHA
+    toString /*LOL*/ (
+            //No args found
+    ) /**/{
+        //NO RETURN. BECAUSE /me can
+        ;
+    }
+
+}
+//Comment
+//Another comment

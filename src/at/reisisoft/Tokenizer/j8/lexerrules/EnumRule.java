@@ -30,11 +30,13 @@ public class EnumRule implements JavaLexerRule {
     private final List<JavaSimpleTokenType> optionalTokenTypes = Collections.unmodifiableList(
             Arrays.asList(
                     JavaSimpleTokenType.VISABILITY,
-                    JavaSimpleTokenType.STATIC
+                    JavaSimpleTokenType.STATIC,
+                    JavaSimpleTokenType.COMMENTLINE,
+                    JavaSimpleTokenType.COMMENTBLOCK
             )
     );
 
-    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> expressionRule = Collections.singletonList(ExpressionRule.getInstance());
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> enumListRules = Collections.singletonList(ExpressionRule.getInstance());
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> bodySubRules;
 
     private EnumRule() {
@@ -55,14 +57,13 @@ public class EnumRule implements JavaLexerRule {
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken enumHead = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP),
-                enumBody = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP),
+                enumBody = new JavaAdvancedToken(JavaAdvancedTokenType.SCOPE),
                 enumTotal = new JavaAdvancedToken(JavaAdvancedTokenType.ENUM, enumHead, enumBody);
         JavaSimpleToken current = null;
         while (fromPos < javaSimpleTokens.size()
                 && (current = javaSimpleTokens.get(fromPos)) != null
-                && JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType())) {
-            enumHead.addChildren(current);
-            fromPos++;
+                && !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType())) {
+            fromPos = RuleUtils.addSimpleToken(enumHead, lexer, javaSimpleTokens, fromPos);
         }
         if (fromPos + 1 >= javaSimpleTokens.size() || current == null || !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();
@@ -77,32 +78,35 @@ public class EnumRule implements JavaLexerRule {
             enumBody.addChildren(enumElementDecleration);
             Lexer.LexingResult<JavaAdvancedToken> curLexingResult;
             JavaAdvancedToken curLexingResultToken;
-            while (!JavaSimpleTokenType.SEMICOLON.equals(current.getTokenType())) {
-                curLexingResult = lexer.lexNext(expressionRule, javaSimpleTokens, fromPos);
+            while (!(JavaSimpleTokenType.SEMICOLON.equals(current.getTokenType()) || JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType()))) {
+                curLexingResult = lexer.lexNext(enumListRules, javaSimpleTokens, fromPos);
                 fromPos = curLexingResult.getNextArrayfromPos();
                 curLexingResultToken = curLexingResult.getReturnToken();
                 current = javaSimpleTokens.get(fromPos);
                 if (JavaSimpleTokenType.COMMA.equals(current.getTokenType())) {
                     curLexingResultToken.addChildren(current);
-                    current = javaSimpleTokens.get(fromPos + 1);
+                    fromPos++;
+                    current = javaSimpleTokens.get(fromPos);
                 }
-                enumElementDecleration.addChildren(curLexingResultToken);
+                enumElementDecleration.addChildren(curLexingResultToken.getChildren());
             }
             enumElementDecleration.addChildren(current);
-            curLexingResultToken = null; //Hard fail
             fromPos++;
-            current = javaSimpleTokens.get(fromPos);
-            //Start init rules
-            if (bodySubRules == null) {
-                bodySubRules = ClassRule.getClassBodyRules();
+            curLexingResultToken = null; //Hard fail
+            if (!JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType())) {
+                current = javaSimpleTokens.get(fromPos);
+                //Start init rules
+                if (bodySubRules == null) {
+                    bodySubRules = ClassRule.getClassBodyRules();
+                }
+                //End init rules
+                while (!JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType())) {
+                    curLexingResult = lexer.lexNext(bodySubRules, javaSimpleTokens, fromPos);
+                    enumBody.addChildren(curLexingResult.getReturnToken());
+                    fromPos = curLexingResult.getNextArrayfromPos();
+                }
+                enumBody.addChildren(current);
             }
-            //End init rules
-            while (!JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType())) {
-                curLexingResult = lexer.lexNext(bodySubRules, javaSimpleTokens, fromPos);
-                enumBody.addChildren(curLexingResult.getReturnToken());
-                fromPos = curLexingResult.getNextArrayfromPos();
-            }
-            enumBody.addChildren(current);
             fromPos++;
         }
         return new Lexer.LexingResult<>(enumTotal, fromPos);

@@ -50,7 +50,9 @@ public class ClassRule implements JavaLexerRule {
                     JavaSimpleTokenType.VISABILITY,
                     JavaSimpleTokenType.STATIC,
                     JavaSimpleTokenType.FINAL,
-                    JavaSimpleTokenType.ABSTRACT
+                    JavaSimpleTokenType.ABSTRACT,
+                    JavaSimpleTokenType.COMMENTLINE,
+                    JavaSimpleTokenType.COMMENTBLOCK
             )
     );
 

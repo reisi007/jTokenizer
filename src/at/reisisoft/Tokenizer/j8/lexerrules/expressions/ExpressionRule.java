@@ -74,10 +74,11 @@ public class ExpressionRule implements JavaLexerRule {
         return new Lexer.LexingResult<>(expression, fromPos);
     }
 
-    private boolean isEndReached(JavaSimpleToken tokenType) {
-        return tokenType == null
-                || JavaSimpleTokenType.COMMA.equals(tokenType.getTokenType())
-                || JavaSimpleTokenType.SEMICOLON.equals(tokenType.getTokenType())
-                || JavaSimpleTokenType.BRACKETROUNDEND.equals(tokenType.getTokenType());
+    private boolean isEndReached(JavaSimpleToken token) {
+        return token == null
+                || JavaSimpleTokenType.COMMA.equals(token.getTokenType())
+                || JavaSimpleTokenType.SEMICOLON.equals(token.getTokenType())
+                || JavaSimpleTokenType.BRACKETROUNDEND.equals(token.getTokenType())
+                || JavaSimpleTokenType.SCOPEEND.equals(token.getTokenType());
     }
 }

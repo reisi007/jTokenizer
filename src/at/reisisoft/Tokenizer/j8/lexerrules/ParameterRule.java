@@ -33,15 +33,7 @@ public class ParameterRule implements JavaLexerRule {
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> tokens, int fromPos) {
-        JavaSimpleToken cur = tokens.get(fromPos);
-        boolean found = JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType());
-        if (found)
-            return true;
-        fromPos++;
-        if (fromPos >= tokens.size())
-            return false;
-        cur = tokens.get(fromPos);
-        return JavaSimpleTokenType.LAMBDAARROW.equals(cur.getTokenType());
+        return true;
     }
 
     @Override

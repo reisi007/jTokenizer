@@ -62,6 +62,14 @@ public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerToke
         public void setNextArrayfromPos(int nextArrayfromPos) {
             this.nextArrayfromPos = nextArrayfromPos;
         }
+
+        @Override
+        public String toString() {
+            return "LexingResult{" +
+                    "returnToken=" + returnToken +
+                    ", nextArrayfromPos=" + nextArrayfromPos +
+                    '}';
+        }
     }
 
 }

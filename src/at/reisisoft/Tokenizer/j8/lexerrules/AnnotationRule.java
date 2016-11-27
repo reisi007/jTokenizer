@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Florian on 25.11.2016.
+ * Created by Florian on 25.11.2016. FIXME Comments#comment1 fails here -> redo this
  */
 public class AnnotationRule implements JavaLexerRule {
 
