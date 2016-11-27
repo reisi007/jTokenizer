@@ -44,6 +44,7 @@ public class ClassBodyRule implements JavaLexerRule {
             subRules = Collections.unmodifiableList(
                     Arrays.asList(
                             AnnotationRule.getInstance(),
+                            GenericScope.getInstace(),
                             UnnecessarySemicolonRule.getInstance(),
                             FunctionRule.getInstance(),
                             DeclInitialRule.getInstance()

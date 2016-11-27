@@ -39,12 +39,7 @@ public class FunctionRule implements JavaLexerRule {
                 JavaSimpleTokenType.DEFAULT
         );
         headLexerRules = Collections.singletonList(ParameterRule.getInstance());
-        // TODO add body rules and add them
-        bodyLexerRules = Collections.unmodifiableList(
-                Arrays.asList(
-                        UnnecessarySemicolonRule.getInstance()
-                )
-        );
+
     }
 
     @Override
@@ -86,27 +81,18 @@ public class FunctionRule implements JavaLexerRule {
         if (fromPos >= tokens.size())
             throw GENERIC_LEXER_EXCEPTION.get();
         JavaSimpleToken simpleToken = tokens.get(fromPos);
-        fromPos++;
         if (JavaSimpleTokenType.SEMICOLON.equals(simpleToken.getTokenType())) {
             mainToken.addChildren(simpleToken);
-        } else {
-            //Function has a body -> parse it
-            if (!JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType()))
-                throw GENERIC_LEXER_EXCEPTION.get();
-            JavaAdvancedToken functionBody = new JavaAdvancedToken(JavaAdvancedTokenType.SCOPE, simpleToken);
-            mainToken.addChildren(functionBody);
-            // Peek at next element -> If not SCOPEEND do subparsing.
-            simpleToken = tokens.get(fromPos);
-            while (!JavaSimpleTokenType.SCOPEEND.equals(simpleToken.getTokenType())) {
-                Lexer.LexingResult<JavaAdvancedToken> bodyLexingResult = lexer.lexNext(bodyLexerRules, tokens, fromPos);
-                fromPos = bodyLexingResult.getNextArrayfromPos();
-                if (fromPos >= tokens.size())
-                    throw GENERIC_LEXER_EXCEPTION.get();
-                simpleToken = tokens.get(fromPos);
-                functionBody.addChildren(bodyLexingResult.getReturnToken(), simpleToken);
-            }
-            functionBody.addChildren(simpleToken);
             fromPos++;
+        } else {
+            if (JavaSimpleTokenType.DEFAULT.equals(simpleToken.getTokenType())) {
+// TODO default
+            } else if (!JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType()))
+                throw GENERIC_LEXER_EXCEPTION.get();
+            //Function has a body -> parse it
+            Lexer.LexingResult<JavaAdvancedToken> functionBody = lexer.lexNext(Collections.singletonList(GenericScope.getInstace()), tokens, fromPos);
+            fromPos = functionBody.getNextArrayfromPos();
+            mainToken.addChildren(functionBody.getReturnToken());
         }
         return new Lexer.LexingResult<>(mainToken, fromPos);
     }

@@ -36,7 +36,7 @@ public class ExpressionRule implements JavaLexerRule {
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
-        return true;
+        return !JavaSimpleTokenType.SCOPESTART.equals(javaSimpleTokens.get(fromPos).getTokenType());
     }
 
     @Override
@@ -46,6 +46,7 @@ public class ExpressionRule implements JavaLexerRule {
             subrules = Collections.unmodifiableList(
                     Arrays.asList(
                             LambdaRule.getInstance(),
+                            CastRule.getInstance(),
                             BracketRule.getInstance(),
                             NewRule.getInstance(),
                             ConstantVariableRule.getInstance()

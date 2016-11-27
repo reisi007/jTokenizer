@@ -10,6 +10,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.ParameterRule;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +30,11 @@ public class LambdaRule implements JavaLexerRule {
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>>
             leftRules = Collections.singletonList(ParameterRule.getInstance()),
-            rightRules = Collections.singletonList(ExpressionRule.getInstance());
+            rightRules = Collections.unmodifiableList(
+                    Arrays.asList(
+                            ExpressionRule.getInstance()
+                    )
+            );
 
     private LambdaRule() {
 

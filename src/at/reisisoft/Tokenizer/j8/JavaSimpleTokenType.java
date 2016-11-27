@@ -52,15 +52,14 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     BOOLLITERAL("true|false" + LOOKAHEAD_END_OF_WORD),
     BREAK("break\\s+?;"),
     CONTINUE("continue\\s*;"),
-    DEFAULT("default\\s*:"),
+    DEFAULT("default"),
     COMMENTLINE("\\/\\/.*"),
     COMMENTBLOCK("\\/\\*(.|\\s)*?\\*\\/"),
     CHARACTER("'.'"),
     STRING("\".*\""),
     ANNOTATION("@[^\\s(]+"),
     BINARYOPMULTIPLICATIVE("[\\*|/|%]"),
-    UNARYPOSTFIX("[^\\s\\:;]+(\\+\\+|\\-\\-)"),
-    UNARYPREFIX("(\\+\\+|\\-\\-)[^\\s\\:;]+"),
+    UNARYPREFIXPOSTFIX("(\\+\\+|\\-\\-|!|~)"),
     BINARYADDITIVE("[+|-]"),
     NUMBER("([0-9]+(.[0-9]+)?|\\.[0-9]+)(f|d|l)?"),
     BINARYSHIFT("(>{2,3}|<{2})"),
@@ -95,5 +94,9 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     @Override
     public String getName() {
         return super.name();
+    }
+
+    public boolean isConstantOrVariable() {
+        return STRING.equals(this) || IDENTIFYER.equals(this) || NUMBER.equals(this);
     }
 }

@@ -25,9 +25,7 @@ public class ConstantVariableRule implements JavaLexerRule {
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
         JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
-        return JavaSimpleTokenType.STRING.equals(curToken.getTokenType())
-                || JavaSimpleTokenType.IDENTIFYER.equals(curToken.getTokenType())
-                || JavaSimpleTokenType.NUMBER.equals(curToken.getTokenType());
+        return curToken.getTokenType().isConstantOrVariable();
     }
 
     @Override

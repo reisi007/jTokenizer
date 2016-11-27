@@ -27,10 +27,9 @@ public class BracketRule implements JavaLexerRule {
         return instance;
     }
 
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> rules;
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> rules = Collections.singletonList(ExpressionRule.getInstance());
 
     private BracketRule() {
-        rules = Collections.singletonList(ExpressionRule.getInstance());
     }
 
     @Override
@@ -48,7 +47,7 @@ public class BracketRule implements JavaLexerRule {
         Lexer.LexingResult<JavaAdvancedToken> curLexingResult;
         do {
             curLexingResult = lexer.lexNext(rules, javaSimpleTokens, fromPos);
-            brackets.addChildren(curLexingResult.getReturnToken());
+            brackets.addChildren(curLexingResult.getReturnToken().getChildren());
             fromPos = curLexingResult.getNextArrayfromPos();
             current = javaSimpleTokens.get(fromPos);
         } while (!JavaSimpleTokenType.BRACKETROUNDEND.equals(current.getTokenType()));
