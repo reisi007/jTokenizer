@@ -7,6 +7,7 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
+import at.reisisoft.Tokenizer.j8.lexerrules.CommentRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
 import java.util.Arrays;
@@ -45,10 +46,13 @@ public class ExpressionRule implements JavaLexerRule {
         if (subrules == null) {
             subrules = Collections.unmodifiableList(
                     Arrays.asList(
+                            PrefixRule.getInstance(),
+                            CommentRule.getInstance(),
                             LambdaRule.getInstance(),
                             CastRule.getInstance(),
                             BracketRule.getInstance(),
                             NewRule.getInstance(),
+                            FunctionCallRule.getInstance(),
                             ConstantVariableRule.getInstance()
                     )
             );

@@ -62,6 +62,7 @@ public class Simple {
                 FILE,
                 PACKAGE,
                 IMPORT,
+                COMMENT,
                 COMMENTBLOCK,
                 CLASS_OR_INTERFACE,
                 GENERIC_GROUP,
@@ -164,6 +165,7 @@ public class Simple {
                 FILE,
                 PACKAGE,
                 IMPORT,
+                COMMENT,
                 COMMENTBLOCK,
                 CLASS_OR_INTERFACE,
                 GENERIC_GROUP,
@@ -325,6 +327,7 @@ public class Simple {
         ArrayList<GenericTokenType<?>> lexerSolution = TestHelper.getList(
                 FILE,
                 PACKAGE,
+                COMMENT,
                 COMMENTBLOCK,
                 CLASS_OR_INTERFACE,
                 GENERIC_GROUP,

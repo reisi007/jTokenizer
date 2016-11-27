@@ -26,16 +26,22 @@ public class FileRule implements JavaLexerRule {
         return instance;
     }
 
-    private List<JavaSimpleTokenType> acceptedStartTokens;
-    private List<JavaSimpleTokenType> fileBeginning;
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
+    private final List<JavaSimpleTokenType> acceptedStartTokens;
+    private final List<JavaSimpleTokenType> fileBeginning;
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.unmodifiableList(
+            Arrays.asList(
+                    UnnecessarySemicolonRule.getInstance(),
+                    CommentRule.getInstance(),
+                    AnnotationRule.getInstance(),
+                    ClassRule.getInstance(),
+                    EnumRule.getInstance()
+            )
+    );
 
     private FileRule() {
         fileBeginning = Arrays.asList(
                 JavaSimpleTokenType.PACKAGE,
-                JavaSimpleTokenType.IMPORT,
-                JavaSimpleTokenType.COMMENTBLOCK,
-                JavaSimpleTokenType.COMMENTLINE
+                JavaSimpleTokenType.IMPORT
         );
 
         acceptedStartTokens = new ArrayList<>(
@@ -46,14 +52,6 @@ public class FileRule implements JavaLexerRule {
                 )
         );
         acceptedStartTokens.addAll(fileBeginning);
-
-        subrules = Collections.unmodifiableList(
-                Arrays.asList(
-                        UnnecessarySemicolonRule.getInstance(),
-                        AnnotationRule.getInstance(),
-                        ClassRule.getInstance()
-                )
-        );
     }
 
     @Override

@@ -53,7 +53,16 @@ public class BracketRule implements JavaLexerRule {
         } while (!JavaSimpleTokenType.BRACKETROUNDEND.equals(current.getTokenType()));
         fromPos++;
         brackets.addChildren(current);
-        //TODO postfix check
+        if (fromPos < javaSimpleTokens.size()) {
+            current = javaSimpleTokens.get(fromPos);
+            if (JavaSimpleTokenType.UNARYPREFIXPOSTFIX.equals(current.getTokenType())) {
+                fromPos++;
+                //Create Postfix response
+                return new Lexer.LexingResult<>(
+                        new JavaAdvancedToken(JavaAdvancedTokenType.POSTFIX, brackets, current)
+                        , fromPos);
+            }
+        }
         return new Lexer.LexingResult<>(brackets, fromPos);
     }
 

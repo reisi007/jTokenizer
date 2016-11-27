@@ -2,43 +2,44 @@ package at.reisisoft.Tokenizer.j8.lexerrules.expressions;
 
 import at.reisisoft.Tokenizer.Lexer;
 import at.reisisoft.Tokenizer.LexerException;
+import at.reisisoft.Tokenizer.LexerRule;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Florian on 25.11.2016.
+ * Created by Florian on 27.11.2016.
  */
-public class ConstantVariableRule implements JavaLexerRule {
+public class PrefixRule implements JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {
         if (instance == null)
-            instance = new ConstantVariableRule();
+            instance = new PrefixRule();
         return instance;
+    }
+
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> expressionRule = Collections.singletonList(ExpressionRule.getInstance());
+
+    private PrefixRule() {
+
     }
 
     @Override
     public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
-        JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
-        return curToken.getTokenType().isConstantOrVariable();
+        return JavaSimpleTokenType.UNARYPREFIXPOSTFIX.equals(javaSimpleTokens.get(fromPos).getTokenType());
     }
 
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
-        JavaAdvancedToken mainToken = new JavaAdvancedToken(JavaAdvancedTokenType.CONSTANT_OR_VARIABLE, javaSimpleTokens.get(fromPos));
-        fromPos++;
-        if (fromPos < javaSimpleTokens.size()) {
-            JavaSimpleToken lookahead = javaSimpleTokens.get(fromPos);
-            if (JavaSimpleTokenType.UNARYPREFIXPOSTFIX.equals(lookahead.getTokenType())) {
-                fromPos++;
-                mainToken = new JavaAdvancedToken(JavaAdvancedTokenType.POSTFIX, mainToken, lookahead);
-            }
-        }
-        return new Lexer.LexingResult<>(mainToken, fromPos);
+        JavaAdvancedToken prefix = new JavaAdvancedToken(JavaAdvancedTokenType.PREFIX, javaSimpleTokens.get(fromPos));
+        Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(expressionRule, javaSimpleTokens, fromPos + 1);
+        prefix.addChildren(lexingResult.getReturnToken().getChildren());
+        return new Lexer.LexingResult<>(prefix, lexingResult.getNextArrayfromPos());
     }
 }

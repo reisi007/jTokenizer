@@ -8,8 +8,6 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
@@ -27,7 +25,6 @@ public class ClassBodyRule implements JavaLexerRule {
     }
 
     private ClassBodyRule() {
-
     }
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subRules;
@@ -41,15 +38,7 @@ public class ClassBodyRule implements JavaLexerRule {
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
         //Start init rules
         if (subRules == null) {
-            subRules = Collections.unmodifiableList(
-                    Arrays.asList(
-                            AnnotationRule.getInstance(),
-                            GenericScope.getInstace(),
-                            UnnecessarySemicolonRule.getInstance(),
-                            FunctionRule.getInstance(),
-                            DeclInitialRule.getInstance()
-                    )
-            );
+            subRules = ClassRule.getClassBodyRules();
         }
         //End init rules
         JavaSimpleToken current = javaSimpleTokens.get(fromPos);

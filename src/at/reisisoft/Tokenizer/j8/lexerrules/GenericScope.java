@@ -7,6 +7,7 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
+import at.reisisoft.Tokenizer.j8.lexerrules.statements.StatementRule;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,7 +30,7 @@ public class GenericScope implements JavaLexerRule {
     private GenericScope() {
     }
 
-    // TODO add body rules and add them
+
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
 
     @Override
@@ -46,7 +47,8 @@ public class GenericScope implements JavaLexerRule {
             subrules = Collections.unmodifiableList(
                     Arrays.asList(
                             UnnecessarySemicolonRule.getInstance(),
-                            GenericScope.getInstace()
+                            GenericScope.getInstace(),
+                            StatementRule.getInstance()
                     )
             );
         }

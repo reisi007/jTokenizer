@@ -2,6 +2,7 @@ package at.reisisoft.Tokenizer.j8.lexerrules;
 
 import at.reisisoft.Tokenizer.Lexer;
 import at.reisisoft.Tokenizer.LexerException;
+import at.reisisoft.Tokenizer.LexerRule;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
@@ -18,6 +19,21 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  */
 public class ClassRule implements JavaLexerRule {
 
+    public static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getClassBodyRules() {
+        return Collections.unmodifiableList(
+                Arrays.asList(
+                        CommentRule.getInstance(),
+                        AnnotationRule.getInstance(),
+                        GenericScope.getInstace(),
+                        UnnecessarySemicolonRule.getInstance(),
+                        FunctionRule.getInstance(),
+                        DeclInitialRule.getInstance(),
+                        ClassRule.getInstance(),
+                        EnumRule.getInstance()
+                )
+        );
+    }
+
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {
@@ -27,21 +43,19 @@ public class ClassRule implements JavaLexerRule {
     }
 
     private ClassRule() {
-        optionalTokenTypes = Collections.unmodifiableList(
-                Arrays.asList(
-                        JavaSimpleTokenType.VISABILITY,
-                        JavaSimpleTokenType.STATIC,
-                        JavaSimpleTokenType.FINAL,
-                        JavaSimpleTokenType.ABSTRACT
-                )
-        );
     }
 
-    private List<JavaSimpleTokenType> optionalTokenTypes;
+    private final List<JavaSimpleTokenType> optionalTokenTypes = Collections.unmodifiableList(
+            Arrays.asList(
+                    JavaSimpleTokenType.VISABILITY,
+                    JavaSimpleTokenType.STATIC,
+                    JavaSimpleTokenType.FINAL,
+                    JavaSimpleTokenType.ABSTRACT
+            )
+    );
 
     private final List<JavaSimpleTokenType> acceptToken = Collections.unmodifiableList(
             Arrays.asList(
-                    JavaSimpleTokenType.VISABILITY,
                     JavaSimpleTokenType.CLASS,
                     JavaSimpleTokenType.INTERFACE
             )
@@ -62,8 +76,8 @@ public class ClassRule implements JavaLexerRule {
     @Override
     public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
 
-        JavaAdvancedToken classToken = new JavaAdvancedToken(JavaAdvancedTokenType.CLASS_OR_INTERFACE);
-        JavaAdvancedToken classHeader = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
+        JavaAdvancedToken classToken = new JavaAdvancedToken(JavaAdvancedTokenType.CLASS_OR_INTERFACE),
+                classHeader = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
 
         JavaSimpleToken current = null;
         while (fromPos < javaSimpleTokens.size()

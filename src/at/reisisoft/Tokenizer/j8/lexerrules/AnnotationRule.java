@@ -18,7 +18,7 @@ import java.util.List;
 public class AnnotationRule implements JavaLexerRule {
 
     private static JavaLexerRule instance;
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.unmodifiableList(
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.unmodifiableList(
             Arrays.asList(
                     this,
                     ClassRule.getInstance(),

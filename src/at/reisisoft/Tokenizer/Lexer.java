@@ -1,6 +1,7 @@
 package at.reisisoft.Tokenizer;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -43,7 +44,7 @@ public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerToke
 
         public LexingResult(ReturnToken returnToken, int nextArrayfromPos) {
             this.returnToken = returnToken;
-            this.nextArrayfromPos = nextArrayfromPos;
+            this.nextArrayfromPos = Objects.requireNonNull(nextArrayfromPos);
         }
 
         public ReturnToken getReturnToken() {
