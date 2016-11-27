@@ -9,6 +9,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
 import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * Created by Florian on 25.11.2016.
@@ -23,13 +24,13 @@ public class ConstantVariableRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
         return curToken.getTokenType().isConstantOrVariable();
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken mainToken = new JavaAdvancedToken(JavaAdvancedTokenType.CONSTANT_OR_VARIABLE, javaSimpleTokens.get(fromPos));
         fromPos++;
         if (fromPos < javaSimpleTokens.size()) {

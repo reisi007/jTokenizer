@@ -11,6 +11,7 @@ import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * Created by Florian on 27.11.2016.
@@ -31,12 +32,12 @@ public class PrefixRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         return JavaSimpleTokenType.UNARYPREFIXPOSTFIX.equals(javaSimpleTokens.get(fromPos).getTokenType());
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken prefix = new JavaAdvancedToken(JavaAdvancedTokenType.PREFIX, javaSimpleTokens.get(fromPos));
         Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(expressionRule, javaSimpleTokens, fromPos + 1);
         prefix.addChildren(lexingResult.getReturnToken().getChildren());

@@ -13,6 +13,7 @@ import at.reisisoft.Tokenizer.j8.lexerrules.ParameterRule;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
@@ -41,7 +42,7 @@ public class LambdaRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType())) {
             fromPos++;
@@ -70,7 +71,7 @@ public class LambdaRule implements JavaLexerRule {
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.LAMBDA);
         Lexer.LexingResult<JavaAdvancedToken> leftSideLexingResult = lexer.lexNext(leftRules, javaSimpleTokens, fromPos);
         fromPos = leftSideLexingResult.getNextArrayfromPos();

@@ -11,6 +11,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * Created by Florian on 25.11.2016. FIXME Comments#comment1 fails here -> redo this
@@ -39,13 +40,12 @@ public class AnnotationRule implements JavaLexerRule {
 
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         return JavaSimpleTokenType.ANNOTATION.equals(javaSimpleTokens.get(fromPos).getTokenType());
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
-        //TODO quick implementation, maybe add more scopes
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken annotation = new JavaAdvancedToken(JavaAdvancedTokenType.ANNOTATION),
                 container = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP, annotation);
         JavaSimpleToken current = javaSimpleTokens.get(fromPos);

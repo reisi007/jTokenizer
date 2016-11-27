@@ -13,6 +13,7 @@ import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
@@ -36,12 +37,12 @@ public class ExpressionRule implements JavaLexerRule {
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         return !JavaSimpleTokenType.SCOPESTART.equals(javaSimpleTokens.get(fromPos).getTokenType());
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         //Start init rules
         if (subrules == null) {
             subrules = Collections.unmodifiableList(

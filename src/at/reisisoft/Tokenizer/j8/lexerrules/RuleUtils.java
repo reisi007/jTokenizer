@@ -8,6 +8,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * Created by Florian on 27.11.2016.
@@ -23,7 +24,7 @@ public class RuleUtils {
      * @return The next {@code fromPos}
      * @throws LexerException Throws an exception if the call to the lexer went wrong
      */
-    public static int addSimpleToken(JavaAdvancedToken javaAdvancedToken, Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public static <L extends List<JavaSimpleToken> & RandomAccess> int addSimpleToken(JavaAdvancedToken javaAdvancedToken, Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
         if (simpleToken.getTokenType().isComment()) {
             final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(Collections.singletonList(CommentRule.getInstance()), javaSimpleTokens, fromPos);

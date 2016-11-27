@@ -12,6 +12,7 @@ import at.reisisoft.Tokenizer.j8.lexerrules.expressions.ExpressionRule;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
@@ -48,7 +49,7 @@ public class FunctionRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> tokens, final int origFromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L tokens, final int origFromPos) {
         int fromPos = origFromPos;
         JavaSimpleToken cur = tokens.get(fromPos);
         while (acceptTokenTypes.indexOf(cur.getTokenType()) >= 0) {
@@ -62,7 +63,7 @@ public class FunctionRule implements JavaLexerRule {
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken functionHead = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
         int cntIdentifyer = 0;
         JavaSimpleToken cur = null;

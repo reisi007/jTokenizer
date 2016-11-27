@@ -2,6 +2,7 @@ package at.reisisoft.Tokenizer;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.RandomAccess;
 import java.util.function.Supplier;
 
 /**
@@ -17,7 +18,7 @@ public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerToke
      * @return A list of all recognized tokens
      * @throws LexerException Thrown e.g. when a construct in the Java file cannot be matched to a LexerRule
      */
-    ReturnToken lexFile(List<TokenizerToken> tokenizerTokens) throws LexerException;
+    <L extends List<TokenizerToken> & RandomAccess> ReturnToken lexFile(L tokenizerTokens) throws LexerException;
 
     /**
      * Lexes from the position specified in {@code int fromPos}. It lexes and returns when one token is found.
@@ -29,7 +30,7 @@ public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerToke
      * @return Returns a {@see Lexer.LexingResult} object
      * @throws LexerException Thrown e.g. when no rule matches the list from the specific position
      */
-    LexingResult<ReturnToken> lexNext(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> currentRules, final List<TokenizerToken> tokenizerTokens, int fromPos) throws LexerException;
+    <L extends List<TokenizerToken> & RandomAccess> LexingResult<ReturnToken> lexNext(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> currentRules, final L tokenizerTokens, int fromPos) throws LexerException;
 
     /**
      * @param <ReturnToken> The TokenType which is stored in this class.

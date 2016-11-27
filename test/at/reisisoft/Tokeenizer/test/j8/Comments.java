@@ -7,7 +7,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static at.reisisoft.Tokenizer.j8.JavaSimpleTokenType.*;
 
@@ -89,7 +88,7 @@ public class Comments {
                 COMMENTLINE,
                 COMMENTLINE
         );
-        final List<JavaSimpleToken> javaSimpleTokens = TestHelper.doTokenizerTest("comments1", tokenizerSolution);
+        final ArrayList<JavaSimpleToken> javaSimpleTokens = TestHelper.doTokenizerTest("comments1", tokenizerSolution);
         try {
             new JavaLexerImpl().lexFile(javaSimpleTokens);
         } catch (LexerException e) {

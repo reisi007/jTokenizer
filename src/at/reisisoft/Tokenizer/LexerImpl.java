@@ -1,9 +1,6 @@
 package at.reisisoft.Tokenizer;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -21,26 +18,26 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
     }
 
     @Override
-    public ReturnToken lexFile(List<TokenizerToken> tokenizerTokenTypes) throws LexerException {
-        if (Objects.requireNonNull(tokenizerTokenTypes).size() == 0) {
+    public <L extends List<TokenizerToken> & RandomAccess> ReturnToken lexFile(L tokenizerTokens) throws LexerException {
+        if (Objects.requireNonNull(tokenizerTokens).size() == 0) {
             throw new LexerException("Lexer needs to have some tokens to operate");
         }
-        //Make list readonly
-        tokenizerTokenTypes = Collections.unmodifiableList(tokenizerTokenTypes);
+        //Make list readonly Collections.unmodifiableList supports RandomaccessList!
+        tokenizerTokens = (L) Collections.unmodifiableList(tokenizerTokens);
         final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> fileRule = fileRuleSupplier.get();
-        if (!fileRule.isApplicable(tokenizerTokenTypes, 0)) {
+        if (!fileRule.isApplicable(tokenizerTokens, 0)) {
             throw GENERIC_LEXER_EXCEPTION.get();
         }
-        final LexingResult<ReturnToken> fileLexingResult = fileRule.apply(this, tokenizerTokenTypes, 0);
-        if (fileLexingResult.getNextArrayfromPos() < tokenizerTokenTypes.size()) {
+        final LexingResult<ReturnToken> fileLexingResult = fileRule.apply(this, tokenizerTokens, 0);
+        if (fileLexingResult.getNextArrayfromPos() < tokenizerTokens.size()) {
             //There are tokens, which are at the end of the file, but the rest of the file is a valid Java file
             ReturnToken errorToken = Objects.requireNonNull(error.get());
             int curPos = fileLexingResult.getNextArrayfromPos();
             if (curPos < 0)
                 throw GENERIC_LEXER_EXCEPTION.get();
             TokenizerToken cur;
-            while (curPos < tokenizerTokenTypes.size()) {
-                cur = tokenizerTokenTypes.get(curPos);
+            while (curPos < tokenizerTokens.size()) {
+                cur = tokenizerTokens.get(curPos);
                 errorToken.addChildren(cur);
                 curPos++;
             }
@@ -52,13 +49,13 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
     }
 
     @Override
-    public LexingResult<ReturnToken> lexNext(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules, List<TokenizerToken> tokenizerTokenTypes, int fromPos) throws LexerException {
+    public <L extends List<TokenizerToken> & RandomAccess> LexingResult<ReturnToken> lexNext(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules, L tokenizerTokenTypes, int fromPos) throws LexerException {
         final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> currentRole = getMatchingRule(lexerRules, tokenizerTokenTypes, fromPos)
                 .orElseThrow(() -> new LexerException("No rule found for token at index " + fromPos));
         return Objects.requireNonNull(currentRole.apply(this, tokenizerTokenTypes, fromPos));
     }
 
-    private Optional<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getMatchingRule(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules, final List<TokenizerToken> tokenizerTokenList, final int fromPos) {
+    private <L extends List<TokenizerToken> & RandomAccess> Optional<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getMatchingRule(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules, final L tokenizerTokenList, final int fromPos) {
         for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> rule : lexerRules) {
             boolean isApplicable = rule.isApplicable(tokenizerTokenList, fromPos);
             if (isApplicable) {

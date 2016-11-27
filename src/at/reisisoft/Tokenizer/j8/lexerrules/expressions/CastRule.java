@@ -12,6 +12,7 @@ import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * Created by Florian on 26.11.2016.
@@ -38,7 +39,7 @@ public class CastRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         if (fromPos + 2 >= javaSimpleTokens.size())
             return false;
         if (!(JavaSimpleTokenType.BRACKETROUNDSTART.equals(javaSimpleTokens.get(fromPos).getTokenType())
@@ -53,7 +54,7 @@ public class CastRule implements JavaLexerRule {
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken cast = new JavaAdvancedToken(JavaAdvancedTokenType.CAST, javaSimpleTokens.get(fromPos), javaSimpleTokens.get(fromPos + 1), javaSimpleTokens.get(fromPos + 2));
         fromPos += 3;
         Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);

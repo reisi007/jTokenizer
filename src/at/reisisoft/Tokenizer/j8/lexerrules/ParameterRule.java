@@ -9,6 +9,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.RandomAccess;
 import java.util.function.Supplier;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
@@ -32,12 +33,12 @@ public class ParameterRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> tokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L tokens, int fromPos) {
         return true;
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> tokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L tokens, int fromPos) throws LexerException {
         Supplier<JavaAdvancedToken> singleParamGroup = () -> new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
         JavaSimpleToken curToken = tokens.get(fromPos);
         fromPos++;

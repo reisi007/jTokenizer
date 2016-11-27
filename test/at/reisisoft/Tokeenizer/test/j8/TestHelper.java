@@ -7,6 +7,7 @@ import at.reisisoft.Tokenizer.j8.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.RandomAccess;
 
 import static org.junit.Assert.*;
 
@@ -21,10 +22,10 @@ public class TestHelper {
         return new ArrayList<>(Arrays.asList(elements));
     }
 
-    public static List<JavaSimpleToken> doTokenizerTest(String filename, ArrayList<JavaSimpleTokenType> solution) {
+    public static <L extends List<JavaSimpleTokenType> & RandomAccess> ArrayList<JavaSimpleToken> doTokenizerTest(String filename, L solution) {
         Tokenizer<JavaSimpleTokenType, JavaSimpleToken> lexar = new JavaTokenizerImpl();
         String file = FileLoader.getTestFile(filename);
-        final List<JavaSimpleToken> lexed = lexar.tokenize(file);
+        final ArrayList<JavaSimpleToken> lexed = new ArrayList<>(lexar.tokenize(file));
         JavaSimpleToken current;
         JavaSimpleTokenType expected;
         GenericTokenType actual;
@@ -39,7 +40,7 @@ public class TestHelper {
         return lexed;
     }
 
-    public static void doLexerTest(List<JavaSimpleToken> tokens, ArrayList<GenericTokenType<?>> solution) throws LexerException {
+    public static <L extends List<JavaSimpleToken> & RandomAccess> void doLexerTest(L tokens, ArrayList<GenericTokenType<?>> solution) throws LexerException {
         Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer = new JavaLexerImpl();
         final JavaAdvancedToken javaAdvancedToken = lexer.lexFile(tokens);
         final List<GenericTokenType<?>> actualTokens = explode(javaAdvancedToken);
@@ -54,13 +55,14 @@ public class TestHelper {
         }
     }
 
-    private static List<GenericTokenType<?>> explode(JavaAdvancedToken javaAdvancedTokenType) {
-        List<GenericTokenType<?>> list = new ArrayList<>();
+    private static <LS extends List<GenericTokenType<?>> & RandomAccess> LS explode(JavaAdvancedToken javaAdvancedTokenType) {
+        //I do not know why this cast is unchecked...
+        LS list = (LS) new ArrayList<GenericTokenType<?>>();
         explode(javaAdvancedTokenType, list);
         return list;
     }
 
-    private static void explode(HirachialToken<?> hirachialToken, final List<GenericTokenType<?>> tokenList) {
+    private static <LS extends List<GenericTokenType<?>> & RandomAccess> void explode(HirachialToken<?> hirachialToken, final LS tokenList) {
         tokenList.add(hirachialToken.getTokenType());
         for (Token<?, ?> cur : hirachialToken.getChildren()) {
             if (cur instanceof HirachialToken<?>) {

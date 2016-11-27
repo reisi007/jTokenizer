@@ -11,6 +11,7 @@ import at.reisisoft.Tokenizer.j8.lexerrules.expressions.ExpressionRule;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * Created by Florian on 24.11.2016.
@@ -46,7 +47,7 @@ public class DeclInitialRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         while (optionalTokenTypes.indexOf(cur.getTokenType()) >= 0) {
             fromPos++;
@@ -56,7 +57,7 @@ public class DeclInitialRule implements JavaLexerRule {
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         final JavaAdvancedToken root = new JavaAdvancedToken(JavaAdvancedTokenType.DECLARATION_OR_INITIALISATION);
         JavaAdvancedToken current = root;
         JavaSimpleToken currentSimple = javaSimpleTokens.get(fromPos);

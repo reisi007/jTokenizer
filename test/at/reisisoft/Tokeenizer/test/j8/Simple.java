@@ -8,7 +8,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType.*;
 import static at.reisisoft.Tokenizer.j8.JavaSimpleTokenType.*;
@@ -56,7 +55,7 @@ public class Simple {
                 SCOPEEND
         );
 
-        List<JavaSimpleToken> tokens = TestHelper.doTokenizerTest("simpleClassOnly", solution);
+        ArrayList<JavaSimpleToken> tokens = TestHelper.doTokenizerTest("simpleClassOnly", solution);
 
         ArrayList<GenericTokenType<?>> lexerSolution = TestHelper.getList(
                 FILE,
@@ -159,7 +158,7 @@ public class Simple {
                 SCOPEEND
         );
 
-        List<JavaSimpleToken> tokens = TestHelper.doTokenizerTest("simpleFunctions", solution);
+        ArrayList<JavaSimpleToken> tokens = TestHelper.doTokenizerTest("simpleFunctions", solution);
 
         ArrayList<GenericTokenType<?>> lexerSolution = TestHelper.getList(
                 FILE,
@@ -322,7 +321,7 @@ public class Simple {
                 SCOPEEND
         );
 
-        List<JavaSimpleToken> tokens = TestHelper.doTokenizerTest("simpleDeclareInit", solution);
+        ArrayList<JavaSimpleToken> tokens = TestHelper.doTokenizerTest("simpleDeclareInit", solution);
 
         ArrayList<GenericTokenType<?>> lexerSolution = TestHelper.getList(
                 FILE,

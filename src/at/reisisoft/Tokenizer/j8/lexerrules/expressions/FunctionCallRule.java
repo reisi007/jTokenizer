@@ -11,6 +11,7 @@ import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.RandomAccess;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
@@ -32,14 +33,14 @@ public class FunctionCallRule implements JavaLexerRule {
     }
 
     @Override
-    public boolean isApplicable(List<JavaSimpleToken> javaSimpleTokens, int fromPos) {
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         return (fromPos + 1) < javaSimpleTokens.size()
                 && JavaSimpleTokenType.IDENTIFYER.equals(javaSimpleTokens.get(fromPos).getTokenType())
                 && JavaSimpleTokenType.BRACKETROUNDSTART.equals(javaSimpleTokens.get(fromPos + 1).getTokenType());
     }
 
     @Override
-    public Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<JavaSimpleToken> javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken mainToken = new JavaAdvancedToken(JavaAdvancedTokenType.FUNCTION_CALL, javaSimpleTokens.get(fromPos), javaSimpleTokens.get(fromPos + 1));
         fromPos += 2;
         JavaSimpleToken current = javaSimpleTokens.get(fromPos);
