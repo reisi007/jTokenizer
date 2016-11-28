@@ -86,8 +86,7 @@ public class ClassRule implements JavaLexerRule {
         while (fromPos < javaSimpleTokens.size()
                 && (current = javaSimpleTokens.get(fromPos)) != null
                 && !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType())) {
-            classHeader.addChildren(current);
-            fromPos++;
+            fromPos = addSimpleToken(classHeader, lexer, javaSimpleTokens, fromPos);
         }
         if (current == null || !(fromPos < javaSimpleTokens.size()) || !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();

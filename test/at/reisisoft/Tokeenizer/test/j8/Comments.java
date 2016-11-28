@@ -1,13 +1,15 @@
 package at.reisisoft.Tokeenizer.test.j8;
 
+import at.reisisoft.Tokenizer.GenericTokenType;
 import at.reisisoft.Tokenizer.LexerException;
-import at.reisisoft.Tokenizer.j8.JavaLexerImpl;
+import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
+import static at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType.*;
 import static at.reisisoft.Tokenizer.j8.JavaSimpleTokenType.*;
 
 /**
@@ -16,7 +18,7 @@ import static at.reisisoft.Tokenizer.j8.JavaSimpleTokenType.*;
 public class Comments {
 
     @Test
-    public void comments1() {
+    public void comments1() throws LexerException {
         ArrayList<JavaSimpleTokenType> tokenizerSolution = TestHelper.getList(
                 COMMENTBLOCK,
                 PACKAGE,
@@ -48,14 +50,14 @@ public class Comments {
                 COMMENTBLOCK,
                 IDENTIFYER,
                 COMMENTBLOCK,
-                ASSIGNMENT,
+                JavaSimpleTokenType.ASSIGNMENT,
                 COMMENTLINE,
                 NUMBER,
                 COMMENTLINE,
                 SEMICOLON,
                 VISABILITY,
                 COMMENTLINE,
-                ENUM,
+                JavaSimpleTokenType.ENUM,
                 COMMENTBLOCK,
                 IDENTIFYER,
                 SCOPESTART,
@@ -65,7 +67,7 @@ public class Comments {
                 IDENTIFYER,
                 COMMENTLINE,
                 SCOPEEND,
-                ANNOTATION,
+                JavaSimpleTokenType.ANNOTATION,
                 BRACKETROUNDSTART,
                 COMMENTBLOCK,
                 BRACKETROUNDEND,
@@ -89,10 +91,129 @@ public class Comments {
                 COMMENTLINE
         );
         final ArrayList<JavaSimpleToken> javaSimpleTokens = TestHelper.doTokenizerTest("comments1", tokenizerSolution);
-        try {
-            new JavaLexerImpl().lexFile(javaSimpleTokens);
-        } catch (LexerException e) {
-            throw new RuntimeException(e);
-        }
+        ArrayList<GenericTokenType<?>> lexerSolution = TestHelper.getList(
+                FILE,
+                COMMENT,
+                COMMENTBLOCK,
+                PACKAGE,
+                COMMENT,
+                COMMENTLINE,
+                COMMENTBLOCK,
+                CLASS_OR_INTERFACE,
+                GENERIC_GROUP,
+                VISABILITY,
+                COMMENT,
+                COMMENTLINE,
+                CLASS,
+                COMMENT,
+                COMMENTBLOCK,
+                IDENTIFYER,
+                COMMENT,
+                COMMENTLINE,
+                SCOPE,
+                SCOPESTART,
+                COMMENT,
+                COMMENTLINE,
+                CONSTRUCTOR,
+                GENERIC_GROUP,
+                VISABILITY,
+                COMMENT,
+                COMMENTBLOCK,
+                IDENTIFYER,
+                COMMENT,
+                COMMENTBLOCK,
+                BRACKETS_ROUND,
+                BRACKETROUNDSTART,
+                COMMENT,
+                COMMENTBLOCK,
+                BRACKETROUNDEND,
+                SCOPE,
+                SCOPESTART,
+                COMMENT,
+                COMMENTLINE,
+                SCOPEEND,
+                DECLARATION_OR_INITIALISATION,
+                VISABILITY,
+                COMMENT,
+                COMMENTBLOCK,
+                FINAL,
+                COMMENT,
+                COMMENTBLOCK,
+                IDENTIFYER,
+                COMMENT,
+                COMMENTBLOCK,
+                IDENTIFYER,
+                COMMENT,
+                COMMENTBLOCK,
+                JavaSimpleTokenType.ASSIGNMENT,
+                COMMENT,
+                COMMENTLINE,
+                CONSTANT_OR_VARIABLE,
+                NUMBER,
+                COMMENT,
+                COMMENTLINE,
+                SEMICOLON,
+                JavaAdvancedTokenType.ENUM,
+                GENERIC_GROUP,
+                VISABILITY,
+                COMMENT,
+                COMMENTLINE,
+                JavaSimpleTokenType.ENUM,
+                COMMENT,
+                COMMENTBLOCK,
+                IDENTIFYER,
+                SCOPE,
+                SCOPESTART,
+                GENERIC_GROUP,
+                CONSTANT_OR_VARIABLE,
+                IDENTIFYER,
+                COMMENT,
+                COMMENTBLOCK,
+                COMMA,
+                CONSTANT_OR_VARIABLE,
+                IDENTIFYER,
+                COMMENT,
+                COMMENTLINE,
+                SCOPEEND,
+                JavaAdvancedTokenType.ANNOTATION,
+                JavaSimpleTokenType.ANNOTATION,
+                BRACKETS_ROUND,
+                BRACKETROUNDSTART,
+                COMMENT,
+                COMMENTBLOCK,
+                BRACKETROUNDEND,
+                COMMENT,
+                COMMENTLINE,
+                FUNCTION,
+                GENERIC_GROUP,
+                VISABILITY,
+                COMMENT,
+                COMMENTBLOCK,
+                IDENTIFYER,
+                COMMENT,
+                COMMENTLINE,
+                IDENTIFYER,
+                COMMENT,
+                COMMENTBLOCK,
+                BRACKETS_ROUND,
+                BRACKETROUNDSTART,
+                COMMENT,
+                COMMENTLINE,
+                BRACKETROUNDEND,
+                COMMENT,
+                COMMENTBLOCK,
+                SCOPE,
+                SCOPESTART,
+                COMMENT,
+                COMMENTLINE,
+                STATEMENT,
+                SEMICOLON,
+                SCOPEEND,
+                SCOPEEND,
+                COMMENT,
+                COMMENTLINE,
+                COMMENTLINE
+        );
+        TestHelper.doLexerTest(javaSimpleTokens, lexerSolution);
     }
 }

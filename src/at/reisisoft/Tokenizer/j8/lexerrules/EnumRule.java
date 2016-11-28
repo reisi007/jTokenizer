@@ -64,7 +64,7 @@ public class EnumRule implements JavaLexerRule {
         while (fromPos < javaSimpleTokens.size()
                 && (current = javaSimpleTokens.get(fromPos)) != null
                 && !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType())) {
-            fromPos = RuleUtils.addSimpleToken(enumHead, lexer, javaSimpleTokens, fromPos);
+            fromPos = addSimpleToken(enumHead, lexer, javaSimpleTokens, fromPos);
         }
         if (fromPos + 1 >= javaSimpleTokens.size() || current == null || !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();
@@ -107,8 +107,9 @@ public class EnumRule implements JavaLexerRule {
                     fromPos = curLexingResult.getNextArrayfromPos();
                 }
                 enumBody.addChildren(current);
+                fromPos++;
             }
-            fromPos++;
+
         }
         return new Lexer.LexingResult<>(enumTotal, fromPos);
     }

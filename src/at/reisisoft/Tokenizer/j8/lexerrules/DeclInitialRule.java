@@ -63,7 +63,7 @@ public class DeclInitialRule implements JavaLexerRule {
         JavaSimpleToken currentSimple = javaSimpleTokens.get(fromPos);
         do {
             while (!isEndTokenType(currentSimple.getTokenType())) {
-                fromPos = RuleUtils.addSimpleToken(current, lexer, javaSimpleTokens, fromPos);
+                fromPos = addSimpleToken(current, lexer, javaSimpleTokens, fromPos);
                 currentSimple = javaSimpleTokens.get(fromPos);
             }
             if (JavaSimpleTokenType.ASSIGNMENT.equals(currentSimple.getTokenType())) {
@@ -75,7 +75,7 @@ public class DeclInitialRule implements JavaLexerRule {
             }
             //Check for comment
             if (currentSimple.getTokenType().isComment()) {
-                fromPos = RuleUtils.addSimpleToken(current, lexer, javaSimpleTokens, fromPos);
+                fromPos = addSimpleToken(current, lexer, javaSimpleTokens, fromPos);
             }
 
             if (JavaSimpleTokenType.COMMA.equals(currentSimple.getTokenType())) {

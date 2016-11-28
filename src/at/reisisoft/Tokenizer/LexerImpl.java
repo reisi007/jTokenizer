@@ -9,14 +9,13 @@ import java.util.function.Supplier;
 public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerTokenType>, TokenizerToken extends Token<TokenizerTokenType, String>, ReturnToken extends HirachialToken<?>> implements Lexer<TokenizerTokenType, TokenizerToken, ReturnToken> {
 
     private final Supplier<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> fileRuleSupplier;
-    private final Supplier<ReturnToken> error;
 
 
-    public LexerImpl(Supplier<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> fileRuleSupplier, Supplier<ReturnToken> error) {
+    public LexerImpl(Supplier<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> fileRuleSupplier) {
         this.fileRuleSupplier = fileRuleSupplier;
-        this.error = error;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <L extends List<TokenizerToken> & RandomAccess> ReturnToken lexFile(L tokenizerTokens) throws LexerException {
         if (Objects.requireNonNull(tokenizerTokens).size() == 0) {
@@ -29,22 +28,6 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
             throw GENERIC_LEXER_EXCEPTION.get();
         }
         final LexingResult<ReturnToken> fileLexingResult = fileRule.apply(this, tokenizerTokens, 0);
-        if (fileLexingResult.getNextArrayfromPos() < tokenizerTokens.size()) {
-            //There are tokens, which are at the end of the file, but the rest of the file is a valid Java file
-            ReturnToken errorToken = Objects.requireNonNull(error.get());
-            int curPos = fileLexingResult.getNextArrayfromPos();
-            if (curPos < 0)
-                throw GENERIC_LEXER_EXCEPTION.get();
-            TokenizerToken cur;
-            while (curPos < tokenizerTokens.size()) {
-                cur = tokenizerTokens.get(curPos);
-                errorToken.addChildren(cur);
-                curPos++;
-            }
-            ReturnToken file = Objects.requireNonNull(fileLexingResult.getReturnToken());
-            file.addChildren(errorToken);
-            return file;
-        }
         return Objects.requireNonNull(fileLexingResult.getReturnToken());
     }
 

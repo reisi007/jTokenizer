@@ -18,7 +18,6 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     CONSTRUCTOR,
     DECLARATION_OR_INITIALISATION,
     ENUM,
-    ERROR,
     EXPRESSION,
     FILE,
     FUNCTION,

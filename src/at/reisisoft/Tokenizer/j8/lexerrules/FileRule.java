@@ -69,7 +69,7 @@ public class FileRule implements JavaLexerRule {
         while (fromPos < javaSimpleTokens.size()
                 && (simpleToken = javaSimpleTokens.get(fromPos)) != null
                 && fileBeginning.indexOf(simpleToken.getTokenType()) != -1) {
-            fromPos = RuleUtils.addSimpleToken(advancedToken, lexer, javaSimpleTokens, fromPos);
+            fromPos = addSimpleToken(advancedToken, lexer, javaSimpleTokens, fromPos);
         }
 
         while (fromPos < javaSimpleTokens.size()) {

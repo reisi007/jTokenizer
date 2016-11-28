@@ -70,8 +70,7 @@ public class GenericScope implements JavaLexerRule {
             fromPos = lexingResult.getNextArrayfromPos();
             if (fromPos >= javaSimpleTokens.size())
                 throw GENERIC_LEXER_EXCEPTION.get();
-            current = javaSimpleTokens.get(fromPos);
-            scope.addChildren(lexingResult.getReturnToken(), current);
+            scope.addChildren(lexingResult.getReturnToken());
         }
         if (current == null || !JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();

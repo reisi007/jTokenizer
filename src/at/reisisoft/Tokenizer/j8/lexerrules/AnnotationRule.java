@@ -1,10 +1,7 @@
 package at.reisisoft.Tokenizer.j8.lexerrules;
 
-import at.reisisoft.Tokenizer.Lexer;
-import at.reisisoft.Tokenizer.LexerException;
 import at.reisisoft.Tokenizer.LexerRule;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
-import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
@@ -14,9 +11,9 @@ import java.util.List;
 import java.util.RandomAccess;
 
 /**
- * Created by Florian on 25.11.2016. FIXME Comments#comment1 fails here -> redo this
+ * Created by Florian on 28.11.2016.
  */
-public class AnnotationRule implements JavaLexerRule {
+public class AnnotationRule extends AbstractAnnotationRule {
 
     private static JavaLexerRule instance;
     private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.unmodifiableList(
@@ -38,45 +35,15 @@ public class AnnotationRule implements JavaLexerRule {
     private AnnotationRule() {
     }
 
-
+    /**
+     * The cast does not fail as Arrays#asList returns a List which implements RandomAccess and Collections.unmodifiableList bewares RandomAccess interface and returns a List
+     *
+     * @param <L> A RandomAccessList<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>>
+     * @return A random access list of rules
+     */
     @Override
-    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
-        return JavaSimpleTokenType.ANNOTATION.equals(javaSimpleTokens.get(fromPos).getTokenType());
-    }
-
-    @Override
-    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
-        JavaAdvancedToken annotation = new JavaAdvancedToken(JavaAdvancedTokenType.ANNOTATION),
-                container = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP, annotation);
-        JavaSimpleToken current = javaSimpleTokens.get(fromPos);
-        fromPos++;
-        annotation.addChildren(current);
-        current = javaSimpleTokens.get(fromPos);
-        if (JavaSimpleTokenType.BRACKETROUNDSTART.equals(current.getTokenType())) {
-            //Consume token (increase frompos) if we want to add it -> Annotation is not complete)
-            fromPos++;
-            JavaAdvancedToken annotationData = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP, current);
-            annotation.addChildren(annotationData);
-            int roundBracketCount = 1;
-            while (roundBracketCount > 0) {
-                current = javaSimpleTokens.get(fromPos);
-                switch (current.getTokenType()) {
-                    case BRACKETROUNDSTART:
-                        roundBracketCount++;
-                        break;
-                    case BRACKETROUNDEND:
-                        roundBracketCount--;
-                        break;
-                }
-                annotationData.addChildren(current);
-                fromPos++;
-            }
-        }
-
-        //On what is the annotation defined?
-        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
-        fromPos = lexingResult.getNextArrayfromPos();
-        container.addChildren(lexingResult.getReturnToken());
-        return new Lexer.LexingResult<>(container, fromPos);
+    @SuppressWarnings("unchecked")
+    protected <L extends List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> & RandomAccess> L getRules() {
+        return (L) subrules;
     }
 }

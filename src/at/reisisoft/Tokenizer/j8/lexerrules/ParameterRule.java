@@ -20,6 +20,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 public class ParameterRule implements JavaLexerRule {
 
     private static JavaLexerRule instance;
+    private final List<JavaSimpleTokenType> endParam = Arrays.asList(JavaSimpleTokenType.COMMA, JavaSimpleTokenType.BRACKETROUNDEND);
 
     public static JavaLexerRule getInstance() {
         if (instance == null) {
@@ -33,14 +34,15 @@ public class ParameterRule implements JavaLexerRule {
     }
 
     @Override
-    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L tokens, int fromPos) {
-        return true;
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
+        JavaSimpleTokenType cur = javaSimpleTokens.get(fromPos).getTokenType();
+        return JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur) || JavaSimpleTokenType.IDENTIFYER.equals(cur);
     }
 
     @Override
-    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L tokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         Supplier<JavaAdvancedToken> singleParamGroup = () -> new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
-        JavaSimpleToken curToken = tokens.get(fromPos);
+        JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
         fromPos++;
         if (JavaSimpleTokenType.IDENTIFYER.equals(curToken.getTokenType())) {
             JavaAdvancedToken advancedToken = singleParamGroup.get();
@@ -50,36 +52,49 @@ public class ParameterRule implements JavaLexerRule {
         if (!JavaSimpleTokenType.BRACKETROUNDSTART.equals(curToken.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();
         JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.BRACKETS_ROUND, curToken);
-        final List<JavaSimpleTokenType> endParam = Arrays.asList(JavaSimpleTokenType.COMMA, JavaSimpleTokenType.BRACKETROUNDEND);
-        boolean searchNext = fromPos < tokens.size();
+
+        boolean searchNext = fromPos < javaSimpleTokens.size();
         if (!searchNext)
             throw GENERIC_LEXER_EXCEPTION.get();
         JavaAdvancedToken curParamGroup;
         while (searchNext) {
             curParamGroup = singleParamGroup.get();
-            curToken = tokens.get(fromPos);
+            curToken = javaSimpleTokens.get(fromPos);
+            if (curToken.getTokenType().isComment()) {
+                fromPos = addSimpleToken(curParamGroup, lexer, javaSimpleTokens, fromPos);
+                curToken = javaSimpleTokens.get(fromPos);
+            }
             fromPos++;
             if (JavaSimpleTokenType.BRACKETROUNDEND.equals(curToken.getTokenType())) {
                 // ()
                 searchNext = false;
+                advancedToken.addChildren(curParamGroup.getChildren()); // We might have comments
                 advancedToken.addChildren(curToken);
             } else {
                 curParamGroup.addChildren(curToken);
-                if (!(fromPos < tokens.size()))
+                if (!(fromPos < javaSimpleTokens.size()))
                     throw GENERIC_LEXER_EXCEPTION.get();
-                curToken = tokens.get(fromPos);
+                curToken = javaSimpleTokens.get(fromPos);
+                if (curToken.getTokenType().isComment()) {
+                    fromPos = addSimpleToken(curParamGroup, lexer, javaSimpleTokens, fromPos);
+                    curToken = javaSimpleTokens.get(fromPos);
+                }
                 fromPos++;
                 if (endParam.indexOf(curToken.getTokenType()) < 0) {
                     curParamGroup.addChildren(curToken);
-                    if (!(fromPos < tokens.size()))
+                    if (!(fromPos < javaSimpleTokens.size()))
                         throw GENERIC_LEXER_EXCEPTION.get();
-                    curToken = tokens.get(fromPos);
+                    curToken = javaSimpleTokens.get(fromPos);
                     fromPos++;
                 }
                 // Either of from ([ID ID [,ID ID]*]) or (ID [, ID]*)
                 if (endParam.indexOf(curToken.getTokenType()) < 0)
                     throw GENERIC_LEXER_EXCEPTION.get();
 
+                if (curToken.getTokenType().isComment()) {
+                    fromPos = addSimpleToken(curParamGroup, lexer, javaSimpleTokens, fromPos);
+                    curToken = javaSimpleTokens.get(fromPos);
+                }
                 advancedToken.addChildren(curParamGroup, curToken);
                 searchNext = JavaSimpleTokenType.COMMA.equals(curToken.getTokenType());
             }

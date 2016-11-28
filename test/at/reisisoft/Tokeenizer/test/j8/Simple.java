@@ -211,7 +211,6 @@ public class Simple {
                 SCOPE,
                 SCOPESTART,
                 SCOPEEND,
-                GENERIC_GROUP,
                 JavaAdvancedTokenType.ANNOTATION,
                 JavaSimpleTokenType.ANNOTATION,
                 FUNCTION,

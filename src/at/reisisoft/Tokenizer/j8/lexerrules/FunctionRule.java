@@ -34,29 +34,23 @@ public class FunctionRule implements JavaLexerRule {
             JavaSimpleTokenType.STATIC,
             JavaSimpleTokenType.ABSTRACT,
             JavaSimpleTokenType.FINAL,
-            JavaSimpleTokenType.DEFAULT,
-            JavaSimpleTokenType.COMMENTBLOCK,
-            JavaSimpleTokenType.COMMENTLINE
+            JavaSimpleTokenType.DEFAULT
     );
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> headLexerRules = Collections.unmodifiableList(
-            Arrays.asList(
-                    ParameterRule.getInstance(),
-                    CommentRule.getInstance()
-            )
-    );
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> headLexerRules = Collections.singletonList(ParameterRule.getInstance()),
+            defaultLexerRules = Collections.singletonList(ExpressionRule.getInstance());
 
     private FunctionRule() {
     }
 
     @Override
-    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L tokens, final int origFromPos) {
-        int fromPos = origFromPos;
-        JavaSimpleToken cur = tokens.get(fromPos);
+    public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, final int origFromPos) {
+        int fromPos = skipComment(javaSimpleTokens, origFromPos);
+        JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         while (acceptTokenTypes.indexOf(cur.getTokenType()) >= 0) {
-            fromPos++;
-            if (fromPos >= tokens.size())
+            fromPos = skipComment(javaSimpleTokens, fromPos + 1);
+            if (fromPos >= javaSimpleTokens.size())
                 return false;
-            cur = tokens.get(fromPos);
+            cur = javaSimpleTokens.get(fromPos);
         }
         return JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType())
                 && origFromPos < fromPos;
@@ -70,10 +64,9 @@ public class FunctionRule implements JavaLexerRule {
         while (fromPos < javaSimpleTokens.size()
                 && ((cur = javaSimpleTokens.get(fromPos)) != null)
                 && !JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType())) {
-            functionHead.addChildren(cur);
             if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType()))
                 cntIdentifyer++;
-            fromPos++;
+            fromPos = addSimpleToken(functionHead, lexer, javaSimpleTokens, fromPos);
         }
         if (cur == null || !JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType()) || !(0 < cntIdentifyer && cntIdentifyer < 3))
             throw GENERIC_LEXER_EXCEPTION.get();
@@ -87,6 +80,10 @@ public class FunctionRule implements JavaLexerRule {
         if (fromPos >= javaSimpleTokens.size())
             throw GENERIC_LEXER_EXCEPTION.get();
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
+        if (simpleToken.getTokenType().isComment()) {
+            fromPos = addSimpleToken(mainToken, lexer, javaSimpleTokens, fromPos);
+            simpleToken = javaSimpleTokens.get(fromPos);
+        }
         if (JavaSimpleTokenType.SEMICOLON.equals(simpleToken.getTokenType())) {
             mainToken.addChildren(simpleToken);
             fromPos++;
@@ -94,17 +91,13 @@ public class FunctionRule implements JavaLexerRule {
             if (JavaSimpleTokenType.DEFAULT.equals(simpleToken.getTokenType())) {
                 JavaAdvancedToken defaultGroup = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP, simpleToken);
                 mainToken.addChildren(defaultGroup);
-                Lexer.LexingResult<JavaAdvancedToken> expressionLexingResult = lexer.lexNext(Collections.singletonList(ExpressionRule.getInstance()), javaSimpleTokens, fromPos + 1);
+                Lexer.LexingResult<JavaAdvancedToken> expressionLexingResult = lexer.lexNext(defaultLexerRules, javaSimpleTokens, fromPos + 1);
                 fromPos = expressionLexingResult.getNextArrayfromPos();
                 defaultGroup.addChildren(expressionLexingResult.getReturnToken().getChildren());
                 defaultGroup.addChildren(javaSimpleTokens.get(fromPos));
                 fromPos++;
             } else if (!JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType()))
                 throw GENERIC_LEXER_EXCEPTION.get();
-            //Function has a body -> parse it
-            if (simpleToken.getTokenType().isComment()) {
-                fromPos = RuleUtils.addSimpleToken(mainToken, lexer, javaSimpleTokens, fromPos);
-            }
             Lexer.LexingResult<JavaAdvancedToken> functionBody = lexer.lexNext(Collections.singletonList(GenericScope.getInstace()), javaSimpleTokens, fromPos);
             fromPos = functionBody.getNextArrayfromPos();
             mainToken.addChildren(functionBody.getReturnToken());
