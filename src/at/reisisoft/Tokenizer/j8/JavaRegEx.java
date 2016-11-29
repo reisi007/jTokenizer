@@ -8,7 +8,7 @@ class JavaRegEx {
      * A pattern which performs a positive lookahead [without consuming the characters].
      */
     static final String LOOKAHEAD_END_OF_WORD = "(?=(\\s|\\{|\\(|;))";
-    private static final String IDENTIFYER_ALLOWED_CHARS = "[^\\s)(\\:,;<>+-]";
+    private static final String IDENTIFYER_ALLOWED_CHARS = "[^\\s)(\\:,;<>+\\-{}]";
     private static final String IDENTIFYER_NON_GENERICS_CHAR = "[^<>]*";
 
     public static String getIdentifyerRegex(int supportedGenericsLevel) {

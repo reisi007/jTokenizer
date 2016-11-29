@@ -14,7 +14,7 @@ import java.util.RandomAccess;
 /**
  * Created by Florian on 25.11.2016.
  */
-public class ConstantVariableRule implements JavaLexerRule {
+public class ConstantVariableRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {

@@ -19,7 +19,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 /**
  * Created by Florian on 27.11.2016.
  */
-public class GenericScope implements JavaLexerRule {
+public class GenericScope extends JavaLexerRule {
     private static JavaLexerRule instace;
 
     public static JavaLexerRule getInstace() {

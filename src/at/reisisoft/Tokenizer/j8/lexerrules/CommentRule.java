@@ -13,7 +13,7 @@ import java.util.RandomAccess;
 /**
  * Created by Florian on 27.11.2016.
  */
-public class CommentRule implements JavaLexerRule {
+public class CommentRule extends JavaLexerRule {
     private static CommentRule instance;
 
     public static CommentRule getInstance() {

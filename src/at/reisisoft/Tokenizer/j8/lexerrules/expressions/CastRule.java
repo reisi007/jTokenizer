@@ -17,7 +17,7 @@ import java.util.RandomAccess;
 /**
  * Created by Florian on 26.11.2016.
  */
-public class CastRule implements JavaLexerRule {
+public class CastRule extends JavaLexerRule {
 
     private static JavaLexerRule instance;
 

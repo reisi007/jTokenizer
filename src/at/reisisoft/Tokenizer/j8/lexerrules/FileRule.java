@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Created by Florian on 20.11.2016.
  */
-public class FileRule implements JavaLexerRule {
+public class FileRule extends JavaLexerRule {
 
     private static JavaLexerRule instance;
 

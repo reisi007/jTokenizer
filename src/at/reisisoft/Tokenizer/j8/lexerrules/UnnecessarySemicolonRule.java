@@ -16,7 +16,7 @@ import static at.reisisoft.Tokenizer.Lexer.LexingResult;
 /**
  * Created by Florian on 24.11.2016.
  */
-public class UnnecessarySemicolonRule implements JavaLexerRule {
+public class UnnecessarySemicolonRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {

@@ -13,7 +13,8 @@ import org.junit.runners.Suite;
         Aritmetics.class,
         Try.class,
         Lambda.class,
-        Comments.class
+        Comments.class,
+        LoginRequired.class
 })
 public class Testrunner {
 }

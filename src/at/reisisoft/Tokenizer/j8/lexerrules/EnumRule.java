@@ -19,7 +19,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 /**
  * Created by Florian on 27.11.2016.
  */
-public class EnumRule implements JavaLexerRule {
+public class EnumRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {

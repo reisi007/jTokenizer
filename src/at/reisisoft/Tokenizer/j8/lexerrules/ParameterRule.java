@@ -17,7 +17,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 /**
  * Created by Florian on 22.11.2016.
  */
-public class ParameterRule implements JavaLexerRule {
+public class ParameterRule extends JavaLexerRule {
 
     private static JavaLexerRule instance;
     private final List<JavaSimpleTokenType> endParam = Arrays.asList(JavaSimpleTokenType.COMMA, JavaSimpleTokenType.BRACKETROUNDEND);

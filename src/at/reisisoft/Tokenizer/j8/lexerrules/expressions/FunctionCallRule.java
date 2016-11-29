@@ -18,7 +18,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 /**
  * Created by Florian on 27.11.2016.
  */
-public class FunctionCallRule implements JavaLexerRule {
+public class FunctionCallRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.singletonList(ExpressionRule.getInstance());

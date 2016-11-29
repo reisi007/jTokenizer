@@ -14,7 +14,12 @@ import java.util.RandomAccess;
 /**
  * Created by Florian on 20.11.2016.
  */
-public interface JavaLexerRule extends LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> {
+public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> {
+
+    protected JavaLexerRule() {
+
+    }
+
     /**
      * This adds a {@link JavaSimpleToken} to an {@link JavaAdvancedToken}, expect if it is a comment. Then the comment will be lexed using {@link CommentRule}
      *
@@ -26,7 +31,7 @@ public interface JavaLexerRule extends LexerRule<JavaSimpleTokenType, JavaSimple
      * @return The next {@code fromPos}
      * @throws LexerException Throws an exception if the call to the lexer went wrong
      */
-    default <L extends List<JavaSimpleToken> & RandomAccess> int addSimpleToken(JavaAdvancedToken javaAdvancedToken, Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
+    protected final <L extends List<JavaSimpleToken> & RandomAccess> int addSimpleToken(JavaAdvancedToken javaAdvancedToken, Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
         if (simpleToken.getTokenType().isComment()) {
             final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(Collections.singletonList(CommentRule.getInstance()), javaSimpleTokens, fromPos);
@@ -44,7 +49,7 @@ public interface JavaLexerRule extends LexerRule<JavaSimpleTokenType, JavaSimple
      * @param <L>              A randomaccess list of {@link JavaSimpleToken}
      * @return The next value of {@code frompos}
      */
-    default <L extends List<JavaSimpleToken> & RandomAccess> int skipComment(L javaSimpleTokens, int fromPos) {
+    protected final <L extends List<JavaSimpleToken> & RandomAccess> int skipComment(L javaSimpleTokens, int fromPos) {
         JavaSimpleTokenType cur = javaSimpleTokens.get(fromPos).getTokenType();
         while (cur.isComment()) {
             fromPos++;

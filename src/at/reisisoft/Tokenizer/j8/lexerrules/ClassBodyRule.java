@@ -16,7 +16,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 /**
  * Created by Florian on 26.11.2016.
  */
-public class ClassBodyRule implements JavaLexerRule {
+public class ClassBodyRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {

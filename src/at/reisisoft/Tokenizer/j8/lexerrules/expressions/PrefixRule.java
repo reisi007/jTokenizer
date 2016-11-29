@@ -16,7 +16,7 @@ import java.util.RandomAccess;
 /**
  * Created by Florian on 27.11.2016.
  */
-public class PrefixRule implements JavaLexerRule {
+public class PrefixRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {

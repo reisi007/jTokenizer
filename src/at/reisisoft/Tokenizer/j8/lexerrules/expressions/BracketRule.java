@@ -18,7 +18,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 /**
  * Created by Florian on 25.11.2016.
  */
-public class BracketRule implements JavaLexerRule {
+public class BracketRule extends JavaLexerRule {
 
     public static JavaLexerRule instance;
 

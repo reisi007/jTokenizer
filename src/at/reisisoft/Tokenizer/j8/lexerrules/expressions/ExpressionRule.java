@@ -20,7 +20,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 /**
  * Created by Florian on 24.11.2016.
  */
-public class ExpressionRule implements JavaLexerRule {
+public class ExpressionRule extends JavaLexerRule {
 
     private static JavaLexerRule instance;
 

@@ -17,9 +17,9 @@ import java.util.RandomAccess;
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
 /**
- * Created by Florian on 25.11.2016. FIXME Comments#comment1 fails here -> redo this
+ * Created by Florian on 25.11.2016.
  */
-public abstract class AbstractAnnotationRule implements JavaLexerRule {
+public abstract class AbstractAnnotationRule extends JavaLexerRule {
 
     private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> annotationArgsSubrules = Collections.unmodifiableList(
             Arrays.asList(

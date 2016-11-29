@@ -16,7 +16,7 @@ import java.util.RandomAccess;
 /**
  * Created by Florian on 28.11.2016.
  */
-public class ListOfExpressionRule implements JavaLexerRule {
+public class ListOfExpressionRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {
@@ -38,7 +38,7 @@ public class ListOfExpressionRule implements JavaLexerRule {
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
-        JavaAdvancedToken scope = new JavaAdvancedToken(JavaAdvancedTokenType.SCOPE, javaSimpleTokens.get(fromPos));
+        JavaAdvancedToken scope = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP, javaSimpleTokens.get(fromPos));
         fromPos++;
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         while (!JavaSimpleTokenType.SCOPEEND.equals(cur.getTokenType())) {

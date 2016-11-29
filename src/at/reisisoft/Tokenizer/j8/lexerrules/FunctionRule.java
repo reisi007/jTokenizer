@@ -19,7 +19,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 /**
  * Created by Florian on 22.11.2016.
  */
-public class FunctionRule implements JavaLexerRule {
+public class FunctionRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {
@@ -94,8 +94,8 @@ public class FunctionRule implements JavaLexerRule {
                 Lexer.LexingResult<JavaAdvancedToken> expressionLexingResult = lexer.lexNext(defaultLexerRules, javaSimpleTokens, fromPos + 1);
                 fromPos = expressionLexingResult.getNextArrayfromPos();
                 defaultGroup.addChildren(expressionLexingResult.getReturnToken().getChildren());
-                defaultGroup.addChildren(javaSimpleTokens.get(fromPos));
-                fromPos++;
+                mainToken.addChildren(javaSimpleTokens.get(fromPos));
+                return new Lexer.LexingResult<>(mainToken, fromPos + 1);
             } else if (!JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType()))
                 throw GENERIC_LEXER_EXCEPTION.get();
             Lexer.LexingResult<JavaAdvancedToken> functionBody = lexer.lexNext(Collections.singletonList(GenericScope.getInstace()), javaSimpleTokens, fromPos);

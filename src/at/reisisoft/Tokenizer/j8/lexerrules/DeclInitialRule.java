@@ -16,7 +16,7 @@ import java.util.RandomAccess;
 /**
  * Created by Florian on 24.11.2016.
  */
-public class DeclInitialRule implements JavaLexerRule {
+public class DeclInitialRule extends JavaLexerRule {
     private final List<JavaSimpleTokenType> optionalTokenTypes = Collections.unmodifiableList(
             Arrays.asList(
                     JavaSimpleTokenType.IDENTIFYER,
