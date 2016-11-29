@@ -15,14 +15,14 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
         this.fileRuleSupplier = fileRuleSupplier;
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
     public <L extends List<TokenizerToken> & RandomAccess> ReturnToken lexFile(L tokenizerTokens) throws LexerException {
         if (Objects.requireNonNull(tokenizerTokens).size() == 0) {
             throw new LexerException("Lexer needs to have some tokens to operate");
         }
         //Make list readonly Collections.unmodifiableList supports RandomaccessList!
-        tokenizerTokens = (L) Collections.unmodifiableList(tokenizerTokens);
+        tokenizerTokens = makeListUnmodifyable(tokenizerTokens);
         final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> fileRule = fileRuleSupplier.get();
         if (!fileRule.isApplicable(tokenizerTokens, 0)) {
             throw GENERIC_LEXER_EXCEPTION.get();
@@ -46,5 +46,12 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
             }
         }
         return Optional.empty();
+    }
+
+    @SuppressWarnings("unchecked")
+    private <L extends List<TokenizerToken> & RandomAccess> L makeListUnmodifyable(L list) {
+        List<TokenizerToken> unmodifiableList = Collections.unmodifiableList(list);
+        //Collections.unmodifiableList leaves RandomAccess state. We had it before, we have it now
+        return (L) unmodifiableList;
     }
 }

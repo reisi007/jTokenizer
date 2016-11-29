@@ -3,6 +3,8 @@ package at.reisisoft.Tokenizer;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.RandomAccess;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +20,7 @@ public class TokenizerImpl<TokenType extends RegExTokenType<TokenType>, T extend
     }
 
     @Override
-    public ArrayList<T> tokenize(String input) {
+    public <L extends List<T> & RandomAccess> L tokenize(String input) {
         // The tokens to return
         ArrayList<T> tokens = new ArrayList<>();
         // JavaTokenizerImpl logic begins here
@@ -40,7 +42,7 @@ public class TokenizerImpl<TokenType extends RegExTokenType<TokenType>, T extend
                 tokens.add(currentToken);
             }
         }
-        return tokens;
+        return castArrayList(tokens);
     }
 
     private T getToken(Matcher matcher, TokenType[] availableTokenTypes) {
@@ -57,5 +59,10 @@ public class TokenizerImpl<TokenType extends RegExTokenType<TokenType>, T extend
             }
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <L extends List<T> & RandomAccess> L castArrayList(ArrayList<T> arrayList) {
+        return (L) arrayList;
     }
 }

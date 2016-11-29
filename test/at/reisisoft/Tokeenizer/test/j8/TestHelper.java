@@ -23,9 +23,9 @@ public class TestHelper {
     }
 
     public static <L extends List<JavaSimpleTokenType> & RandomAccess> ArrayList<JavaSimpleToken> doTokenizerTest(String filename, L solution) {
-        Tokenizer<JavaSimpleTokenType, JavaSimpleToken> lexar = new JavaTokenizerImpl();
+        Tokenizer<JavaSimpleTokenType, JavaSimpleToken> tokenizer = JavaTokenizerImpl.getInstance();
         String file = FileLoader.getTestFile(filename);
-        final ArrayList<JavaSimpleToken> lexed = new ArrayList<>(lexar.tokenize(file));
+        final ArrayList<JavaSimpleToken> lexed = new ArrayList<>(tokenizer.tokenize(file));
         JavaSimpleToken current;
         JavaSimpleTokenType expected;
         GenericTokenType actual;
@@ -41,7 +41,7 @@ public class TestHelper {
     }
 
     public static <L extends List<JavaSimpleToken> & RandomAccess> void doLexerTest(L tokens, ArrayList<GenericTokenType<?>> solution) throws LexerException {
-        Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer = new JavaLexerImpl();
+        Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer = JavaLexerImpl.getInstance();
         final JavaAdvancedToken javaAdvancedToken = lexer.lexFile(tokens);
         final List<GenericTokenType<?>> actualTokens = explode(javaAdvancedToken);
         GenericTokenType<?> actual = null;
@@ -57,7 +57,7 @@ public class TestHelper {
 
     private static <LS extends List<GenericTokenType<?>> & RandomAccess> LS explode(JavaAdvancedToken javaAdvancedTokenType) {
         //I do not know why this cast is unchecked...
-        LS list = (LS) new ArrayList<GenericTokenType<?>>();
+        LS list = castArrayList(new ArrayList<>());
         explode(javaAdvancedTokenType, list);
         return list;
     }
@@ -73,5 +73,10 @@ public class TestHelper {
                 tokenList.add(cur.getTokenType());
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <L extends List<GenericTokenType<?>> & RandomAccess> L castArrayList(ArrayList<GenericTokenType<?>> instance) {
+        return (L) instance;
     }
 }
