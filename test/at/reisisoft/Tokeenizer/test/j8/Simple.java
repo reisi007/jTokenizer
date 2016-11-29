@@ -172,6 +172,7 @@ public class Simple {
                 ABSTRACT,
                 CLASS,
                 IDENTIFYER,
+                GENERIC_GROUP,
                 IMPLEMENTS,
                 IDENTIFYER,
                 SCOPE,

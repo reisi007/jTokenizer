@@ -80,13 +80,18 @@ public class ClassRule implements JavaLexerRule {
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
 
         JavaAdvancedToken classToken = new JavaAdvancedToken(JavaAdvancedTokenType.CLASS_OR_INTERFACE),
-                classHeader = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
+                classHeader = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP),
+                curAdvanced = classHeader;
 
         JavaSimpleToken current = null;
         while (fromPos < javaSimpleTokens.size()
                 && (current = javaSimpleTokens.get(fromPos)) != null
                 && !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType())) {
-            fromPos = addSimpleToken(classHeader, lexer, javaSimpleTokens, fromPos);
+            if (JavaSimpleTokenType.EXTENDS.equals(current.getTokenType()) || JavaSimpleTokenType.IMPLEMENTS.equals(current.getTokenType())) {
+                curAdvanced = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
+                classHeader.addChildren(curAdvanced);
+            }
+            fromPos = addSimpleToken(curAdvanced, lexer, javaSimpleTokens, fromPos);
         }
         if (current == null || !(fromPos < javaSimpleTokens.size()) || !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.get();
