@@ -57,4 +57,22 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
         }
         return fromPos;
     }
+
+    /**
+     * This adds a {@link JavaSimpleToken} to an {@link JavaAdvancedToken}, if and only if it is a comment using {@link CommentRule}
+     *
+     * @param javaAdvancedToken The token, where the simple token should be added
+     * @param lexer             The lexer used for lexing, if {@link JavaSimpleTokenType#isComment()} is {@code true}
+     * @param javaSimpleTokens  The tokens from the tokenizer
+     * @param fromPos           The position in the array the pattern should be found
+     * @param <L>               A randomaccess list of {@link JavaSimpleToken}
+     * @return The next {@code fromPos}
+     * @throws LexerException Throws an exception if the call to the lexer went wrong
+     */
+    protected final <L extends List<JavaSimpleToken> & RandomAccess> int addSimpleTokenIfComment(JavaAdvancedToken javaAdvancedToken, Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
+        JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
+        if (!cur.getTokenType().isComment())
+            return fromPos;
+        return addSimpleToken(javaAdvancedToken, lexer, javaSimpleTokens, fromPos);
+    }
 }

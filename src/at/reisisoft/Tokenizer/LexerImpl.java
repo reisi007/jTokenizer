@@ -39,6 +39,7 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
     }
 
     private <L extends List<TokenizerToken> & RandomAccess> Optional<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> getMatchingRule(final List<LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken>> lexerRules, final L tokenizerTokenList, final int fromPos) {
+        Objects.requireNonNull(lexerRules);
         for (LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> rule : lexerRules) {
             boolean isApplicable = rule.isApplicable(tokenizerTokenList, fromPos);
             if (isApplicable) {

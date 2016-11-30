@@ -11,27 +11,26 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Florian on 27.11.2016.
+ * Created by Florian on 30.11.2016.
  */
-public class GenericScope extends AbstractGenericScope {
-    private static JavaLexerRule instace;
+public class CaseRule extends AbstractCaseRule {
+    private static JavaLexerRule instance;
 
-    public static JavaLexerRule getInstace() {
-        if (instace == null)
-            instace = new GenericScope();
-        return instace;
+    public static JavaLexerRule getInstance() {
+        if (instance == null)
+            instance = new CaseRule();
+        return instance;
     }
 
-    private GenericScope() {
+    private CaseRule() {
+        super(JavaSimpleTokenType.CASE);
     }
 
     @Override
-    protected List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getRules() {
+    protected List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getSubRules() {
         return Collections.unmodifiableList(
                 Arrays.asList(
-                        UnnecessarySemicolonRule.getInstance(),
-                        GenericScope.getInstace(),
-                        CommentRule.getInstance(),
+                        this,
                         StatementRule.getInstance()
                 )
         );

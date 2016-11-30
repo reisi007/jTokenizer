@@ -11,24 +11,31 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     ASSIGNMENT,
     BINARY_OPERATOR,
     BRACKETS_ROUND,
+    CASE,
     CAST,
     CLASS_OR_INTERFACE,
     COMMENT,
     CONSTANT_OR_VARIABLE,
     CONSTRUCTOR,
     DECLARATION_OR_INITIALISATION,
+    DO_WHILE,
+    ELSE,
     ENUM,
     EXPRESSION,
     FILE,
     FUNCTION,
     FUNCTION_CALL,
     GENERIC_GROUP,
+    IF,
+    IF_ELSE,
     LAMBDA,
     NEW,
     PREFIX,
     POSTFIX,
     SCOPE,
-    STATEMENT;
+    STATEMENT,
+    SWITCH,
+    WHILE;
 
     @Override
     public String getName() {
