@@ -7,7 +7,9 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
+import at.reisisoft.Tokenizer.j8.lexerrules.DeclInitialRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
+import at.reisisoft.Tokenizer.j8.lexerrules.UnnecessarySemicolonRule;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,10 +55,14 @@ public class StatementRule extends JavaLexerRule {
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getRules() {
         return Collections.unmodifiableList(
                 Arrays.asList(
-                        SingleTokenStatementRule.getInstance(),
+                        StatementSingleTokenRule.getInstance(),
                         StatementScopeRule.getInstance(),
                         StatementIfRule.getInstance(),
-                        StatementWhileRule.getInstance()
+                        StatementWhileRule.getInstance(),
+                        StatementForRule.getInstance(),
+                        DeclInitialRule.getInstance(),
+                        UnnecessarySemicolonRule.getInstance(),
+                        StatementExpressionRule.getInstance()
                 )
         );
     }

@@ -19,11 +19,14 @@ import java.util.RandomAccess;
  */
 public abstract class AbstractHeadConditionRuleStatement extends JavaLexerRule {
 
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> bracketExpressionRule = getBracketRule(),
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> bracketExpressionRule,
             anyStatementRule = Collections.singletonList(StatementRule.getInstance());
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
+        if (bracketExpressionRule == null)
+            bracketExpressionRule = getBracketRule();
+
         JavaAdvancedToken jat = new JavaAdvancedToken(getMainTokenType());
         JavaSimpleToken cur;
         while (fromPos < javaSimpleTokens.size()

@@ -23,6 +23,7 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     ENUM,
     EXPRESSION,
     FILE,
+    FOR,
     FUNCTION,
     FUNCTION_CALL,
     GENERIC_GROUP,

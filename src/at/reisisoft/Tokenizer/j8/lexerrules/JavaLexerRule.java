@@ -9,6 +9,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.RandomAccess;
 
 /**
@@ -74,5 +75,17 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
         if (!cur.getTokenType().isComment())
             return fromPos;
         return addSimpleToken(javaAdvancedToken, lexer, javaSimpleTokens, fromPos);
+    }
+
+    /**
+     * Creates an array (of at least length one) from a s
+     *
+     * @param ts  Instances of type {@code <T>}, must not be {@code null}
+     * @param <T> Any object
+     * @return An array of type {@code <T>} with minimum length 1
+     */
+    @SafeVarargs
+    protected final <T> T[] getArrayFromVararg(T... ts) {
+        return Objects.requireNonNull(ts);
     }
 }

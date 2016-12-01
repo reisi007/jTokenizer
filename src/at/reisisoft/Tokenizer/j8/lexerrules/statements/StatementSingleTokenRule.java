@@ -16,16 +16,16 @@ import java.util.RandomAccess;
 /**
  * Created by Florian on 30.11.2016.
  */
-public class SingleTokenStatementRule extends JavaLexerRule {
+public class StatementSingleTokenRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {
         if (instance == null)
-            instance = new SingleTokenStatementRule();
+            instance = new StatementSingleTokenRule();
         return instance;
     }
 
-    private SingleTokenStatementRule() {
+    private StatementSingleTokenRule() {
     }
 
     private final List<JavaSimpleTokenType> acceptTokens = Collections.unmodifiableList(

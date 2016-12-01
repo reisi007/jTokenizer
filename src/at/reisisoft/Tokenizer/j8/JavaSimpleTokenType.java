@@ -100,6 +100,14 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
         return STRING.equals(this) || IDENTIFYER.equals(this) || NUMBER.equals(this) || BOOLLITERAL.equals(this);
     }
 
+    public boolean equals(JavaSimpleTokenType other) {
+        return super.equals(other);
+    }
+
+    public boolean nonEquals(JavaSimpleTokenType other) {
+        return !equals(other);
+    }
+
     public boolean isComment() {
         return COMMENTBLOCK.equals(this) || COMMENTLINE.equals(this);
     }
