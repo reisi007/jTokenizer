@@ -10,10 +10,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.CommentRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.RandomAccess;
+import java.util.*;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
@@ -47,8 +44,10 @@ public class ExpressionRule extends JavaLexerRule {
         if (subrules == null) {
             subrules = Collections.unmodifiableList(
                     Arrays.asList(
-                            PrefixRule.getInstance(),
                             CommentRule.getInstance(),
+                            PrefixRule.getInstance(),
+                            SignedRule.getInstance(),
+                            RawBinaryOperatorRule.getInstance(),
                             LambdaRule.getInstance(),
                             CastRule.getInstance(),
                             BracketRule.getInstance(),
@@ -60,18 +59,24 @@ public class ExpressionRule extends JavaLexerRule {
         }
         //End init rules
         JavaAdvancedToken expression = new JavaAdvancedToken(JavaAdvancedTokenType.EXPRESSION);
+        List<JavaAdvancedToken> subTokenList = new ArrayList<>();
         JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
         if (isEndReached(curToken))
             throw GENERIC_LEXER_EXCEPTION.get();
         Lexer.LexingResult<JavaAdvancedToken> curLexingResult;
         do {
             curLexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
-            expression.addChildren(curLexingResult.getReturnToken());
+            subTokenList.add(curLexingResult.getReturnToken());
             fromPos = curLexingResult.getNextArrayfromPos();
             if (fromPos > javaSimpleTokens.size())
                 throw GENERIC_LEXER_EXCEPTION.get();
             curToken = javaSimpleTokens.get(fromPos);
         } while (!isEndReached(curToken));
+        //TODO group binary operators and operands here
+        {
+
+        }
+        expression.addChildren(subTokenList);
         return new Lexer.LexingResult<>(expression, fromPos);
     }
 

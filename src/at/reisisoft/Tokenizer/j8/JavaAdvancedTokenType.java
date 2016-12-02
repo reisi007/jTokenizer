@@ -10,6 +10,7 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     ANNOTATION,
     ASSIGNMENT,
     BINARY_OPERATOR,
+    BINARY_OPERATOR_RAW,
     BRACKETS_ROUND,
     CASE,
     CAST,
@@ -34,6 +35,7 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     PREFIX,
     POSTFIX,
     SCOPE,
+    SIGNED,
     STATEMENT,
     SWITCH,
     WHILE;

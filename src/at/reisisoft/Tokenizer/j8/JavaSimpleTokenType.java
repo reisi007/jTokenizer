@@ -111,4 +111,10 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     public boolean isComment() {
         return COMMENTBLOCK.equals(this) || COMMENTLINE.equals(this);
     }
+
+    public boolean isBinaryOperator() {
+        return BINARYADDITIVE.equals(this) || BINARYBITWISE.equals(this) || BINARYEQUALITY.equals(this)
+                || BINARYLOGICAL.equals(this) || BINARYOPMULTIPLICATIVE.equals(this) || BINARYRELATIONAL.equals(this)
+                || BINARYSHIFT.equals(this);
+    }
 }
