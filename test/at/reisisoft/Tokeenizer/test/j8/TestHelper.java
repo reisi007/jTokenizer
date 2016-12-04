@@ -3,6 +3,7 @@ package at.reisisoft.Tokeenizer.test.j8;
 import at.reisisoft.Tokeenizer.test.j8.files.FileLoader;
 import at.reisisoft.Tokenizer.*;
 import at.reisisoft.Tokenizer.j8.*;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,5 +85,23 @@ public class TestHelper {
     @SuppressWarnings("unchecked")
     private static <L extends List<GenericTokenType<?>> & RandomAccess> L castArrayList(ArrayList<GenericTokenType<?>> instance) {
         return (L) instance;
+    }
+
+    public <L extends List<GenericTokenType<?>> & RandomAccess> void doSmokeTest(String filename) throws LexerException {
+        String baseString = "TokenizerIndex: %s\t\tLexerIndex: %s";
+        String file = FileLoader.getTestFile(filename);
+        final Tokenizer<JavaSimpleTokenType, JavaSimpleToken> tokenizer = JavaTokenizerImpl.getInstance();
+        final ArrayList<JavaSimpleToken> tokenizerTokens = new ArrayList<>(tokenizer.tokenize(file));
+        final Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer = JavaLexerImpl.getInstance();
+        final JavaAdvancedToken advancedToken = lexer.lexFile(tokenizerTokens);
+        List<GenericTokenType<?>> lexerTokens = explode(advancedToken);
+        int tokenizerTokenIndex = 0, lexerTokenIndex = 0;
+        while (!(tokenizerTokenIndex >= tokenizerTokens.size() || lexerTokenIndex >= lexerTokens.size())) {
+            while (!(lexerTokens.get(lexerTokenIndex) instanceof JavaSimpleToken))
+                lexerTokenIndex++;
+            Assert.assertEquals(String.format(baseString, tokenizerTokenIndex, lexerTokenIndex), tokenizerTokens.get(tokenizerTokenIndex), lexerTokens.get(lexerTokenIndex));
+            tokenizerTokenIndex++;
+            lexerTokenIndex++;
+        }
     }
 }
