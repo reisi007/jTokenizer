@@ -44,7 +44,7 @@ public class SignedRule extends JavaLexerRule {
                 && (
                 (fromPos == 0)
                         || ((before = javaSimpleTokens.get(fromPos - 1).getTokenType()) != null
-                        && (JavaSimpleTokenType.BRACKETROUNDEND.nonEquals(before) || !before.isConstantOrVariable())
+                        && !(JavaSimpleTokenType.BRACKETROUNDEND.equals(before) || before.isConstantOrVariable())
                 )
         );
     }

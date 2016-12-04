@@ -3,10 +3,7 @@ package at.reisisoft.Tokenizer.j8.lexerrules.expressions;
 import at.reisisoft.Tokenizer.Lexer;
 import at.reisisoft.Tokenizer.LexerException;
 import at.reisisoft.Tokenizer.LexerRule;
-import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
-import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
-import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
-import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
+import at.reisisoft.Tokenizer.j8.*;
 import at.reisisoft.Tokenizer.j8.lexerrules.CommentRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
@@ -15,7 +12,7 @@ import java.util.*;
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
 /**
- * Created by Florian on 24.11.2016.
+ * Created by Florian on 24.11.2016. FIXME Object[] empty = {}; fails, because we have no "value" rule for this -> Comma seperated expressions within {}  needed
  */
 public class ExpressionRule extends JavaLexerRule {
 
@@ -32,7 +29,9 @@ public class ExpressionRule extends JavaLexerRule {
     }
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
-
+    private BinOpJavaAdvancedTokenFactory binOpFactory = BinOpJavaAdvancedTokenFactory.getInstance();
+    private FirstBinOpFinder binOpFinder = new FirstBinOpFinder();
+    //Order of the elements in the list is important
     private final List<JavaSimpleTokenType> binOpOrdered = Collections.unmodifiableList(
             Arrays.asList(
                     JavaSimpleTokenType.BINARYOPMULTIPLICATIVE,
@@ -76,7 +75,7 @@ public class ExpressionRule extends JavaLexerRule {
         }
         //End init rules
         JavaAdvancedToken expression = new JavaAdvancedToken(JavaAdvancedTokenType.EXPRESSION);
-        List<JavaAdvancedToken> subTokenList = new ArrayList<>();
+        ArrayList<JavaAdvancedToken> subTokenList = new ArrayList<>();
         JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
         if (isEndReached(curToken))
             throw GENERIC_LEXER_EXCEPTION.get();
@@ -89,12 +88,51 @@ public class ExpressionRule extends JavaLexerRule {
                 throw GENERIC_LEXER_EXCEPTION.get();
             curToken = javaSimpleTokens.get(fromPos);
         } while (!isEndReached(curToken));
-        //TODO group binary operators and operands here tenary needs special treatment, assignment is last
-        {
 
+        {
+            JavaAdvancedToken cur;
+            boolean clean;
+            boolean anyBinOpFound;
+            JavaSimpleTokenType curSimpleTokenType;
+            int firstIndex;
+
+            do {
+                //Preperations
+                clean = true;
+                binOpFinder.clear();
+
+                for (int index = 0; index < subTokenList.size(); index++) {
+                    cur = subTokenList.get(index);
+                    binOpFinder.accept(cur, index);
+                }
+                anyBinOpFound = binOpFinder.anyBinopFound();
+                if (anyBinOpFound) {
+                    for (int i = 0; clean && i < binOpOrdered.size(); i++) {
+                        curSimpleTokenType = binOpOrdered.get(i);
+                        firstIndex = binOpFinder.getFirstIndex(curSimpleTokenType);
+                        if (firstIndex >= 0) {
+                            clean = false;
+                            subTokenList = getNewList(subTokenList, firstIndex);
+                        }
+
+                    }
+                }
+            } while (anyBinOpFound);
         }
         expression.addChildren(subTokenList);
         return new Lexer.LexingResult<>(expression, fromPos);
+    }
+
+    private ArrayList<JavaAdvancedToken> getNewList(ArrayList<JavaAdvancedToken> oldList, int binOpPos) {
+        ArrayList<JavaAdvancedToken> newList = new ArrayList<>(oldList.size());
+        //Add all elements before the binary operator
+        newList.addAll(oldList.subList(0, binOpPos - 1));
+        //Add BinaryOperatorElement
+        final Lexer.LexingResult<JavaAdvancedToken> binaryOperatorJAT = binOpFactory.getBinaryOperatorJAT(oldList, binOpPos);
+        newList.add(binaryOperatorJAT.getReturnToken());
+        //Add all elements after the binary operator ended
+        newList.addAll(oldList.subList(binaryOperatorJAT.getNextArrayfromPos(), oldList.size()));
+        return newList;
     }
 
     private boolean isEndReached(JavaSimpleToken token) {
@@ -104,4 +142,5 @@ public class ExpressionRule extends JavaLexerRule {
                 || JavaSimpleTokenType.BRACKETROUNDEND.equals(token.getTokenType())
                 || JavaSimpleTokenType.SCOPEEND.equals(token.getTokenType());
     }
+
 }

@@ -1,5 +1,6 @@
 package at.reisisoft.Tokeenizer.test.j8;
 
+import at.reisisoft.Tokeenizer.test.j8.smoketest.Smoketestrunner;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -15,7 +16,8 @@ import org.junit.runners.Suite;
         Try.class,
         Lambda.class,
         Comments.class,
-        LoginRequired.class
+        LoginRequired.class,
+        Smoketestrunner.class
 })
 public class Testrunner {
     @BeforeClass
