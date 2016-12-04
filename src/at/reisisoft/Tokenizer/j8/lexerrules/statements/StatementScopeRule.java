@@ -31,4 +31,9 @@ public class StatementScopeRule extends AbstractGenericScope {
     protected List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getRules() {
         return subrule;
     }
+
+    @Override
+    protected JavaSimpleTokenType getAllowedTokenType() {
+        return JavaSimpleTokenType.SYNCHRONIZED;
+    }
 }

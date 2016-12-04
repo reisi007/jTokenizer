@@ -16,6 +16,8 @@ import static org.junit.Assert.*;
  */
 public class TestHelper {
 
+    public static boolean doOutput = true;
+
     public static <T> ArrayList<T> getList(T... elements) {
         if (elements == null || elements.length == 0)
             return new ArrayList<>(0);
@@ -29,12 +31,14 @@ public class TestHelper {
         JavaSimpleToken current;
         JavaSimpleTokenType expected;
         GenericTokenType actual;
-        System.out.printf("%n%n== TokenizerTest ==%nEXPECTED <==> ACTUAL%n%n");
+        if (doOutput)
+            System.out.printf("%n%n== TokenizerTest ==%nEXPECTED <==> ACTUAL%n%n");
         for (int i = 0; i < solution.size(); i++) {
             current = lexed.get(i);
             expected = solution.get(i);
             actual = current.getTokenType();
-            System.out.println(i + ") " + expected + " <==> " + actual);
+            if (doOutput)
+                System.out.println(i + ") " + expected + " <==> " + actual);
             assertEquals(expected, actual);
         }
         return lexed;
@@ -46,11 +50,13 @@ public class TestHelper {
         final List<GenericTokenType<?>> actualTokens = explode(javaAdvancedToken);
         GenericTokenType<?> actual = null;
         GenericTokenType<?> expected = null;
-        System.out.printf("%n%n== LexerTest ==%nEXPECTED <==> ACTUAL%n%n");
+        if (doOutput)
+            System.out.printf("%n%n== LexerTest ==%nEXPECTED <==> ACTUAL%n%n");
         for (int i = 0; i < solution.size(); i++) {
             actual = actualTokens.get(i);
             expected = solution.get(i);
-            System.out.println(i + ") " + expected + " <==> " + actual);
+            if (doOutput)
+                System.out.println(i + ") " + expected + " <==> " + actual);
             assertEquals(expected, actual);
         }
     }

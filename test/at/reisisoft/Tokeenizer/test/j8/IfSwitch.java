@@ -65,7 +65,7 @@ public class IfSwitch {
                 JavaSimpleTokenType.BINARYRELATIONAL,
                 JavaSimpleTokenType.NUMBER,
                 JavaSimpleTokenType.BRACKETROUNDEND,
-                JavaSimpleTokenType.BINARYBITWISE,
+                JavaSimpleTokenType.BINARYBITWISEEXOR,
                 JavaSimpleTokenType.BRACKETROUNDSTART,
                 JavaSimpleTokenType.NUMBER,
                 JavaSimpleTokenType.BINARYEQUALITY,

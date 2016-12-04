@@ -98,7 +98,7 @@ public class FunctionRule extends JavaLexerRule {
                 return new Lexer.LexingResult<>(mainToken, fromPos + 1);
             } else if (!JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType()))
                 throw GENERIC_LEXER_EXCEPTION.get();
-            Lexer.LexingResult<JavaAdvancedToken> functionBody = lexer.lexNext(Collections.singletonList(GenericScope.getInstace()), javaSimpleTokens, fromPos);
+            Lexer.LexingResult<JavaAdvancedToken> functionBody = lexer.lexNext(Collections.singletonList(GenericScope.getInstance()), javaSimpleTokens, fromPos);
             fromPos = functionBody.getNextArrayfromPos();
             mainToken.addChildren(functionBody.getReturnToken());
         }

@@ -33,6 +33,23 @@ public class ExpressionRule extends JavaLexerRule {
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
 
+    private final List<JavaSimpleTokenType> binOpOrdered = Collections.unmodifiableList(
+            Arrays.asList(
+                    JavaSimpleTokenType.BINARYOPMULTIPLICATIVE,
+                    JavaSimpleTokenType.BINARYADDITIVE,
+                    JavaSimpleTokenType.BINARYSHIFT,
+                    JavaSimpleTokenType.BINARYRELATIONAL,
+                    JavaSimpleTokenType.BINARYEQUALITY,
+                    JavaSimpleTokenType.BINARYBITWISEAND,
+                    JavaSimpleTokenType.BINARYBITWISEEXOR,
+                    JavaSimpleTokenType.BINARYBITWISEOR,
+                    JavaSimpleTokenType.BINARYLOGICALAND,
+                    JavaSimpleTokenType.BINARYLOGICALOR,
+                    JavaSimpleTokenType.QUESTIONMARK,
+                    JavaSimpleTokenType.ASSIGNMENT
+            )
+    );
+
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         return !JavaSimpleTokenType.SCOPESTART.equals(javaSimpleTokens.get(fromPos).getTokenType());
@@ -72,7 +89,7 @@ public class ExpressionRule extends JavaLexerRule {
                 throw GENERIC_LEXER_EXCEPTION.get();
             curToken = javaSimpleTokens.get(fromPos);
         } while (!isEndReached(curToken));
-        //TODO group binary operators and operands here
+        //TODO group binary operators and operands here tenary needs special treatment, assignment is last
         {
 
         }

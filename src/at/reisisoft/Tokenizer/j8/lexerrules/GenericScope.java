@@ -14,12 +14,12 @@ import java.util.List;
  * Created by Florian on 27.11.2016.
  */
 public class GenericScope extends AbstractGenericScope {
-    private static JavaLexerRule instace;
+    private static JavaLexerRule instance;
 
-    public static JavaLexerRule getInstace() {
-        if (instace == null)
-            instace = new GenericScope();
-        return instace;
+    public static JavaLexerRule getInstance() {
+        if (instance == null)
+            instance = new GenericScope();
+        return instance;
     }
 
     private GenericScope() {
@@ -30,10 +30,15 @@ public class GenericScope extends AbstractGenericScope {
         return Collections.unmodifiableList(
                 Arrays.asList(
                         UnnecessarySemicolonRule.getInstance(),
-                        GenericScope.getInstace(),
+                        GenericScope.getInstance(),
                         CommentRule.getInstance(),
                         StatementRule.getInstance()
                 )
         );
+    }
+
+    @Override
+    protected JavaSimpleTokenType getAllowedTokenType() {
+        return JavaSimpleTokenType.STATIC;
     }
 }

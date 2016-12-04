@@ -25,7 +25,7 @@ public class ClassRule extends JavaLexerRule {
                 Arrays.asList(
                         CommentRule.getInstance(),
                         AnnotationRule.getInstance(),
-                        GenericScope.getInstace(),
+                        GenericScope.getInstance(),
                         UnnecessarySemicolonRule.getInstance(),
                         FunctionRule.getInstance(),
                         DeclInitialRule.getInstance(),

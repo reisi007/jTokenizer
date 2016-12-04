@@ -64,8 +64,11 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     NUMBER("([0-9]+(.[0-9]+)?|\\.[0-9]+)(f|d|l)?"),
     BINARYSHIFT("(>{2,3}|<{2})"),
     BINARYRELATIONAL("(<=?|>=?|instanceof" + LOOKAHEAD_END_OF_WORD + ")"),
-    BINARYLOGICAL("[\\|&]{2}"),
-    BINARYBITWISE("[\\|\\^&]"),
+    BINARYLOGICALOR("\\|{2}"),
+    BINARYLOGICALAND("&{2}"),
+    BINARYBITWISEAND("&"),
+    BINARYBITWISEOR("\\|"),
+    BINARYBITWISEEXOR("\\^"),
     /* Maximal level of Generic support. The maximum generic depth
     List is 0,
     List<T> is one
@@ -113,8 +116,9 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     }
 
     public boolean isBinaryOperator() {
-        return BINARYADDITIVE.equals(this) || BINARYBITWISE.equals(this) || BINARYEQUALITY.equals(this)
-                || BINARYLOGICAL.equals(this) || BINARYOPMULTIPLICATIVE.equals(this) || BINARYRELATIONAL.equals(this)
-                || BINARYSHIFT.equals(this);
+        return BINARYADDITIVE.equals(this) || BINARYBITWISEAND.equals(this) || BINARYBITWISEOR.equals(this)
+                || BINARYEQUALITY.equals(this) || BINARYLOGICALAND.equals(this) || BINARYLOGICALOR.equals(this)
+                || BINARYOPMULTIPLICATIVE.equals(this) || BINARYRELATIONAL.equals(this) || BINARYSHIFT.equals(this)
+                || QUESTIONMARK.equals(this) || ASSIGNMENT.equals(this) || BINARYBITWISEEXOR.equals(this);
     }
 }

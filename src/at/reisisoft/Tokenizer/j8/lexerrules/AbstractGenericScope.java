@@ -28,7 +28,7 @@ public abstract class AbstractGenericScope extends JavaLexerRule {
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         return JavaSimpleTokenType.SCOPESTART.equals(javaSimpleTokens.get(fromPos).getTokenType())
-                || (JavaSimpleTokenType.STATIC.equals(javaSimpleTokens.get(fromPos).getTokenType())
+                || (getAllowedTokenType().equals(javaSimpleTokens.get(fromPos).getTokenType())
                 && JavaSimpleTokenType.SCOPESTART.equals(javaSimpleTokens.get(fromPos).getTokenType()));
     }
 
@@ -64,4 +64,6 @@ public abstract class AbstractGenericScope extends JavaLexerRule {
     }
 
     protected abstract List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getRules();
+
+    protected abstract JavaSimpleTokenType getAllowedTokenType();
 }

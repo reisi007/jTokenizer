@@ -26,7 +26,7 @@ public class Aritmetics {
                 JavaSimpleTokenType.IDENTIFYER,
                 JavaSimpleTokenType.ASSIGNMENT,
                 JavaSimpleTokenType.IDENTIFYER,
-                JavaSimpleTokenType.BINARYBITWISE,
+                JavaSimpleTokenType.BINARYBITWISEAND,
                 JavaSimpleTokenType.IDENTIFYER,
                 JavaSimpleTokenType.SEMICOLON,
                 JavaSimpleTokenType.SEMICOLON,

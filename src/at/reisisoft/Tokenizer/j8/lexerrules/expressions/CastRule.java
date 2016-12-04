@@ -53,7 +53,7 @@ public class CastRule extends JavaLexerRule {
         while (!JavaSimpleTokenType.BRACKETROUNDEND.equals(cur)) {
             fromPos = skipComment(javaSimpleTokens, fromPos);
             cur = javaSimpleTokens.get(fromPos).getTokenType();
-            if (!JavaSimpleTokenType.BINARYBITWISE.equals(cur))
+            if (!JavaSimpleTokenType.BINARYBITWISEAND.equals(cur))
                 return false;
             fromPos = skipComment(javaSimpleTokens, fromPos + 1);
             cur = javaSimpleTokens.get(fromPos).getTokenType();
