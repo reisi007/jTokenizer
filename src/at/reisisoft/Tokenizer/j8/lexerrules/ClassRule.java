@@ -87,7 +87,7 @@ public class ClassRule extends JavaLexerRule {
         while (fromPos < javaSimpleTokens.size()
                 && (current = javaSimpleTokens.get(fromPos)) != null
                 && !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType())) {
-            if (JavaSimpleTokenType.EXTENDS.equals(current.getTokenType()) || JavaSimpleTokenType.IMPLEMENTS.equals(current.getTokenType())) {
+            if (isNextGroupTokenType(current.getTokenType())) {
                 curAdvanced = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP);
                 classHeader.addChildren(curAdvanced);
             }
@@ -99,5 +99,9 @@ public class ClassRule extends JavaLexerRule {
         fromPos = classBodyLexingResult.getNextArrayfromPos();
         classToken.addChildren(classHeader, classBodyLexingResult.getReturnToken());
         return new Lexer.LexingResult<>(classToken, fromPos);
+    }
+
+    private boolean isNextGroupTokenType(JavaSimpleTokenType current) {
+        return JavaSimpleTokenType.EXTENDS.equals(current) || JavaSimpleTokenType.IMPLEMENTS.equals(current) || JavaSimpleTokenType.THROWS.equals(current);
     }
 }

@@ -41,7 +41,6 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     SEMICOLON(";"),
     QUESTIONMARK("\\?"),
     SYNCHRONIZED("synchronized" + LOOKAHEAD_END_OF_WORD),
-    THROWNEW("throw\\s+new" + LOOKAHEAD_END_OF_WORD),
     THROW("throw" + LOOKAHEAD_END_OF_WORD),
     THROWS("throws" + LOOKAHEAD_END_OF_WORD),
     IMPLEMENTS("implements" + LOOKAHEAD_END_OF_WORD),

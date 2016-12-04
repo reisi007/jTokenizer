@@ -6,6 +6,7 @@ import at.reisisoft.Tokenizer.LexerRule;
 import at.reisisoft.Tokenizer.j8.*;
 import at.reisisoft.Tokenizer.j8.lexerrules.CommentRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
+import at.reisisoft.Tokenizer.j8.lexerrules.ListOfExpressionRule;
 
 import java.util.*;
 
@@ -51,7 +52,7 @@ public class ExpressionRule extends JavaLexerRule {
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
-        return !JavaSimpleTokenType.SCOPESTART.equals(javaSimpleTokens.get(fromPos).getTokenType());
+        return true;
     }
 
     @Override
@@ -63,6 +64,7 @@ public class ExpressionRule extends JavaLexerRule {
                             CommentRule.getInstance(),
                             PrefixRule.getInstance(),
                             SignedRule.getInstance(),
+                            ListOfExpressionRule.getInstance(),
                             RawBinaryOperatorRule.getInstance(),
                             LambdaRule.getInstance(),
                             CastRule.getInstance(),
