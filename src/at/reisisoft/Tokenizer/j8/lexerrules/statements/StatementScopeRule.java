@@ -7,7 +7,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.AbstractGenericScope;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,14 +21,12 @@ public class StatementScopeRule extends AbstractGenericScope {
         return instance;
     }
 
-    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrule = Collections.singletonList(StatementRule.getInstance());
-
     private StatementScopeRule() {
     }
 
     @Override
     protected List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getRules() {
-        return subrule;
+        return StatementRule.getListInstance();
     }
 
     @Override

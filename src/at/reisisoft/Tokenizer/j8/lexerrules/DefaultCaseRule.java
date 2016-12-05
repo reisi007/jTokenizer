@@ -6,7 +6,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.statements.StatementRule;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,6 +26,6 @@ public class DefaultCaseRule extends AbstractCaseRule {
 
     @Override
     protected List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getSubRules() {
-        return Collections.singletonList(StatementRule.getInstance());
+        return StatementRule.getListInstance();
     }
 }

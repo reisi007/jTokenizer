@@ -94,7 +94,7 @@ public class ClassRule extends JavaLexerRule {
             fromPos = addSimpleToken(curAdvanced, lexer, javaSimpleTokens, fromPos);
         }
         if (current == null || !(fromPos < javaSimpleTokens.size()) || !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType()))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         Lexer.LexingResult<JavaAdvancedToken> classBodyLexingResult = lexer.lexNext(Collections.singletonList(ClassBodyRule.getInstance()), javaSimpleTokens, fromPos);
         fromPos = classBodyLexingResult.getNextArrayfromPos();
         classToken.addChildren(classHeader, classBodyLexingResult.getReturnToken());

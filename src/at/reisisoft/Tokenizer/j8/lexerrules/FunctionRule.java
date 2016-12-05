@@ -37,7 +37,7 @@ public class FunctionRule extends JavaLexerRule {
             JavaSimpleTokenType.DEFAULT
     );
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> headLexerRules = Collections.singletonList(ParameterRule.getInstance()),
-            defaultLexerRules = Collections.singletonList(ExpressionRule.getInstance());
+            defaultLexerRules = ExpressionRule.getListInstance();
 
     private FunctionRule() {
     }
@@ -69,7 +69,7 @@ public class FunctionRule extends JavaLexerRule {
             fromPos = addSimpleToken(functionHead, lexer, javaSimpleTokens, fromPos);
         }
         if (cur == null || !JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType()) || !(0 < cntIdentifyer && cntIdentifyer < 3))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         //The tokenType of cur is BRACKETROUNDSTART, cntIdentifyer is either 1 or 2
         JavaAdvancedTokenType functionOrConstructor = cntIdentifyer == 1 ? JavaAdvancedTokenType.CONSTRUCTOR : JavaAdvancedTokenType.FUNCTION;
         JavaAdvancedToken mainToken = new JavaAdvancedToken(functionOrConstructor, functionHead);
@@ -78,7 +78,7 @@ public class FunctionRule extends JavaLexerRule {
         functionHead.addChildren(functionHeadLexingResult.getReturnToken());
         //Check if a semicolon is next -> abstract method
         if (fromPos >= javaSimpleTokens.size())
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
         if (simpleToken.getTokenType().isComment()) {
             fromPos = addSimpleToken(mainToken, lexer, javaSimpleTokens, fromPos);
@@ -97,7 +97,7 @@ public class FunctionRule extends JavaLexerRule {
                 mainToken.addChildren(javaSimpleTokens.get(fromPos));
                 return new Lexer.LexingResult<>(mainToken, fromPos + 1);
             } else if (!JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType()))
-                throw GENERIC_LEXER_EXCEPTION.get();
+                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
             Lexer.LexingResult<JavaAdvancedToken> functionBody = lexer.lexNext(Collections.singletonList(GenericScope.getInstance()), javaSimpleTokens, fromPos);
             fromPos = functionBody.getNextArrayfromPos();
             mainToken.addChildren(functionBody.getReturnToken());

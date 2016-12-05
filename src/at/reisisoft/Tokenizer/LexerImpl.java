@@ -25,7 +25,7 @@ public class LexerImpl<TokenizerTokenType extends GenericTokenType<TokenizerToke
         tokenizerTokens = makeListUnmodifyable(tokenizerTokens);
         final LexerRule<TokenizerTokenType, TokenizerToken, ReturnToken> fileRule = fileRuleSupplier.get();
         if (!fileRule.isApplicable(tokenizerTokens, 0)) {
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(0);
         }
         final LexingResult<ReturnToken> fileLexingResult = fileRule.apply(this, tokenizerTokens, 0);
         return Objects.requireNonNull(fileLexingResult.getReturnToken());

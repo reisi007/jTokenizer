@@ -9,7 +9,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -28,7 +27,7 @@ public class BracketRule extends JavaLexerRule {
         return instance;
     }
 
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> rules = Collections.singletonList(ExpressionRule.getInstance());
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> rules = ExpressionRule.getListInstance();
 
     private BracketRule() {
     }
@@ -42,7 +41,7 @@ public class BracketRule extends JavaLexerRule {
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaSimpleToken current = javaSimpleTokens.get(fromPos);
         if (!JavaSimpleTokenType.BRACKETROUNDSTART.equals(current.getTokenType()))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         JavaAdvancedToken brackets = new JavaAdvancedToken(JavaAdvancedTokenType.BRACKETS_ROUND, current);
         fromPos++;
         Lexer.LexingResult<JavaAdvancedToken> curLexingResult;

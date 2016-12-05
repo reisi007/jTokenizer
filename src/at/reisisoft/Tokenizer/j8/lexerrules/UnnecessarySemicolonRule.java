@@ -36,7 +36,7 @@ public class UnnecessarySemicolonRule extends JavaLexerRule {
         JavaSimpleToken token = javaSimpleTokens.get(fromPos);
         fromPos++;
         if (!JavaSimpleTokenType.SEMICOLON.equals(token.getTokenType()))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.STATEMENT, token);
         return new LexingResult<>(advancedToken, fromPos);
     }

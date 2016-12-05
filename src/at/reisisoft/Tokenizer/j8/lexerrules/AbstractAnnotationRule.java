@@ -9,8 +9,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.expressions.ExpressionRule;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -21,12 +19,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  */
 public abstract class AbstractAnnotationRule extends JavaLexerRule {
 
-    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> annotationArgsSubrules = Collections.unmodifiableList(
-            Arrays.asList(
-                    ListOfExpressionRule.getInstance(),
-                    ExpressionRule.getInstance()
-            )
-    );
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> annotationArgsSubrules = ExpressionRule.getListInstance();
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
@@ -57,7 +50,7 @@ public abstract class AbstractAnnotationRule extends JavaLexerRule {
 
             cur = javaSimpleTokens.get(fromPos);
             if (!JavaSimpleTokenType.BRACKETROUNDEND.equals(cur.getTokenType())) {
-                throw GENERIC_LEXER_EXCEPTION.get();
+                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
             }
             annotationArgs.addChildren(cur);
             fromPos++;

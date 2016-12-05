@@ -39,15 +39,13 @@ public class StatementIfRule extends AbstractHeadConditionRuleStatement {
             return ifPart;
         }
         //Else is coming
-        JavaAdvancedToken elseif = new JavaAdvancedToken(JavaAdvancedTokenType.IF_ELSE);
-        JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
-        while (cur.getTokenType().isComment()) {
-            fromPos = addSimpleToken(elseif, lexer, javaSimpleTokens, fromPos);
-        }
+        JavaAdvancedToken elseif = new JavaAdvancedToken(JavaAdvancedTokenType.IF_ELSE, ifPart.getReturnToken());
+        fromPos = addSimpleTokenIfComment(elseif, lexer, javaSimpleTokens, fromPos);
+
         final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(elseRule, javaSimpleTokens, fromPos);
-        fromPos = lexingResult.getNextArrayfromPos();
         elseif.addChildren(lexingResult.getReturnToken());
-        return new Lexer.LexingResult<>(elseif, fromPos);
+
+        return new Lexer.LexingResult<>(elseif, lexingResult.getNextArrayfromPos());
     }
 
     @Override

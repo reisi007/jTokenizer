@@ -7,38 +7,42 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
+import at.reisisoft.Tokenizer.j8.lexerrules.GenericScope;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
 /**
- * Created by Florian on 30.11.2016.
+ * Created by Florian on 05.12.2016.
  */
-public class StatementElseRule extends JavaLexerRule {
+public class StatementFinallyRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
     public static JavaLexerRule getInstance() {
         if (instance == null)
-            instance = new StatementElseRule();
+            instance = new StatementFinallyRule();
         return instance;
     }
 
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> lexerRules = StatementRule.getListInstance();
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> lexerRule = Collections.singletonList(GenericScope.getInstance());
 
-    private StatementElseRule() {
+    private StatementFinallyRule() {
+
     }
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
-        return JavaSimpleTokenType.ELSE.equals(javaSimpleTokens.get(fromPos).getTokenType());
+        return JavaSimpleTokenType.FINALLY.equals(javaSimpleTokens.get(fromPos).getTokenType());
     }
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
-        JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.ELSE, javaSimpleTokens.get(fromPos));
-        Lexer.LexingResult<JavaAdvancedToken> curLexingResult = lexer.lexNext(lexerRules, javaSimpleTokens, fromPos + 1);
-        advancedToken.addChildren(curLexingResult.getReturnToken().getChildren());
-        return new Lexer.LexingResult<>(advancedToken, curLexingResult.getNextArrayfromPos());
+        JavaAdvancedToken finallyToken = new JavaAdvancedToken(JavaAdvancedTokenType.FINALLY, javaSimpleTokens.get(fromPos));
+        fromPos = addSimpleTokenIfComment(finallyToken, lexer, javaSimpleTokens, fromPos + 1);
+        final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(lexerRule, javaSimpleTokens, fromPos);
+        finallyToken.addChildren(lexingResult.getReturnToken());
+        return new Lexer.LexingResult<>(finallyToken, lexingResult.getNextArrayfromPos());
     }
 }

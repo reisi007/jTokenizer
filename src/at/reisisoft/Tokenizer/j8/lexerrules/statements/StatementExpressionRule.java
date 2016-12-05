@@ -10,7 +10,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.expressions.ExpressionRule;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -26,7 +25,7 @@ public class StatementExpressionRule extends JavaLexerRule {
         return instance;
     }
 
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.singletonList(ExpressionRule.getInstance());
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = ExpressionRule.getListInstance();
 
     private StatementExpressionRule() {
 

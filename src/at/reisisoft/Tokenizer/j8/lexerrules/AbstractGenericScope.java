@@ -9,6 +9,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.RandomAccess;
 
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
@@ -36,7 +37,7 @@ public abstract class AbstractGenericScope extends JavaLexerRule {
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         //Start init rules
         if (subrules == null) {
-            subrules = getRules();
+            subrules = Objects.requireNonNull(getRules());
         }
         //End init rules
         JavaSimpleToken current = javaSimpleTokens.get(fromPos);
@@ -53,11 +54,11 @@ public abstract class AbstractGenericScope extends JavaLexerRule {
             Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
             fromPos = lexingResult.getNextArrayfromPos();
             if (fromPos >= javaSimpleTokens.size())
-                throw GENERIC_LEXER_EXCEPTION.get();
+                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
             scope.addChildren(lexingResult.getReturnToken());
         }
         if (current == null || !JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType()))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         scope.addChildren(current);
         fromPos++;
         return new Lexer.LexingResult<>(scope, fromPos);

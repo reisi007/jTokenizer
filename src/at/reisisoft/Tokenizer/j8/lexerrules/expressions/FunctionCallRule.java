@@ -9,7 +9,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -21,7 +20,7 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 public class FunctionCallRule extends JavaLexerRule {
     private static JavaLexerRule instance;
 
-    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.singletonList(ExpressionRule.getInstance());
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = ExpressionRule.getListInstance();
 
     public static JavaLexerRule getInstance() {
         if (instance == null)
@@ -49,17 +48,18 @@ public class FunctionCallRule extends JavaLexerRule {
             curLexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
             fromPos = curLexingResult.getNextArrayfromPos();
             if (fromPos >= javaSimpleTokens.size())
-                throw GENERIC_LEXER_EXCEPTION.get();
+                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
             JavaAdvancedToken lexingResultToken = curLexingResult.getReturnToken();
             current = javaSimpleTokens.get(fromPos);
             if (JavaSimpleTokenType.COMMA.equals(current.getTokenType())) {
                 lexingResultToken.addChildren(current);
-                current = javaSimpleTokens.get(fromPos + 1);
+                fromPos++;
+                current = javaSimpleTokens.get(fromPos);
             }
             mainToken.addChildren(lexingResultToken);
         }
         if (!JavaSimpleTokenType.BRACKETROUNDEND.equals(current.getTokenType()))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         mainToken.addChildren(current);
         fromPos++;
         return new Lexer.LexingResult<>(mainToken, fromPos);

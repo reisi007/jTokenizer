@@ -37,7 +37,7 @@ public class EnumRule extends JavaLexerRule {
             )
     );
 
-    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> enumListRules = Collections.singletonList(ExpressionRule.getInstance());
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> enumListRules = ExpressionRule.getListInstance();
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> bodySubRules;
 
     private EnumRule() {
@@ -67,7 +67,7 @@ public class EnumRule extends JavaLexerRule {
             fromPos = addSimpleToken(enumHead, lexer, javaSimpleTokens, fromPos);
         }
         if (fromPos + 1 >= javaSimpleTokens.size() || current == null || !JavaSimpleTokenType.SCOPESTART.equals(current.getTokenType()))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         enumBody.addChildren(current);
         fromPos++;
         current = javaSimpleTokens.get(fromPos);

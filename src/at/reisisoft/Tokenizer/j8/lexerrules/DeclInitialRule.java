@@ -68,7 +68,7 @@ public class DeclInitialRule extends JavaLexerRule {
             }
             if (JavaSimpleTokenType.ASSIGNMENT.equals(currentSimple.getTokenType())) {
                 current.addChildren(currentSimple);
-                final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(Collections.singletonList(ExpressionRule.getInstance()), javaSimpleTokens, fromPos + 1);
+                final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(ExpressionRule.getListInstance(), javaSimpleTokens, fromPos + 1);
                 fromPos = lexingResult.getNextArrayfromPos();
                 current.addChildren(lexingResult.getReturnToken().getChildren());
                 currentSimple = javaSimpleTokens.get(fromPos);

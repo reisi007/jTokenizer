@@ -13,6 +13,7 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     BINARY_OPERATOR_RAW,
     BRACKETS_ROUND,
     CASE,
+    CATCH,
     CAST,
     CLASS_OR_INTERFACE,
     COMMENT,
@@ -24,6 +25,7 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     ENUM,
     EXPRESSION,
     FILE,
+    FINALLY,
     FOR,
     FUNCTION,
     FUNCTION_CALL,
@@ -38,6 +40,8 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     SIGNED,
     STATEMENT,
     SWITCH,
+    TRY,
+    THROW,
     WHILE;
 
     @Override

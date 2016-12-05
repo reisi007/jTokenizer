@@ -17,13 +17,20 @@ import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
  */
 public class ExpressionRule extends JavaLexerRule {
 
-    private static JavaLexerRule instance;
+    private static LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> instance;
+    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> listInstance;
 
-    public static JavaLexerRule getInstance() {
+    public static LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> getInstance() {
         if (instance == null) {
             instance = new ExpressionRule();
         }
         return instance;
+    }
+
+    public static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getListInstance() {
+        if (listInstance == null)
+            listInstance = Collections.singletonList(getInstance());
+        return listInstance;
     }
 
     private ExpressionRule() {
@@ -66,11 +73,11 @@ public class ExpressionRule extends JavaLexerRule {
                             SignedRule.getInstance(),
                             ListOfExpressionRule.getInstance(),
                             RawBinaryOperatorRule.getInstance(),
+                            FunctionCallRule.getInstance(),
                             LambdaRule.getInstance(),
                             CastRule.getInstance(),
                             BracketRule.getInstance(),
                             NewRule.getInstance(),
-                            FunctionCallRule.getInstance(),
                             ConstantVariableRule.getInstance()
                     )
             );
@@ -80,14 +87,14 @@ public class ExpressionRule extends JavaLexerRule {
         ArrayList<JavaAdvancedToken> subTokenList = new ArrayList<>();
         JavaSimpleToken curToken = javaSimpleTokens.get(fromPos);
         if (isEndReached(curToken))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         Lexer.LexingResult<JavaAdvancedToken> curLexingResult;
         do {
             curLexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
             subTokenList.add(curLexingResult.getReturnToken());
             fromPos = curLexingResult.getNextArrayfromPos();
             if (fromPos > javaSimpleTokens.size())
-                throw GENERIC_LEXER_EXCEPTION.get();
+                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
             curToken = javaSimpleTokens.get(fromPos);
         } while (!isEndReached(curToken));
 

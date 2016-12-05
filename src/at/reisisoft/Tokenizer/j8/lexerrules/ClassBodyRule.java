@@ -50,7 +50,7 @@ public class ClassBodyRule extends JavaLexerRule {
             final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subRules, javaSimpleTokens, fromPos);
             fromPos = lexingResult.getNextArrayfromPos();
             if (fromPos < 0 || fromPos >= javaSimpleTokens.size()) {
-                throw GENERIC_LEXER_EXCEPTION.get();
+                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
             }
             classBody.addChildren(lexingResult.getReturnToken());
             current = javaSimpleTokens.get(fromPos);

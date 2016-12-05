@@ -3,13 +3,13 @@ package at.reisisoft.Tokenizer;
 import java.util.List;
 import java.util.Objects;
 import java.util.RandomAccess;
-import java.util.function.Supplier;
+import java.util.function.IntFunction;
 
 /**
  * Created by Florian on 12.11.2016.
  */
 public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerTokenType>, TokenizerToken extends Token<TokenizerTokenType, String>, ReturnToken extends HirachialToken<?>> {
-    Supplier<LexerException> GENERIC_LEXER_EXCEPTION = () -> new LexerException("The lexer does not support this file!");
+    IntFunction<LexerException> GENERIC_LEXER_EXCEPTION = (i) -> new LexerException("The lexer does not support this file at position " + i + '!');
 
     /**
      * Lexes over all tokens. Implementations should gurantee, that this list is not modified via this method

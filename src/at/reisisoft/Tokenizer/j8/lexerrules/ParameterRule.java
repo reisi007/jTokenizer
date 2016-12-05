@@ -50,12 +50,12 @@ public class ParameterRule extends JavaLexerRule {
             return new Lexer.LexingResult<>(advancedToken, fromPos);
         }
         if (!JavaSimpleTokenType.BRACKETROUNDSTART.equals(curToken.getTokenType()))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         JavaAdvancedToken advancedToken = new JavaAdvancedToken(JavaAdvancedTokenType.BRACKETS_ROUND, curToken);
 
         boolean searchNext = fromPos < javaSimpleTokens.size();
         if (!searchNext)
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         JavaAdvancedToken curParamGroup;
         while (searchNext) {
             curParamGroup = singleParamGroup.get();
@@ -73,7 +73,7 @@ public class ParameterRule extends JavaLexerRule {
             } else {
                 curParamGroup.addChildren(curToken);
                 if (!(fromPos < javaSimpleTokens.size()))
-                    throw GENERIC_LEXER_EXCEPTION.get();
+                    throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
                 curToken = javaSimpleTokens.get(fromPos);
                 if (curToken.getTokenType().isComment()) {
                     fromPos = addSimpleToken(curParamGroup, lexer, javaSimpleTokens, fromPos);
@@ -83,13 +83,13 @@ public class ParameterRule extends JavaLexerRule {
                 if (endParam.indexOf(curToken.getTokenType()) < 0) {
                     curParamGroup.addChildren(curToken);
                     if (!(fromPos < javaSimpleTokens.size()))
-                        throw GENERIC_LEXER_EXCEPTION.get();
+                        throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
                     curToken = javaSimpleTokens.get(fromPos);
                     fromPos++;
                 }
                 // Either of from ([ID ID [,ID ID]*]) or (ID [, ID]*)
                 if (endParam.indexOf(curToken.getTokenType()) < 0)
-                    throw GENERIC_LEXER_EXCEPTION.get();
+                    throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
 
                 if (curToken.getTokenType().isComment()) {
                     fromPos = addSimpleToken(curParamGroup, lexer, javaSimpleTokens, fromPos);

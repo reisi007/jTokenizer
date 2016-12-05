@@ -7,6 +7,7 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
+import at.reisisoft.Tokenizer.j8.lexerrules.GenericScope;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.ParameterRule;
 
@@ -33,6 +34,7 @@ public class LambdaRule extends JavaLexerRule {
             leftRules = Collections.singletonList(ParameterRule.getInstance()),
             rightRules = Collections.unmodifiableList(
                     Arrays.asList(
+                            GenericScope.getInstance(),
                             ExpressionRule.getInstance()
                     )
             );
@@ -78,11 +80,11 @@ public class LambdaRule extends JavaLexerRule {
         advancedToken.addChildren(leftSideLexingResult.getReturnToken());
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
         if (!JavaSimpleTokenType.LAMBDAARROW.equals(simpleToken.getTokenType()))
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         advancedToken.addChildren(simpleToken);
         fromPos++;
         if (fromPos >= javaSimpleTokens.size())
-            throw GENERIC_LEXER_EXCEPTION.get();
+            throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         simpleToken = javaSimpleTokens.get(fromPos);
         if (JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType())) {
             JavaAdvancedToken scope = new JavaAdvancedToken(JavaAdvancedTokenType.SCOPE, simpleToken);
@@ -96,7 +98,7 @@ public class LambdaRule extends JavaLexerRule {
         if (JavaAdvancedTokenType.SCOPE.equals(advancedToken.getTokenType())) {
             simpleToken = javaSimpleTokens.get(fromPos);
             if (!JavaSimpleTokenType.SCOPEEND.equals(simpleToken.getTokenType()))
-                throw GENERIC_LEXER_EXCEPTION.get();
+                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
             advancedToken.addChildren(simpleToken);
             fromPos++;
         }

@@ -9,7 +9,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -25,7 +24,7 @@ public class PrefixRule extends JavaLexerRule {
         return instance;
     }
 
-    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> expressionRule = Collections.singletonList(ExpressionRule.getInstance());
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> expressionRule = ExpressionRule.getListInstance();
 
     private PrefixRule() {
 

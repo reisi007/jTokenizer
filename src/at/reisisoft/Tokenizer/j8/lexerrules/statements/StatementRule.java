@@ -20,12 +20,19 @@ import java.util.RandomAccess;
  * Created by Florian on 27.11.2016.
  */
 public class StatementRule extends JavaLexerRule {
-    private static JavaLexerRule instance;
+    private static LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> instance;
+    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> listInstance;
 
-    public static JavaLexerRule getInstance() {
+    public static LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> getInstance() {
         if (instance == null)
             instance = new StatementRule();
         return instance;
+    }
+
+    public static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getListInstance() {
+        if (listInstance == null)
+            listInstance = Collections.singletonList(StatementRule.getInstance());
+        return listInstance;
     }
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = null;
@@ -60,6 +67,7 @@ public class StatementRule extends JavaLexerRule {
                         StatementIfRule.getInstance(),
                         StatementWhileRule.getInstance(),
                         StatementForRule.getInstance(),
+                        StatementThrowRule.getInstance(),
                         DeclInitialRule.getInstance(),
                         UnnecessarySemicolonRule.getInstance(),
                         StatementExpressionRule.getInstance()

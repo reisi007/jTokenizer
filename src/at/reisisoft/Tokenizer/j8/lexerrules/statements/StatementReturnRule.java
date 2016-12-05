@@ -10,7 +10,6 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.expressions.ExpressionRule;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -28,7 +27,7 @@ public class StatementReturnRule extends JavaLexerRule {
         return instance;
     }
 
-    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.singletonList(ExpressionRule.getInstance());
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = ExpressionRule.getListInstance();
 
     private StatementReturnRule() {
     }
@@ -48,7 +47,7 @@ public class StatementReturnRule extends JavaLexerRule {
             mainToken.addChildren(lexingResult.getReturnToken());
             fromPos = addSimpleTokenIfComment(mainToken, lexer, javaSimpleTokens, fromPos + 1);
             if (!JavaSimpleTokenType.SEMICOLON.equals(javaSimpleTokens.get(fromPos).getTokenType()))
-                throw GENERIC_LEXER_EXCEPTION.get();
+                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         }
         mainToken.addChildren(javaSimpleTokens.get(fromPos));
         return new Lexer.LexingResult<>(mainToken, fromPos + 1);
