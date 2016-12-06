@@ -10,7 +10,7 @@ class JavaRegEx {
     public static final String LOOKAHEAD_END_OF_WORD = "(?=(\\s|\\{|\\(|;|\\/))";
     private static final String IDENTIFYER_VARARG = "(\\s*?\\.{3})?";
     private static final String IDENTIFYER_ALLOWED_CHARS = "[^\\s)(\\:,;<>+\\-{}]";
-    private static final String IDENTIFYER_NON_GENERICS_CHAR = "[^<>]*";
+    private static final String IDENTIFYER_NON_GENERICS_CHAR = "[^<()=>]*";
 
     public static String getIdentifyerRegex(int supportedGenericsLevel) {
         if (supportedGenericsLevel < 0)

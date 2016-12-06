@@ -114,6 +114,6 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
         return BINARYADDITIVE.equals(this) || BINARYBITWISEAND.equals(this) || BINARYBITWISEOR.equals(this)
                 || BINARYEQUALITY.equals(this) || BINARYLOGICALAND.equals(this) || BINARYLOGICALOR.equals(this)
                 || BINARYOPMULTIPLICATIVE.equals(this) || BINARYRELATIONAL.equals(this) || BINARYSHIFT.equals(this)
-                || QUESTIONMARK.equals(this) || ASSIGNMENT.equals(this) || BINARYBITWISEEXOR.equals(this);
+                || QUESTIONMARK.equals(this) || ASSIGNMENT.equals(this) || BINARYBITWISEEXOR.equals(this) || COLON.equals(this);
     }
 }

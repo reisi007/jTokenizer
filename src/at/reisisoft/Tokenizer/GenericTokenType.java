@@ -21,4 +21,9 @@ public interface GenericTokenType<T extends GenericTokenType<T>> {
     default boolean nonEquals(GenericTokenType<T> other) {
         return !equals(other);
     }
+
+    /**
+     * @return A boolean value indecating if this Token is a comment
+     */
+    boolean isComment();
 }

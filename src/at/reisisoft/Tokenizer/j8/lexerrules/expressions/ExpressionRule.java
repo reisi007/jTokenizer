@@ -134,8 +134,11 @@ public class ExpressionRule extends JavaLexerRule {
 
     private ArrayList<JavaAdvancedToken> getNewList(ArrayList<JavaAdvancedToken> oldList, int binOpPos) {
         ArrayList<JavaAdvancedToken> newList = new ArrayList<>(oldList.size());
+        int commentOffset = 1;
+        while (JavaAdvancedTokenType.COMMENT.equals(oldList.get(binOpPos - commentOffset).getTokenType()))
+            commentOffset++;
         //Add all elements before the binary operator
-        newList.addAll(oldList.subList(0, binOpPos - 1));
+        newList.addAll(oldList.subList(0, binOpPos - commentOffset));
         //Add BinaryOperatorElement
         final Lexer.LexingResult<JavaAdvancedToken> binaryOperatorJAT = binOpFactory.getBinaryOperatorJAT(oldList, binOpPos);
         newList.add(binaryOperatorJAT.getReturnToken());
