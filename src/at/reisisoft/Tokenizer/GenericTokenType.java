@@ -17,4 +17,8 @@ public interface GenericTokenType<T extends GenericTokenType<T>> {
      * @return An array of all token types
      */
     T[] getValues();
+
+    default boolean nonEquals(GenericTokenType<T> other) {
+        return !equals(other);
+    }
 }

@@ -104,7 +104,7 @@ public class ExpressionRule extends JavaLexerRule {
             boolean anyBinOpFound;
             JavaSimpleTokenType curSimpleTokenType;
             int firstIndex;
-
+            int startIndex = 0;
             do {
                 //Preperations
                 clean = true;
@@ -116,13 +116,13 @@ public class ExpressionRule extends JavaLexerRule {
                 }
                 anyBinOpFound = binOpFinder.anyBinopFound();
                 if (anyBinOpFound) {
-                    for (int i = 0; clean && i < binOpOrdered.size(); i++) {
+                    for (int i = startIndex; clean && i < binOpOrdered.size(); i++) {
                         curSimpleTokenType = binOpOrdered.get(i);
                         firstIndex = binOpFinder.getFirstIndex(curSimpleTokenType);
                         if (firstIndex >= 0) {
                             clean = false;
                             subTokenList = getNewList(subTokenList, firstIndex);
-                        }
+                        } else startIndex = i;
 
                     }
                 }

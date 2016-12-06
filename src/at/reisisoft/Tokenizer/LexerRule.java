@@ -1,5 +1,7 @@
 package at.reisisoft.Tokenizer;
 
+import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
+
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -12,6 +14,7 @@ public interface LexerRule<TokenizerTokenType extends GenericTokenType<Tokenizer
      *
      * @param tokenizerTokens The tokens from the tokenizer
      * @param fromPos         The position in the array the pattern should be found
+     * @param <L>             A randomaccess list of {@link JavaSimpleToken}
      * @return A boolean value signaling whether the rule is applicable or not
      */
     <L extends List<TokenizerToken> & RandomAccess> boolean isApplicable(L tokenizerTokens, int fromPos);
@@ -22,6 +25,7 @@ public interface LexerRule<TokenizerTokenType extends GenericTokenType<Tokenizer
      * @param lexer           A lexer
      * @param tokenizerTokens The tokens from the tokenizer
      * @param fromPos         The position in the array the pattern should be found
+     * @param <L>             A randomaccess list of {@link JavaSimpleToken}
      * @return Returns a {@see Lexer.LexingResult} object.
      * @throws LexerException Throws an exception e.g. if no token could be found. Implementations should guarantee, that no exception is thrown, when {@link LexerRule#isApplicable(List, int)} returns {@code true}
      */

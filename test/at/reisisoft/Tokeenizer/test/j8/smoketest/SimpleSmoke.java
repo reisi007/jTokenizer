@@ -13,4 +13,9 @@ public class SimpleSmoke {
         TestHelper.doSmokeTest("simpleSmoke1");
     }
 
+    @Test
+    public void test2() throws LexerException {
+        TestHelper.doSmokeTest("simpleSmoke2");
+    }
+
 }

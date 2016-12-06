@@ -88,4 +88,23 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
     protected final <T> T[] getArrayFromVararg(T... ts) {
         return Objects.requireNonNull(ts);
     }
+
+    /**
+     * @param type             The {@link JavaSimpleTokenType} the current token ({@code javaSimpleTokens.get(frompos).getTokenType()}) needs to match
+     * @param parentToken      The {@link JavaAdvancedToken} the lexed token will be added to
+     * @param subrules         The rules for which the {@code tokenizerTokens} should be evaluated against
+     * @param lexer            A lexer
+     * @param javaSimpleTokens The tokens from the tokenizer
+     * @param fromPos          The position in the array the pattern should be found
+     * @param <L>              A randomaccess list of {@link JavaSimpleToken}
+     * @return The next {@code fromPos}
+     * @throws LexerException Throws an exception if the call to the lexer went wrong
+     */
+    protected final <L extends List<JavaSimpleToken> & RandomAccess> int lexIfNextTokenIsOfType(JavaSimpleTokenType type, JavaAdvancedToken parentToken, Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules, L javaSimpleTokens, int fromPos) throws LexerException {
+        if (type.nonEquals(javaSimpleTokens.get(fromPos).getTokenType()))
+            return fromPos;
+        Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
+        parentToken.addChildren(lexingResult.getReturnToken());
+        return lexingResult.getNextArrayfromPos();
+    }
 }

@@ -68,6 +68,7 @@ public class StatementRule extends JavaLexerRule {
                         StatementWhileRule.getInstance(),
                         StatementForRule.getInstance(),
                         StatementThrowRule.getInstance(),
+                        StatementTryRule.getInstance(),
                         DeclInitialRule.getInstance(),
                         UnnecessarySemicolonRule.getInstance(),
                         StatementExpressionRule.getInstance()

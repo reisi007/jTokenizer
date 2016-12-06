@@ -49,6 +49,10 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
         return super.name();
     }
 
+    public boolean equals(JavaAdvancedTokenType other) {
+        return super.equals(other);
+    }
+
     @Override
     public JavaAdvancedTokenType[] getValues() {
         return JavaAdvancedTokenType.values();
