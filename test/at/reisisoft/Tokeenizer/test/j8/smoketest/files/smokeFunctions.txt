@@ -1,0 +1,1 @@
+ <L extends List<TokenizerToken> & RandomAccess> ReturnToken lexFile(L tokenizerTokens) throws LexerException;

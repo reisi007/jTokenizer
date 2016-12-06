@@ -4,12 +4,10 @@ import at.reisisoft.Tokeenizer.test.j8.files.FileLoader;
 import at.reisisoft.Tokeenizer.test.j8.smoketest.files.SmoketestFileLoader;
 import at.reisisoft.Tokenizer.*;
 import at.reisisoft.Tokenizer.j8.*;
+import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import org.junit.Assert;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.RandomAccess;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -19,6 +17,7 @@ import static org.junit.Assert.*;
 public class TestHelper {
 
     public static boolean doOutput = true;
+    private static List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> smokeTestMainRule;
 
     public static <T> ArrayList<T> getList(T... elements) {
         if (elements == null || elements.length == 0)
@@ -96,6 +95,46 @@ public class TestHelper {
         final Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer = JavaLexerImpl.getInstance();
         final JavaAdvancedToken advancedToken = lexer.lexFile(tokenizerTokens);
         List<GenericTokenType<?>> lexerTokens = explode(advancedToken);
+        compareSmokeTest(tokenizerTokens, lexerTokens);
+    }
+
+    public static <L extends List<GenericTokenType<?>> & RandomAccess> void doSmokeTest(String filename, final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> rules) throws LexerException {
+
+        String file = SmoketestFileLoader.getTestFile(filename);
+        final Tokenizer<JavaSimpleTokenType, JavaSimpleToken> tokenizer = JavaTokenizerImpl.getInstance();
+        final ArrayList<JavaSimpleToken> tokenizerTokens = new ArrayList<>(tokenizer.tokenize(file));
+        final Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer = JavaLexerImpl.getInstance();
+        if (smokeTestMainRule == null)
+            smokeTestMainRule = Collections.singletonList(
+                    new JavaLexerRule() {
+                        @Override
+                        public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
+                            return true;
+                        }
+
+                        @Override
+                        public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
+                            JavaAdvancedToken file = new JavaAdvancedToken(JavaAdvancedTokenType.FILE);
+                            Lexer.LexingResult<JavaAdvancedToken> lexingResult;
+                            while (fromPos < javaSimpleTokens.size()) {
+                                lexingResult = lexer.lexNext(rules, javaSimpleTokens, fromPos);
+                                fromPos = lexingResult.getNextArrayfromPos();
+                                file.addChildren(lexingResult.getReturnToken());
+                            }
+                            return new Lexer.LexingResult<>(file, fromPos);
+                        }
+                    }
+            );
+
+        final JavaAdvancedToken advancedToken = lexer.lexNext(smokeTestMainRule, tokenizerTokens, 0).getReturnToken();
+        List<GenericTokenType<?>> lexerTokens = explode(advancedToken);
+        compareSmokeTest(tokenizerTokens, lexerTokens);
+
+    }
+
+    private static final String baseString = "TokenizerIndex: %s\t\tLexerIndex: %s";
+
+    private static void compareSmokeTest(List<JavaSimpleToken> tokenizerTokens, List<GenericTokenType<?>> lexerTokens) {
         int tokenizerTokenIndex = 0, lexerTokenIndex = 0;
         GenericTokenType<?> tokenizerTT, lexerTT;
         while (tokenizerTokenIndex < tokenizerTokens.size() && lexerTokenIndex < lexerTokens.size()) {
