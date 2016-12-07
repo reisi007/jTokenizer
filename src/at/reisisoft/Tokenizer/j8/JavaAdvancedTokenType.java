@@ -43,6 +43,7 @@ public enum JavaAdvancedTokenType implements GenericTokenType<JavaAdvancedTokenT
     TRY,
     THROW,
     TYPE,
+    TYPE_OR_IDENTIFYER,
     WHILE;
 
     @Override

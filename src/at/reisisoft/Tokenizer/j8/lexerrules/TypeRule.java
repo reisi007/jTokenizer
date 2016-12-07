@@ -31,7 +31,7 @@ public class TypeRule extends JavaLexerRule {
         return listInstance;
     }
 
-    private TypeRule() {
+    protected TypeRule() {
     }
 
     @Override
@@ -41,7 +41,7 @@ public class TypeRule extends JavaLexerRule {
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
-        JavaAdvancedToken jat = new JavaAdvancedToken(JavaAdvancedTokenType.TYPE, javaSimpleTokens.get(fromPos));
+        JavaAdvancedToken jat = new JavaAdvancedToken(getAdvancedTokenType(), javaSimpleTokens.get(fromPos));
         fromPos++;
         if ("<".equals(javaSimpleTokens.get(fromPos).getRawData())) {
             jat.addChildren(javaSimpleTokens.get(fromPos));
@@ -65,5 +65,9 @@ public class TypeRule extends JavaLexerRule {
             }
         }
         return new Lexer.LexingResult<>(jat, fromPos);
+    }
+
+    protected JavaAdvancedTokenType getAdvancedTokenType() {
+        return JavaAdvancedTokenType.TYPE;
     }
 }

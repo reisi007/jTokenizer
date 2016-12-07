@@ -10,6 +10,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.TypeRule;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -28,6 +29,13 @@ public class FunctionCallRule extends JavaLexerRule {
             instance = new FunctionCallRule();
         return instance;
     }
+
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> typeRule = Collections.singletonList(new TypeRule() {
+        @Override
+        protected JavaAdvancedTokenType getAdvancedTokenType() {
+            return JavaAdvancedTokenType.TYPE_OR_IDENTIFYER;
+        }
+    });
 
     private FunctionCallRule() {
     }
