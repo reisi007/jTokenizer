@@ -28,12 +28,6 @@ public class DeclInitialRule extends JavaLexerRule {
             )
     );
 
-    private final List<JavaSimpleTokenType> endTokens = Collections.unmodifiableList(
-            Arrays.asList(
-                    JavaSimpleTokenType.COMMA,
-                    JavaSimpleTokenType.SEMICOLON
-            )
-    );
 
     private static JavaLexerRule instance;
 
@@ -50,7 +44,11 @@ public class DeclInitialRule extends JavaLexerRule {
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         while (optionalTokenTypes.indexOf(cur.getTokenType()) >= 0) {
-            fromPos++;
+            if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType())) {
+                fromPos = skipType(javaSimpleTokens, fromPos);
+            } else {
+                fromPos++;
+            }
             cur = javaSimpleTokens.get(fromPos);
         }
         return isEndTokenType(cur.getTokenType());
@@ -60,6 +58,8 @@ public class DeclInitialRule extends JavaLexerRule {
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         final JavaAdvancedToken root = new JavaAdvancedToken(JavaAdvancedTokenType.DECLARATION_OR_INITIALISATION);
         JavaAdvancedToken current = root;
+        //First Token is a Type
+        fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.IDENTIFYER, root, lexer, TypeRule.getListInstance(), javaSimpleTokens, fromPos);
         JavaSimpleToken currentSimple = javaSimpleTokens.get(fromPos);
         do {
             while (!isEndTokenType(currentSimple.getTokenType())) {

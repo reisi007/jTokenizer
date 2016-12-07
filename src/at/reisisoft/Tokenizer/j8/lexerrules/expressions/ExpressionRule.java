@@ -78,6 +78,7 @@ public class ExpressionRule extends JavaLexerRule {
                             CastRule.getInstance(),
                             BracketRule.getInstance(),
                             NewRule.getInstance(),
+                            TypeExpressionRule.getInstance(),
                             ConstantVariableRule.getInstance()
                     )
             );

@@ -37,10 +37,12 @@ public abstract class AbstractCaseRule extends JavaLexerRule {
         JavaAdvancedToken caseToken = new JavaAdvancedToken(JavaAdvancedTokenType.CASE, javaSimpleTokens.get(fromPos));
         fromPos = addSimpleTokenIfComment(caseToken, lexer, javaSimpleTokens, fromPos + 1);
         Lexer.LexingResult<JavaAdvancedToken> lexingResult;
-        while (!(JavaSimpleTokenType.BREAK.equals(javaSimpleTokens.get(fromPos).getTokenType()) || JavaSimpleTokenType.BREAK.equals(javaSimpleTokens.get(fromPos - 1).getTokenType()))) {
+        JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
+        while (!(JavaSimpleTokenType.BREAK.equals(cur.getTokenType()) || JavaSimpleTokenType.SCOPEEND.equals(cur.getTokenType()) || JavaSimpleTokenType.BREAK.equals(javaSimpleTokens.get(fromPos - 1).getTokenType()))) {
             lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
             caseToken.addChildren(lexingResult.getReturnToken());
             fromPos = addSimpleTokenIfComment(caseToken, lexer, javaSimpleTokens, lexingResult.getNextArrayfromPos());
+            cur = javaSimpleTokens.get(fromPos);
         }
         return new Lexer.LexingResult<>(caseToken, fromPos);
     }

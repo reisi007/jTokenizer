@@ -107,4 +107,37 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
         parentToken.addChildren(lexingResult.getReturnToken());
         return lexingResult.getNextArrayfromPos();
     }
+
+    /**
+     * @param javaSimpleTokens The tokens from the tokenizer
+     * @param fromPos          The position in the array the pattern should be found
+     * @param <L>              A randomaccess list of {@link JavaSimpleToken}
+     * @return The next value of {@code frompos}
+     */
+    protected final <L extends List<JavaSimpleToken> & RandomAccess> int skipType(L javaSimpleTokens, int fromPos) {
+        if (JavaSimpleTokenType.IDENTIFYER.nonEquals(javaSimpleTokens.get(fromPos).getTokenType()))
+            return fromPos;
+        if (!"<".equals(javaSimpleTokens.get(fromPos + 1).getRawData()))
+            return fromPos + 1;
+        fromPos += 2;
+        int genericCount = 1;
+        JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
+        while (genericCount > 0) {
+            if (JavaSimpleTokenType.BINARYRELATIONAL.equals(cur.getTokenType())) {
+                switch (cur.getRawData()) {
+                    case "<":
+                        genericCount++;
+                        break;
+                    case ">":
+                        genericCount--;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            fromPos++;
+            cur = javaSimpleTokens.get(fromPos);
+        }
+        return fromPos;
+    }
 }

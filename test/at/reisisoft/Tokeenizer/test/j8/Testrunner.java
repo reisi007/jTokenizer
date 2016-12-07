@@ -14,7 +14,6 @@ import org.junit.runners.Suite;
         Loops.class,
         Aritmetics.class,
         Try.class,
-        Lambda.class,
         Comments.class,
         LoginRequired.class,
         Smoketestrunner.class

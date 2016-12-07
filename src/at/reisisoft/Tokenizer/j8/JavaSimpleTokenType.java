@@ -2,7 +2,7 @@ package at.reisisoft.Tokenizer.j8;
 
 import at.reisisoft.Tokenizer.RegExTokenType;
 
-import static at.reisisoft.Tokenizer.j8.JavaRegex2.LOOKAHEAD_END_OF_WORD;
+import static at.reisisoft.Tokenizer.j8.JavaRegEx.LOOKAHEAD_END_OF_WORD;
 
 /**
  * Created by Florian on 12.11.2016.
@@ -68,13 +68,7 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     BINARYBITWISEAND("&"),
     BINARYBITWISEOR("\\|"),
     BINARYBITWISEEXOR("\\^"),
-    /* Maximal level of Generic support. The maximum generic depth
-     L0<L1<L2<L3<L4>>>> is Level 4
-     Somewhere close to 11 is the limit (Java Heap space)
-     With 10 the speed is slow, 7 is okay
-     I am unsure whether the speed difference between 1 and 5 is noticable, and only minor loss with 6, I'm using 6.
-     */
-    IDENTIFYER(JavaRegex2.getIdentifyerRegex(6));
+    IDENTIFYER("(?=[^\\d])[^\\s\\-<>=&|{}();,\\/+!|]+");
 
 
     private String pattern;

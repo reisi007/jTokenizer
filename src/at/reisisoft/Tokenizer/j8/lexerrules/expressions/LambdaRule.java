@@ -47,7 +47,7 @@ public class LambdaRule extends JavaLexerRule {
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType())) {
-            fromPos++;
+            fromPos = skipComment(javaSimpleTokens, fromPos + 1);
             return fromPos < javaSimpleTokens.size()
                     && (cur = javaSimpleTokens.get(fromPos)) != null
                     && JavaSimpleTokenType.LAMBDAARROW.equals(cur.getTokenType());
@@ -66,9 +66,10 @@ public class LambdaRule extends JavaLexerRule {
                     roundBracketCnt--;
                     break;
             }
-            fromPos++;
+            fromPos = skipComment(javaSimpleTokens, fromPos + 1);
         }
-        return fromPos < javaSimpleTokens.size() && cur != null && JavaSimpleTokenType.LAMBDAARROW.equals(cur.getTokenType());
+        cur = javaSimpleTokens.get(fromPos);
+        return fromPos < javaSimpleTokens.size() && JavaSimpleTokenType.LAMBDAARROW.equals(cur.getTokenType());
 
     }
 
@@ -78,30 +79,17 @@ public class LambdaRule extends JavaLexerRule {
         Lexer.LexingResult<JavaAdvancedToken> leftSideLexingResult = lexer.lexNext(leftRules, javaSimpleTokens, fromPos);
         fromPos = leftSideLexingResult.getNextArrayfromPos();
         advancedToken.addChildren(leftSideLexingResult.getReturnToken());
+        fromPos = addSimpleTokenIfComment(advancedToken, lexer, javaSimpleTokens, fromPos);
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
         if (!JavaSimpleTokenType.LAMBDAARROW.equals(simpleToken.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         advancedToken.addChildren(simpleToken);
-        fromPos++;
+        fromPos = addSimpleTokenIfComment(advancedToken, lexer, javaSimpleTokens, fromPos + 1);
         if (fromPos >= javaSimpleTokens.size())
             throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
-        simpleToken = javaSimpleTokens.get(fromPos);
-        if (JavaSimpleTokenType.SCOPESTART.equals(simpleToken.getTokenType())) {
-            JavaAdvancedToken scope = new JavaAdvancedToken(JavaAdvancedTokenType.SCOPE, simpleToken);
-            advancedToken.addChildren(scope);
-            // If we have a scope we should add to it
-            advancedToken = scope;
-        }
+        //Right side of Lambda
         Lexer.LexingResult<JavaAdvancedToken> rightSide = lexer.lexNext(rightRules, javaSimpleTokens, fromPos);
         advancedToken.addChildren(rightSide.getReturnToken());
-        fromPos = rightSide.getNextArrayfromPos();
-        if (JavaAdvancedTokenType.SCOPE.equals(advancedToken.getTokenType())) {
-            simpleToken = javaSimpleTokens.get(fromPos);
-            if (!JavaSimpleTokenType.SCOPEEND.equals(simpleToken.getTokenType()))
-                throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
-            advancedToken.addChildren(simpleToken);
-            fromPos++;
-        }
-        return new Lexer.LexingResult<>(advancedToken, fromPos);
+        return new Lexer.LexingResult<>(advancedToken, rightSide.getNextArrayfromPos());
     }
 }

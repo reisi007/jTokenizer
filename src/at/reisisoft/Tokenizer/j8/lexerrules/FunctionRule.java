@@ -37,7 +37,8 @@ public class FunctionRule extends JavaLexerRule {
             JavaSimpleTokenType.EXTENDS,
             JavaSimpleTokenType.DEFAULT,
             JavaSimpleTokenType.BINARYRELATIONAL,
-            JavaSimpleTokenType.BINARYBITWISEAND
+            JavaSimpleTokenType.COMMENTBLOCK,
+            JavaSimpleTokenType.COMMENTLINE
     );
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> headLexerRules = Collections.singletonList(ParameterRule.getInstance()),
             defaultLexerRules = ExpressionRule.getListInstance();
@@ -50,7 +51,28 @@ public class FunctionRule extends JavaLexerRule {
         int fromPos = skipComment(javaSimpleTokens, origFromPos);
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         while (acceptTokenTypes.indexOf(cur.getTokenType()) >= 0) {
-            fromPos = skipComment(javaSimpleTokens, fromPos + 1);
+            if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType()))
+                fromPos = skipType(javaSimpleTokens, fromPos);
+            else if (JavaSimpleTokenType.BINARYRELATIONAL.equals(cur.getTokenType()) && "<".equals(cur.getRawData())) {
+                fromPos = skipComment(javaSimpleTokens, fromPos + 1);
+                cur = javaSimpleTokens.get(fromPos);
+                int cnt = 1;
+                while (cnt > 0) {
+                    if (JavaSimpleTokenType.BINARYRELATIONAL.equals(cur.getTokenType())) {
+                        switch (cur.getRawData()) {
+                            case "<":
+                                cnt++;
+                                break;
+                            case ">":
+                                cnt--;
+                                break;
+                        }
+                    }
+                    fromPos = skipComment(javaSimpleTokens, fromPos + 1);
+                    cur = javaSimpleTokens.get(fromPos);
+                }
+            } else
+                fromPos = skipComment(javaSimpleTokens, fromPos + 1);
             if (fromPos >= javaSimpleTokens.size())
                 return false;
             cur = javaSimpleTokens.get(fromPos);
@@ -90,9 +112,14 @@ public class FunctionRule extends JavaLexerRule {
                 fromPos++;
                 functionHead.addChildren(functionGenerics);
             } else {
-                if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType()))
+                if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType())) {
                     cntIdentifyer++;
-                fromPos = addSimpleToken(functionHead, lexer, javaSimpleTokens, fromPos);
+                    if (cntIdentifyer == 1) {
+                        fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.IDENTIFYER, functionHead, lexer, TypeRule.getListInstance(), javaSimpleTokens, fromPos);
+                    } else
+                        fromPos = addSimpleToken(functionHead, lexer, javaSimpleTokens, fromPos);
+                } else
+                    fromPos = addSimpleToken(functionHead, lexer, javaSimpleTokens, fromPos);
             }
         }
         if (cur == null || !JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur.getTokenType()))

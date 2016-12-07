@@ -63,6 +63,7 @@ public class StatementRule extends JavaLexerRule {
         return Collections.unmodifiableList(
                 Arrays.asList(
                         StatementSingleTokenRule.getInstance(),
+                        StatementReturnRule.getInstance(),
                         StatementScopeRule.getInstance(),
                         StatementIfRule.getInstance(),
                         StatementWhileRule.getInstance(),
