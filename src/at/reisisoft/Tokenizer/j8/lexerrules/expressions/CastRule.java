@@ -8,9 +8,8 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
+import at.reisisoft.Tokenizer.j8.lexerrules.TypeRule;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
@@ -27,54 +26,48 @@ public class CastRule extends JavaLexerRule {
         return instance;
     }
 
-    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = Collections.unmodifiableList(
-            Arrays.asList(
-                    ConstantVariableRule.getInstance(),
-                    BracketRule.getInstance()
-            )
-    );
-
+    private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules = ExpressionRule.getListInstance();
 
     private CastRule() {
-
     }
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
-        JavaSimpleTokenType cur = javaSimpleTokens.get(fromPos).getTokenType();
-        if (!JavaSimpleTokenType.BRACKETROUNDSTART.equals(cur))
+        if (!JavaSimpleTokenType.BRACKETROUNDSTART.equals(javaSimpleTokens.get(fromPos).getTokenType()))
             return false;
-        fromPos++;
-        cur = javaSimpleTokens.get(fromPos).getTokenType();
-        fromPos = skipComment(javaSimpleTokens, fromPos);
-        if (!JavaSimpleTokenType.IDENTIFYER.equals(cur))
-            return false;
-        cur = javaSimpleTokens.get(fromPos).getTokenType();
-        while (!JavaSimpleTokenType.BRACKETROUNDEND.equals(cur)) {
+        boolean closingFound = false;
+        do {
+            fromPos = skipComment(javaSimpleTokens, fromPos + 1);
+            int originalFromPos = fromPos;
+            fromPos = skipType(javaSimpleTokens, fromPos);
+            if (fromPos == originalFromPos)
+                return false;
             fromPos = skipComment(javaSimpleTokens, fromPos);
-            cur = javaSimpleTokens.get(fromPos).getTokenType();
-            if (!JavaSimpleTokenType.BINARYBITWISEAND.equals(cur))
+            if (JavaSimpleTokenType.BINARYBITWISEAND.equals(javaSimpleTokens.get(fromPos).getTokenType())) {
+                fromPos = skipComment(javaSimpleTokens, fromPos + 1);
+            } else if (JavaSimpleTokenType.BRACKETROUNDSTART.equals(javaSimpleTokens.get(fromPos).getTokenType())) {
                 return false;
-            fromPos = skipComment(javaSimpleTokens, fromPos + 1);
-            cur = javaSimpleTokens.get(fromPos).getTokenType();
-            if (!JavaSimpleTokenType.IDENTIFYER.equals(cur)) {
-                return false;
+            } else if (JavaSimpleTokenType.BRACKETROUNDEND.equals(javaSimpleTokens.get(fromPos).getTokenType())) {
+                fromPos = skipComment(javaSimpleTokens, fromPos + 1);
+                closingFound = true;
             }
-            fromPos = skipComment(javaSimpleTokens, fromPos + 1);
-            cur = javaSimpleTokens.get(fromPos).getTokenType();
-        }
-        fromPos = skipComment(javaSimpleTokens, fromPos + 1);
+        } while (!closingFound);
         JavaSimpleTokenType afterCast = javaSimpleTokens.get(fromPos).getTokenType();
         return JavaSimpleTokenType.BRACKETROUNDSTART.equals(afterCast) || afterCast.isConstantOrVariable();
     }
 
 
     @Override
-    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
+    public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply
+            (Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws
+            LexerException {
         JavaAdvancedToken cast = new JavaAdvancedToken(JavaAdvancedTokenType.CAST);
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
-        while (JavaSimpleTokenType.BRACKETROUNDEND.equals(cur.getTokenType())) {
-            fromPos = addSimpleToken(cast, lexer, javaSimpleTokens, fromPos);
+        while (JavaSimpleTokenType.BRACKETROUNDEND.nonEquals(cur.getTokenType())) {
+            if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType()))
+                fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.IDENTIFYER, cast, lexer, TypeRule.getListInstance(), javaSimpleTokens, fromPos);
+            else
+                fromPos = addSimpleToken(cast, lexer, javaSimpleTokens, fromPos);
             cur = javaSimpleTokens.get(fromPos);
         }
         cast.addChildren(cur);
@@ -84,7 +77,7 @@ public class CastRule extends JavaLexerRule {
             fromPos = addSimpleToken(cast, lexer, javaSimpleTokens, fromPos);
         //Cast has exactly one sub element
         Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
-        cast.addChildren(lexingResult.getReturnToken());
+        cast.addChildren(lexingResult.getReturnToken().getChildren());
 
         return new Lexer.LexingResult<>(cast, lexingResult.getNextArrayfromPos());
     }

@@ -44,8 +44,8 @@ public class StatementReturnRule extends JavaLexerRule {
         if (!JavaSimpleTokenType.SEMICOLON.equals(javaSimpleTokens.get(fromPos).getTokenType())) {
             //A expression must follow
             final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
-            mainToken.addChildren(lexingResult.getReturnToken());
-            fromPos = addSimpleTokenIfComment(mainToken, lexer, javaSimpleTokens, fromPos + 1);
+            mainToken.addChildren(lexingResult.getReturnToken().getChildren());
+            fromPos = addSimpleTokenIfComment(mainToken, lexer, javaSimpleTokens, lexingResult.getNextArrayfromPos());
             if (!JavaSimpleTokenType.SEMICOLON.equals(javaSimpleTokens.get(fromPos).getTokenType()))
                 throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         }

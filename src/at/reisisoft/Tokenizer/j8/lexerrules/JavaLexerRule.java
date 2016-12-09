@@ -119,6 +119,7 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
             return fromPos;
         if (!"<".equals(javaSimpleTokens.get(fromPos + 1).getRawData()))
             return fromPos + 1;
+        final int originalFromPos = fromPos;
         fromPos += 2;
         int genericCount = 1;
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
@@ -135,6 +136,8 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
                         break;
                 }
             }
+            if (JavaSimpleTokenType.SEMICOLON.equals(cur.getTokenType()))
+                return originalFromPos;
             fromPos++;
             cur = javaSimpleTokens.get(fromPos);
         }
