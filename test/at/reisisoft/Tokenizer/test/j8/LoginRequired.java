@@ -1,4 +1,4 @@
-package at.reisisoft.Tokeenizer.test.j8;
+package at.reisisoft.Tokenizer.test.j8;
 
 import at.reisisoft.Tokenizer.GenericTokenType;
 import at.reisisoft.Tokenizer.LexerException;

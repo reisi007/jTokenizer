@@ -1,11 +1,11 @@
-package at.reisisoft.Tokeenizer.test.j8;
+package at.reisisoft.Tokenizer.test.j8;
 
-import at.reisisoft.Tokeenizer.test.j8.smoketest.files.SmoketestFileLoader;
 import at.reisisoft.Tokenizer.LexerException;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaLexerImpl;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaTokenizerImpl;
+import at.reisisoft.Tokenizer.test.j8.smoketest.files.SmoketestFileLoader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;

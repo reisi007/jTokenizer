@@ -1,7 +1,7 @@
-package at.reisisoft.Tokeenizer.test.j8.smoketest;
+package at.reisisoft.Tokenizer.test.j8.smoketest;
 
-import at.reisisoft.Tokeenizer.test.j8.TestHelper;
 import at.reisisoft.Tokenizer.LexerException;
+import at.reisisoft.Tokenizer.test.j8.TestHelper;
 import org.junit.Test;
 
 /**

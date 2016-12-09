@@ -1,6 +1,6 @@
-package at.reisisoft.Tokeenizer.test.j8;
+package at.reisisoft.Tokenizer.test.j8;
 
-import at.reisisoft.Tokeenizer.test.j8.smoketest.Smoketestrunner;
+import at.reisisoft.Tokenizer.test.j8.smoketest.Smoketestrunner;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

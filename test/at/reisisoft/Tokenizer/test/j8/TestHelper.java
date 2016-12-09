@@ -1,10 +1,10 @@
-package at.reisisoft.Tokeenizer.test.j8;
+package at.reisisoft.Tokenizer.test.j8;
 
-import at.reisisoft.Tokeenizer.test.j8.files.FileLoader;
-import at.reisisoft.Tokeenizer.test.j8.smoketest.files.SmoketestFileLoader;
 import at.reisisoft.Tokenizer.*;
 import at.reisisoft.Tokenizer.j8.*;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
+import at.reisisoft.Tokenizer.test.j8.files.FileLoader;
+import at.reisisoft.Tokenizer.test.j8.smoketest.files.SmoketestFileLoader;
 import org.junit.Assert;
 
 import java.util.*;

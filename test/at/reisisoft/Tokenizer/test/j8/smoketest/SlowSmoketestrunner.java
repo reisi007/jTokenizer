@@ -1,4 +1,4 @@
-package at.reisisoft.Tokeenizer.test.j8.smoketest;
+package at.reisisoft.Tokenizer.test.j8.smoketest;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -8,9 +8,8 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        SimpleSmoke.class,
-        PartJavaFileSmokers.class
-}
-)
-public class Smoketestrunner {
+        Smoketestrunner.class,
+        JdkSmoke.class
+})
+public class SlowSmoketestrunner {
 }

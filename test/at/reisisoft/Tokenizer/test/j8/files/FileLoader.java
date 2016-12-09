@@ -1,4 +1,4 @@
-package at.reisisoft.Tokeenizer.test.j8.smoketest.files;
+package at.reisisoft.Tokenizer.test.j8.files;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,13 +9,13 @@ import java.nio.charset.StandardCharsets;
 /**
  * Created by Florian on 13.11.2016.
  */
-public class SmoketestFileLoader {
+public class FileLoader {
 
     public static String getTestFile(String name) {
         StringBuilder sb = new StringBuilder();
         String newline = System.lineSeparator();
         String line = null;
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(SmoketestFileLoader.class.getResourceAsStream(name + ".txt"), StandardCharsets.UTF_8))) {
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(FileLoader.class.getResourceAsStream(name + ".txt"), StandardCharsets.UTF_8))) {
             while ((line = r.readLine()) != null) {
                 sb.append(line).append(newline);
             }
