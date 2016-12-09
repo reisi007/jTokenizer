@@ -104,7 +104,11 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
         if (type.nonEquals(javaSimpleTokens.get(fromPos).getTokenType()))
             return fromPos;
         Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(subrules, javaSimpleTokens, fromPos);
-        parentToken.addChildren(lexingResult.getReturnToken());
+        JavaAdvancedToken token = lexingResult.getReturnToken();
+        if (token.getChildren().size() == 1)
+            parentToken.addChildren(token.getChildren());
+        else
+            parentToken.addChildren(token);
         return lexingResult.getNextArrayfromPos();
     }
 

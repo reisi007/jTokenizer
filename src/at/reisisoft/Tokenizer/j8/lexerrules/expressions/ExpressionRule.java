@@ -33,7 +33,7 @@ public class ExpressionRule extends JavaLexerRule {
         return listInstance;
     }
 
-    private ExpressionRule() {
+    protected ExpressionRule() {
     }
 
     private List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> subrules;
@@ -120,9 +120,14 @@ public class ExpressionRule extends JavaLexerRule {
                     for (int i = startIndex; clean && i < binOpOrdered.size(); i++) {
                         curSimpleTokenType = binOpOrdered.get(i);
                         firstIndex = binOpFinder.getFirstIndex(curSimpleTokenType);
-                        if (firstIndex >= 0) {
+                        if (firstIndex > 0) {
                             clean = false;
-                            subTokenList = getNewList(subTokenList, firstIndex);
+                            try {
+                                subTokenList = getNewList(subTokenList, firstIndex);
+                            } catch (RuntimeException e) {
+                                throw new LexerException("An exception occured while doing stuff with binary operators BEFORE index " + fromPos, e);
+                            }
+
                         } else startIndex = i;
 
                     }
@@ -148,7 +153,7 @@ public class ExpressionRule extends JavaLexerRule {
         return newList;
     }
 
-    private boolean isEndReached(JavaSimpleToken token) {
+    protected boolean isEndReached(JavaSimpleToken token) {
         return token == null
                 || JavaSimpleTokenType.COMMA.equals(token.getTokenType())
                 || JavaSimpleTokenType.SEMICOLON.equals(token.getTokenType())

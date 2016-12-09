@@ -60,8 +60,8 @@ public abstract class AbstractGenericScope extends JavaLexerRule {
         if (current == null || !JavaSimpleTokenType.SCOPEEND.equals(current.getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         scope.addChildren(current);
-        fromPos++;
-        return new Lexer.LexingResult<>(scope, fromPos);
+
+        return new Lexer.LexingResult<>(scope, fromPos + 1);
     }
 
     protected abstract List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> getRules();

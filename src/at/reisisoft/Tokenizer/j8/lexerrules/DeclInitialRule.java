@@ -24,7 +24,8 @@ public class DeclInitialRule extends JavaLexerRule {
                     JavaSimpleTokenType.STATIC,
                     JavaSimpleTokenType.FINAL,
                     JavaSimpleTokenType.COMMENTBLOCK,
-                    JavaSimpleTokenType.COMMENTLINE
+                    JavaSimpleTokenType.COMMENTLINE,
+                    JavaSimpleTokenType.TRANSIENT
             )
     );
 

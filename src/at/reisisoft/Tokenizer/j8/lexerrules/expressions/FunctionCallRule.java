@@ -55,10 +55,8 @@ public class FunctionCallRule extends JavaLexerRule {
             JavaSimpleTokenType curTokenType = javaSimpleTokens.get(fromPos).getTokenType();
             while (JavaSimpleTokenType.BRACKETROUNDSTART.nonEquals(curTokenType)) {
                 if (JavaSimpleTokenType.IDENTIFYER.equals(curTokenType)) {
-                    fromPos = addSimpleTokenIfComment(
-                            mainToken, lexer, javaSimpleTokens,
-                            lexIfNextTokenIsOfType(JavaSimpleTokenType.IDENTIFYER, mainToken, lexer, TypeRule.getListInstance(), javaSimpleTokens, fromPos)
-                    );
+                    fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.IDENTIFYER, mainToken, lexer, TypeRule.getListInstance(), javaSimpleTokens, fromPos);
+                    fromPos = addSimpleTokenIfComment(mainToken, lexer, javaSimpleTokens, fromPos);
                 } else fromPos = addSimpleToken(mainToken, lexer, javaSimpleTokens, fromPos);
                 curTokenType = javaSimpleTokens.get(fromPos).getTokenType();
             }

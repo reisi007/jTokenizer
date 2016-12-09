@@ -62,6 +62,7 @@ public class StatementSwitchCaseRule extends JavaLexerRule {
         if (!JavaSimpleTokenType.SCOPESTART.equals(javaSimpleTokens.get(fromPos).getTokenType()))
             throw GENERIC_LEXER_EXCEPTION.apply(fromPos);
         JavaAdvancedToken scope = new JavaAdvancedToken(JavaAdvancedTokenType.SCOPE, javaSimpleTokens.get(fromPos));
+        fromPos++;
         switchToken.addChildren(scope);
         {
             Lexer.LexingResult<JavaAdvancedToken> lexingResult;
@@ -72,6 +73,6 @@ public class StatementSwitchCaseRule extends JavaLexerRule {
             }
         }
         scope.addChildren(javaSimpleTokens.get(fromPos));
-        return new Lexer.LexingResult<>(switchToken, fromPos);
+        return new Lexer.LexingResult<>(switchToken, fromPos + 1);
     }
 }

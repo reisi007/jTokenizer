@@ -2,12 +2,19 @@ package at.reisisoft.Tokenizer.j8;
 
 import at.reisisoft.Tokenizer.HirachialToken;
 import at.reisisoft.Tokenizer.Token;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.*;
 
 /**
  * Created by Florian on 12.11.2016.
  */
+@JsonPropertyOrder({
+        "startPos",
+        "endPos",
+        "children"
+})
 public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> {
     private final LinkedList<Token<?, ?>> children = new LinkedList<>();
     private final JavaAdvancedTokenType type;
@@ -19,6 +26,7 @@ public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> 
             this.children.addAll(Arrays.asList(children));
     }
 
+    @JsonIgnore
     @Override
     public String getData() {
         StringBuilder sb = new StringBuilder();
@@ -28,6 +36,7 @@ public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> 
         return sb.append("\")").toString();
     }
 
+    @JsonIgnore
     @Override
     public List<Token<?, ?>> getRawData() {
         return Collections.unmodifiableList(children);
@@ -38,7 +47,7 @@ public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> 
         children.addAll(javaAdvancedTokenTypes);
     }
 
-
+    @JsonIgnore
     @Override
     public JavaAdvancedTokenType getTokenType() {
         return type;

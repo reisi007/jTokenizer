@@ -12,4 +12,14 @@ public class JdkSmoke {
     public void arrayList18() throws LexerException {
         TestHelper.doSmokeTest("arrayList18");
     }
+
+    @Test
+    public void list18() throws LexerException {
+        TestHelper.doSmokeTest("list18");
+    }
+
+    @Test
+    public void math18() throws LexerException {
+        TestHelper.doSmokeTest("math18");
+    }
 }

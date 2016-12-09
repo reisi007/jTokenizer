@@ -33,6 +33,8 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     ELSE("else" + LOOKAHEAD_END_OF_WORD),
     NEW("new" + LOOKAHEAD_END_OF_WORD),
     ABSTRACT("abstract" + LOOKAHEAD_END_OF_WORD),
+    ASSERT("assert" + LOOKAHEAD_END_OF_WORD),
+    TRANSIENT("transient" + LOOKAHEAD_END_OF_WORD),
     LAMBDAARROW("->" + LOOKAHEAD_END_OF_WORD),
     BINARYEQUALITY("(!|=)="),
     ASSIGNMENT("([\\+\\-\\*\\/%&^\\|]|<{2}|>{2,3})?="),
@@ -60,7 +62,7 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     BINARYOPMULTIPLICATIVE("[\\*|/|%]"),
     UNARYPREFIXPOSTFIX("(\\+\\+|\\-\\-|!|~)"),
     BINARYADDITIVE("[+|-]"),
-    NUMBER("([0-9]+(.[0-9]+)?|\\.[0-9]+)(f|d|l)?"),
+    NUMBER("([0-9]+(\\.[0-9]*)?)(f|F|d|D|l|L)?"),
     BINARYSHIFT("(>{2,3}|<{2})"),
     BINARYRELATIONAL("(<=?|>=?|instanceof" + LOOKAHEAD_END_OF_WORD + ")"),
     BINARYLOGICALOR("\\|{2}"),
@@ -68,7 +70,7 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     BINARYBITWISEAND("&"),
     BINARYBITWISEOR("\\|"),
     BINARYBITWISEEXOR("\\^"),
-    IDENTIFYER("(?=[^\\d])[^\\s\\-<>=&|{}();,\\/+!|]+");
+    IDENTIFYER("(?=[^\\d])[^\\s\\-<>=&|{}():;,\\/+!|]+(::(?=[^\\d])[^\\s\\-<>=&|{}():;,\\/+!|]+)?");
 
 
     private String pattern;

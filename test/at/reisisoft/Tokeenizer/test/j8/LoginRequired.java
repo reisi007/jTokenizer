@@ -107,7 +107,6 @@ public class LoginRequired {
                 SCOPEEND,
                 FUNCTION,
                 GENERIC_GROUP,
-                TYPE,
                 IDENTIFYER,
                 IDENTIFYER,
                 BRACKETS_ROUND,
