@@ -8,8 +8,9 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        Smoketestrunner.class,
-        JdkSmoke.class
-})
-public class SlowSmoketestrunner {
+        SimpleSmoke.class,
+        PartJavaFileSmokers.class
+}
+)
+public class SmokeTestRunner {
 }

@@ -1,6 +1,6 @@
 package at.reisisoft.Tokenizer.test.j8;
 
-import at.reisisoft.Tokenizer.test.j8.smoketest.SlowSmoketestrunner;
+import at.reisisoft.Tokenizer.test.j8.smoketest.SlowSmokeTestRunner;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -9,9 +9,9 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        Testrunner.class,
-        SlowSmoketestrunner.class
+        TestRunner.class,
+        SlowSmokeTestRunner.class
 })
-public class SlowTestrunner {
+public class SlowTestRunner {
 
 }

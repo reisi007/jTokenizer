@@ -1,6 +1,6 @@
 package at.reisisoft.Tokenizer.test.j8;
 
-import at.reisisoft.Tokenizer.test.j8.smoketest.Smoketestrunner;
+import at.reisisoft.Tokenizer.test.j8.smoketest.SmokeTestRunner;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -16,9 +16,9 @@ import org.junit.runners.Suite;
         Try.class,
         Comments.class,
         LoginRequired.class,
-        Smoketestrunner.class
+        SmokeTestRunner.class
 })
-public class Testrunner {
+public class TestRunner {
     @BeforeClass
     public static void init() {
         // ~ +22% on my system, most of the junit Test time is loading files from FS
