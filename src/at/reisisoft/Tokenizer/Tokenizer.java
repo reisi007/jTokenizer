@@ -8,8 +8,8 @@ import java.util.RandomAccess;
  */
 public interface Tokenizer<TokenType extends GenericTokenType<TokenType>, T extends Token<TokenType, String>> {
     /**
-     * @param input The source file (as a String) to be tokenized
+     * @param input The source file (as a {@link CharSequence}) to be tokenized
      * @return Returns an RandomAccessList
      */
-    <L extends List<T> & RandomAccess> L tokenize(String input);
+    <L extends List<T> & RandomAccess> L tokenize(CharSequence input);
 }

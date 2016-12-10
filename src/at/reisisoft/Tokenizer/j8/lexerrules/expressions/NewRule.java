@@ -65,7 +65,7 @@ public class NewRule extends JavaLexerRule {
         return new Lexer.LexingResult<>(newToken, fromPos);
     }
 
-    private boolean isArray(JavaSimpleToken token) {
+    private boolean isArray(JavaSimpleToken token) { //TODO generic arrays do not work ATM
         return JavaSimpleTokenType.IDENTIFYER.equals(token.getTokenType()) && token.getRawData().endsWith("]");
     }
 }

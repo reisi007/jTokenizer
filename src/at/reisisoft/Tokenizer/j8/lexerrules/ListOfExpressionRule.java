@@ -38,7 +38,7 @@ public class ListOfExpressionRule extends JavaLexerRule {
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
         JavaAdvancedToken scope = new JavaAdvancedToken(JavaAdvancedTokenType.GENERIC_GROUP, javaSimpleTokens.get(fromPos));
-        fromPos++;
+        fromPos = addSimpleTokenIfComment(scope, lexer, javaSimpleTokens, fromPos + 1);
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         while (!JavaSimpleTokenType.SCOPEEND.equals(cur.getTokenType())) {
             Lexer.LexingResult<JavaAdvancedToken> lr = lexer.lexNext(rules, javaSimpleTokens, fromPos);

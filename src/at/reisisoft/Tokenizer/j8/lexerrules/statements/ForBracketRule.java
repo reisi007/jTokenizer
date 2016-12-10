@@ -29,12 +29,12 @@ public class ForBracketRule extends JavaLexerRule {
         return instance;
     }
 
-    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> advancedForRightSide = ExpressionRule.getListInstance();
+    private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> expressionRule = ExpressionRule.getListInstance(), advancedForRightSide = expressionRule;
     private final List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>>[] simpleForRules =
             getArrayFromVararg(
                     Collections.singletonList(DeclInitialRule.getInstance()),
                     Collections.singletonList(StatementExpressionRule.getInstance()),
-                    ExpressionRule.getListInstance()
+                    expressionRule
             );
 
     private ForBracketRule() {
@@ -72,6 +72,12 @@ public class ForBracketRule extends JavaLexerRule {
             Lexer.LexingResult<JavaAdvancedToken> lexingResult;
             for (List<LexerRule<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken>> curRule : simpleForRules) {
                 lexingResult = lexer.lexNext(curRule, javaSimpleTokens, fromPos);
+                brackets.addChildren(lexingResult.getReturnToken());
+                fromPos = addSimpleTokenIfComment(brackets, lexer, javaSimpleTokens, lexingResult.getNextArrayfromPos());
+            }
+            while (JavaSimpleTokenType.COMMA.equals(javaSimpleTokens.get(fromPos).getTokenType())) {
+                brackets.addChildren(javaSimpleTokens.get(fromPos));
+                lexingResult = lexer.lexNext(expressionRule, javaSimpleTokens, fromPos + 1);
                 brackets.addChildren(lexingResult.getReturnToken());
                 fromPos = addSimpleTokenIfComment(brackets, lexer, javaSimpleTokens, lexingResult.getNextArrayfromPos());
             }

@@ -44,7 +44,8 @@ public class FunctionCallRule extends JavaLexerRule {
     public <L extends List<JavaSimpleToken> & RandomAccess> boolean isApplicable(L javaSimpleTokens, int fromPos) {
         if (JavaSimpleTokenType.IDENTIFYER.nonEquals(javaSimpleTokens.get(fromPos).getTokenType()))
             return false;
-        fromPos = skipComment(javaSimpleTokens, skipType(javaSimpleTokens, fromPos + 1));
+        fromPos = skipType(javaSimpleTokens, fromPos);
+        fromPos = skipComment(javaSimpleTokens, fromPos);
         return JavaSimpleTokenType.BRACKETROUNDSTART.equals(javaSimpleTokens.get(fromPos).getTokenType());
     }
 

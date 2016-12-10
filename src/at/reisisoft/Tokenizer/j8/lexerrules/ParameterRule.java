@@ -74,6 +74,11 @@ public class ParameterRule extends JavaLexerRule {
                 advancedToken.addChildren(curToken);
                 return new Lexer.LexingResult<>(advancedToken, fromPos + 1);
             }
+            //Maybe "final" coming
+            if (JavaSimpleTokenType.FINAL.equals(curToken.getTokenType())) {
+                curParamGroup.addChildren(curToken);
+                fromPos++;
+            }
             //Lex type if another identifyer is following
             {
                 int nextFromPos = skipComment(javaSimpleTokens, skipType(javaSimpleTokens, fromPos));

@@ -70,8 +70,8 @@ public class DeclInitialRule extends JavaLexerRule {
             if (JavaSimpleTokenType.ASSIGNMENT.equals(currentSimple.getTokenType())) {
                 current.addChildren(currentSimple);
                 final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(ExpressionRule.getListInstance(), javaSimpleTokens, fromPos + 1);
-                fromPos = lexingResult.getNextArrayfromPos();
                 current.addChildren(lexingResult.getReturnToken().getChildren());
+                fromPos = addSimpleTokenIfComment(current, lexer, javaSimpleTokens, lexingResult.getNextArrayfromPos());
                 currentSimple = javaSimpleTokens.get(fromPos);
             }
             //Check for comment
@@ -89,7 +89,8 @@ public class DeclInitialRule extends JavaLexerRule {
             }
         } while (!JavaSimpleTokenType.SEMICOLON.equals(currentSimple.getTokenType()));
         current.addChildren(currentSimple);
-        return new Lexer.LexingResult<>(root, fromPos + 1);
+        fromPos = addSimpleTokenIfComment(root, lexer, javaSimpleTokens, fromPos + 1);
+        return new Lexer.LexingResult<>(root, fromPos);
     }
 
     private boolean isEndTokenType(JavaSimpleTokenType curTokenType) {

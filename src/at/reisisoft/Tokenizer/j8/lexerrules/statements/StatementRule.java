@@ -7,6 +7,7 @@ import at.reisisoft.Tokenizer.j8.JavaAdvancedToken;
 import at.reisisoft.Tokenizer.j8.JavaAdvancedTokenType;
 import at.reisisoft.Tokenizer.j8.JavaSimpleToken;
 import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
+import at.reisisoft.Tokenizer.j8.lexerrules.AnnotationRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.DeclInitialRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.UnnecessarySemicolonRule;
@@ -72,6 +73,7 @@ public class StatementRule extends JavaLexerRule {
                         StatementTryRule.getInstance(),
                         StatementSwitchCaseRule.getInstance(),
                         StatementAssertRule.getInstance(),
+                        AnnotationRule.getInstance(),
                         DeclInitialRule.getInstance(),
                         UnnecessarySemicolonRule.getInstance(),
                         StatementExpressionRule.getInstance()
