@@ -59,9 +59,31 @@ public class TypeRule extends JavaLexerRule {
                             break;
                         default:
                     }
+                } else if (JavaSimpleTokenType.BINARYSHIFT.equals(cur.getTokenType())) {
+                    switch (cur.getRawData()) {
+                        case ">>>":
+                            genericCount -= 3;
+                            break;
+                        case ">>":
+                            genericCount -= 2;
+                            break;
+                        case "<<":
+                            genericCount += 2;
+                            break;
+                        default:
+                    }
                 }
                 fromPos = addSimpleToken(jat, lexer, javaSimpleTokens, fromPos);
                 cur = javaSimpleTokens.get(fromPos);
+            }
+        }
+        fromPos = addSimpleTokenIfComment(jat, lexer, javaSimpleTokens, fromPos);
+        JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
+        if (JavaSimpleTokenType.IDENTIFYER.equals(cur.getTokenType())) {
+            final String rawData = cur.getRawData();
+            if ("...".equals(rawData) || (rawData.startsWith("[") && rawData.endsWith("]"))) {
+                jat.addChildren(cur);
+                fromPos++;
             }
         }
         return new Lexer.LexingResult<>(jat, fromPos);

@@ -10,6 +10,7 @@ import at.reisisoft.Tokenizer.j8.JavaSimpleTokenType;
 import at.reisisoft.Tokenizer.j8.lexerrules.ClassBodyRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.JavaLexerRule;
 import at.reisisoft.Tokenizer.j8.lexerrules.ListOfExpressionRule;
+import at.reisisoft.Tokenizer.j8.lexerrules.PossibleTypeRule;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,9 +48,8 @@ public class NewRule extends JavaLexerRule {
         while (JavaSimpleTokenType.IDENTIFYER.nonEquals(javaSimpleTokens.get(fromPos).getTokenType())) {
             fromPos = addSimpleToken(newToken, lexer, javaSimpleTokens, fromPos);
         }
-        if (isArray(javaSimpleTokens.get(fromPos))) {
-            newToken.addChildren(javaSimpleTokens.get(fromPos));
-            fromPos = addSimpleTokenIfComment(newToken, lexer, javaSimpleTokens, fromPos + 1);
+        if (isArray(javaSimpleTokens, fromPos)) {
+            fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.IDENTIFYER, newToken, lexer, PossibleTypeRule.getListInstance(), javaSimpleTokens, fromPos);
             fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.SCOPESTART, newToken, lexer, arraySubRule, javaSimpleTokens, fromPos);
             fromPos = addSimpleTokenIfComment(newToken, lexer, javaSimpleTokens, fromPos);
 
@@ -65,7 +65,13 @@ public class NewRule extends JavaLexerRule {
         return new Lexer.LexingResult<>(newToken, fromPos);
     }
 
-    private boolean isArray(JavaSimpleToken token) { //TODO generic arrays do not work ATM
-        return JavaSimpleTokenType.IDENTIFYER.equals(token.getTokenType()) && token.getRawData().endsWith("]");
+    private <L extends List<JavaSimpleToken> & RandomAccess> boolean isArray(L javaSimpleTokens, int fromPos) {
+        JavaSimpleToken token = javaSimpleTokens.get(fromPos);
+        boolean isArray = JavaSimpleTokenType.IDENTIFYER.equals(token.getTokenType()) && token.getRawData().endsWith("]");
+        if (isArray)
+            return true;
+        fromPos = skipType(javaSimpleTokens, fromPos);
+        String tokenData = javaSimpleTokens.get(fromPos).getRawData();
+        return tokenData.startsWith("[") && tokenData.endsWith("]");
     }
 }

@@ -13,7 +13,7 @@ import java.util.*;
 import static at.reisisoft.Tokenizer.Lexer.GENERIC_LEXER_EXCEPTION;
 
 /**
- * Created by Florian on 24.11.2016. FIXME Object[] empty = {}; fails, because we have no "value" rule for this -> Comma seperated expressions within {}  needed
+ * Created by Florian on 24.11.2016.
  */
 public class ExpressionRule extends JavaLexerRule {
 

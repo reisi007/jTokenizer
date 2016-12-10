@@ -22,4 +22,14 @@ public class JdkSmoke {
     public void math18() throws LexerException {
         TestHelper.doSmokeTest("math18");
     }
+
+    @Test
+    public void batchUpdateException18() throws LexerException {
+        TestHelper.doSmokeTest("batchUpdateException18");
+    }
+
+    @Test
+    public void proxy18() throws LexerException {
+        TestHelper.doSmokeTest("proxy18");
+    }
 }

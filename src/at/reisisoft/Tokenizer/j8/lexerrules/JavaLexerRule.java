@@ -33,8 +33,6 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
      * @throws LexerException Throws an exception if the call to the lexer went wrong
      */
     protected final <L extends List<JavaSimpleToken> & RandomAccess> int addSimpleToken(JavaAdvancedToken javaAdvancedToken, Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
-        if (javaSimpleTokens.size() <= fromPos)
-            return fromPos;
         JavaSimpleToken simpleToken = javaSimpleTokens.get(fromPos);
         if (simpleToken.getTokenType().isComment()) {
             final Lexer.LexingResult<JavaAdvancedToken> lexingResult = lexer.lexNext(Collections.singletonList(CommentRule.getInstance()), javaSimpleTokens, fromPos);
@@ -73,8 +71,6 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
      * @throws LexerException Throws an exception if the call to the lexer went wrong
      */
     protected final <L extends List<JavaSimpleToken> & RandomAccess> int addSimpleTokenIfComment(JavaAdvancedToken javaAdvancedToken, Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
-        if (javaSimpleTokens.size() <= fromPos)
-            return fromPos;
         JavaSimpleToken cur = javaSimpleTokens.get(fromPos);
         if (!cur.getTokenType().isComment())
             return fromPos;
@@ -139,6 +135,20 @@ public abstract class JavaLexerRule implements LexerRule<JavaSimpleTokenType, Ja
                         break;
                     case ">":
                         genericCount--;
+                        break;
+                    default:
+                        break;
+                }
+            } else if (JavaSimpleTokenType.BINARYSHIFT.equals(cur.getTokenType())) {
+                switch (cur.getRawData()) {
+                    case ">>>":
+                        genericCount -= 3;
+                        break;
+                    case ">>":
+                        genericCount -= 2;
+                        break;
+                    case "<<":
+                        genericCount += 2;
                         break;
                     default:
                         break;

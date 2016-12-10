@@ -93,7 +93,8 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     }
 
     public boolean isConstantOrVariable() {
-        return STRING.equals(this) || IDENTIFYER.equals(this) || NUMBER.equals(this) || BOOLLITERAL.equals(this);
+        return STRING.equals(this) || IDENTIFYER.equals(this) || NUMBER.equals(this)
+                || BOOLLITERAL.equals(this) || CHARACTER.equals(this);
     }
 
     public boolean equals(JavaSimpleTokenType other) {

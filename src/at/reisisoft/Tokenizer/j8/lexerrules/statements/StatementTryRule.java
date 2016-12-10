@@ -59,7 +59,12 @@ public class StatementTryRule extends JavaLexerRule {
                 tryToken.addChildren(lexingToken);
             } while (JavaAdvancedTokenType.SCOPE.nonEquals(lexingToken.getTokenType()));
         }
-        fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.CATCH, tryToken, lexer, catchRule, javaSimpleTokens, fromPos);
+
+        do {
+            fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.CATCH, tryToken, lexer, catchRule, javaSimpleTokens, fromPos);
+            fromPos = addSimpleTokenIfComment(tryToken, lexer, javaSimpleTokens, fromPos);
+        } while (JavaSimpleTokenType.CATCH.equals(javaSimpleTokens.get(fromPos).getTokenType()));
+
         fromPos = lexIfNextTokenIsOfType(JavaSimpleTokenType.FINALLY, tryToken, lexer, finallyRule, javaSimpleTokens, fromPos);
 
         return new Lexer.LexingResult<>(tryToken, fromPos);

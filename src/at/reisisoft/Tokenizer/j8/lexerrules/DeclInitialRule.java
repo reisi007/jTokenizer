@@ -89,7 +89,9 @@ public class DeclInitialRule extends JavaLexerRule {
             }
         } while (!JavaSimpleTokenType.SEMICOLON.equals(currentSimple.getTokenType()));
         current.addChildren(currentSimple);
-        fromPos = addSimpleTokenIfComment(root, lexer, javaSimpleTokens, fromPos + 1);
+        fromPos++;
+        if (fromPos < javaSimpleTokens.size())
+            fromPos = addSimpleTokenIfComment(root, lexer, javaSimpleTokens, fromPos);
         return new Lexer.LexingResult<>(root, fromPos);
     }
 
