@@ -99,7 +99,7 @@ public class ExpressionRule extends JavaLexerRule {
             curToken = javaSimpleTokens.get(fromPos);
         } while (!isEndReached(curToken));
 
-        {
+        if (subTokenList.size() > 1) {
             JavaAdvancedToken cur;
             boolean clean;
             boolean anyBinOpFound;
