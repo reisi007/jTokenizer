@@ -48,7 +48,7 @@ public class ForBracketRule extends JavaLexerRule {
 
     @Override
     public <L extends List<JavaSimpleToken> & RandomAccess> Lexer.LexingResult<JavaAdvancedToken> apply(Lexer<JavaSimpleTokenType, JavaSimpleToken, JavaAdvancedToken> lexer, L javaSimpleTokens, int fromPos) throws LexerException {
-        JavaAdvancedToken brackets = new JavaAdvancedToken(JavaAdvancedTokenType.BRACKETS_ROUND);
+        JavaAdvancedToken brackets = new JavaAdvancedToken(JavaAdvancedTokenType.BRACKETS_ROUND, javaSimpleTokens.get(fromPos));
         fromPos = addSimpleTokenIfComment(brackets, lexer, javaSimpleTokens, fromPos + 1);
         if (isEnhancedFor(javaSimpleTokens, fromPos)) {
             while (JavaSimpleTokenType.COLON.nonEquals(javaSimpleTokens.get(fromPos).getTokenType())) {
