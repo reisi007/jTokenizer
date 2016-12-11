@@ -2,14 +2,15 @@ package at.reisisoft.Tokenizer.j8;
 
 import at.reisisoft.Tokenizer.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * Created by Florian on 12.11.2016.
  */
 @JsonPropertyOrder({
-        "startPos",
-        "endPos"
+        "s",
+        "e"
 })
 public class JavaSimpleToken implements Token<JavaSimpleTokenType, String> {
     private final JavaSimpleTokenType type;
@@ -21,6 +22,10 @@ public class JavaSimpleToken implements Token<JavaSimpleTokenType, String> {
         this.data = data;
     }
 
+    /**
+     * @return startPos (including)
+     */
+    @JsonProperty("s")
     public int getStartPos() {
         return startPos;
     }
@@ -29,6 +34,10 @@ public class JavaSimpleToken implements Token<JavaSimpleTokenType, String> {
         this.startPos = startPos;
     }
 
+    /**
+     * @return endPos (excluding)
+     */
+    @JsonProperty("e")
     public int getEndPos() {
         return endPos;
     }

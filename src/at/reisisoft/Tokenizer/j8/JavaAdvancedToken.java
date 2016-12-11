@@ -3,6 +3,7 @@ package at.reisisoft.Tokenizer.j8;
 import at.reisisoft.Tokenizer.HirachialToken;
 import at.reisisoft.Tokenizer.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.*;
@@ -11,11 +12,12 @@ import java.util.*;
  * Created by Florian on 12.11.2016.
  */
 @JsonPropertyOrder({
-        "startPos",
-        "endPos",
-        "children"
+        "s",
+        "e",
+        "c"
 })
 public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> {
+    @JsonProperty("c")
     private final LinkedList<Token<?, ?>> children = new LinkedList<>();
     private final JavaAdvancedTokenType type;
 
@@ -70,6 +72,7 @@ public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> 
         return getData();
     }
 
+    @JsonProperty("s")
     @Override
     public int getStartPos() {
         if (children.size() == 0)
@@ -82,6 +85,7 @@ public class JavaAdvancedToken implements HirachialToken<JavaAdvancedTokenType> 
         throw new IllegalStateException("Cannot set startPos");
     }
 
+    @JsonProperty("e")
     @Override
     public int getEndPos() {
         if (children.size() == 0)

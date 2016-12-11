@@ -19,8 +19,8 @@ import java.util.List;
 public class TestMain {
 
     public static void main(String[] args) throws Exception {
-        writeTokenizerTokens(SmoketestFileLoader.getTestFile("arrayList18"));
-        // writeLexerJSON(SmoketestFileLoader.getTestFile("arrayList18"));
+        //  writeTokenizerTokens(SmoketestFileLoader.getTestFile("arrayList18"));
+        writeLexerJSON(SmoketestFileLoader.getTestFile("math18"));
     }
 
     private static void writeTokenizerTokens(String fileContents) throws IOException {
