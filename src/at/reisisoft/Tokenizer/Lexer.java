@@ -12,7 +12,7 @@ public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerToke
     IntFunction<LexerException> GENERIC_LEXER_EXCEPTION = (i) -> new LexerException("The lexer does not support this file at position " + i + '!');
 
     /**
-     * Lexes over all tokens. Implementations should gurantee, that this list is not modified via this method
+     * Lexes over all tokens. Implementations should guarantee, that this list is not modified via this method
      *
      * @param tokenizerTokens The tokens from the tokenizer
      * @return A list of all recognized tokens
@@ -22,7 +22,7 @@ public interface Lexer<TokenizerTokenType extends GenericTokenType<TokenizerToke
 
     /**
      * Lexes from the position specified in {@code int fromPos}. It lexes and returns when one token is found.
-     * This operation can be greedy, which means that not the smallest possible token should be returned, but the largest possible
+     * This operation is greedy, which means that not the smallest possible token should be returned, but the largest possible
      *
      * @param currentRules    The rules for which the {@code tokenizerTokens} should be evaluated against
      * @param tokenizerTokens The tokens from the tokenizer
