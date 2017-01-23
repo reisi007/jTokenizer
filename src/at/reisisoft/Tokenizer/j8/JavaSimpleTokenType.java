@@ -53,7 +53,7 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     BOOLLITERAL("true|false" + LOOKAHEAD_END_OF_WORD),
     BREAK("break\\s*?;"),
     CONTINUE("continue\\s*;"),
-    DEFAULT("default"),
+    DEFAULT("default(?!\\w)"),
     COMMENTLINE("\\/\\/.*"),
     COMMENTBLOCK("\\/\\*(.|\\s)*?\\*\\/"),
     CHARACTER("'.+?'"),
