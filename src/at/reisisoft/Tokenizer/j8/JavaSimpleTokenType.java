@@ -58,7 +58,7 @@ public enum JavaSimpleTokenType implements RegExTokenType<JavaSimpleTokenType> {
     COMMENTBLOCK("\\/\\*(.|\\s)*?\\*\\/"),
     CHARACTER("'.+?'"),
     STRING("\".*?(?<!\\\\)\""),
-    ANNOTATION("@[^\\s(]+"),
+    ANNOTATION("@[^\\s\\/(]+"),
     BINARYOPMULTIPLICATIVE("[\\*|/|%]"),
     UNARYPREFIXPOSTFIX("(\\+\\+|\\-\\-|!|~)"),
     BINARYADDITIVE("[+|-]"),
